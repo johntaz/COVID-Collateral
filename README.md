@@ -22,7 +22,7 @@ Study investigating the indirect effects of COVID-19
 - Storage for finalised codelists 
 - Please use the following naming convention: `concept_codingsystem`
   - e.g. `Diabetes_ICD10.csv` 
-- Files should only contained two field - `code` and `description` 
+- Files should only contain two fields - `code` and `description` 
 
 ##### Data
 - Folder and its contents masked from git via .gitignore
