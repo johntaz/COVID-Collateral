@@ -26,6 +26,6 @@ Study investigating the indirect effects of COVID-19
 - Local data storage for working copies of data (this will need to be created locally)
 
 ##### Output
-- Storage for analysis output (aggregate outputs only)
+- Storage for aggregate analysis output (masked from git via .gitignore for now)
 - This should not contain any patient-level data (CPRD or otherwise)
 
