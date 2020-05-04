@@ -19,7 +19,7 @@ Study investigating the indirect effects of COVID-19
 - Storage for code:
   - Data management 
   - Analysis
-- Conventiosn to be added...
+- Conventions to be added...
 
 ##### Data
 - Folder and its contents masked from git via .gitignore
