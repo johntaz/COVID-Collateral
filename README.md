@@ -5,6 +5,7 @@ Study investigating the indirect effects of COVID-19
 - [Project folder structure](#repo-structure)
   + [Codelists](#codelists)
   + [Code](#code)
+  + [Doc](#doc)
   + [Output](#output)
   + [Data](#data)
   
@@ -20,6 +21,9 @@ Study investigating the indirect effects of COVID-19
   - Data management 
   - Analysis
 - Conventions to be added...
+
+##### Doc
+- Storage for any relevant documentation 
 
 ##### Data
 - Folder and its contents masked from git via .gitignore
