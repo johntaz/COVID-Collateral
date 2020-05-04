@@ -2,19 +2,30 @@
 Study investigating the indirect effects of COVID-19
 
 ### Table of contents
-- [Repo Structure](#repo-structure)
+- [Project folder structure](#repo-structure)
   + [Codelists](#codelists)
   + [Code](#code)
   + [Output](#output)
+  + [Data](#data)
   
-
-
 ### Repo Structure
 ##### Codelists
-This is a folder for finalised codelists. Please use the following naming convention: `concept_codingsystem`. e.g. `Diabetes_ICD10.csv` 
+- Storage for finalised codelists 
+- Please use the following naming convention: `concept_codingsystem`
+  - e.g. `Diabetes_ICD10.csv` 
+- Files should only contained two field - `code` and `description` 
 
 ##### Code
-This a folder for scripts for running data management and analysis: conventions to be discussed...
+- Storage for code:
+  - Data management 
+  - Analysis
+- Conventiosn to be added...
+
+##### Data
+- Folder and its contents masked from git via .gitignore
+- Local data storage for working copies of data (this will need to be created locally)
 
 ##### Output
-This is a folder for output, including figures and tables. This should not contain any CPRD data. 
+- Storage for analysis output (aggregate outputs only)
+- This should not contain any patient-level data (CPRD or otherwise)
+
