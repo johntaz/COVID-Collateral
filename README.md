@@ -1,5 +1,5 @@
 # COVID-Collateral
-Study investigating the indirect effects of COVID-10
+Study investigating the indirect effects of COVID-19
 
 ### Table of contents
 - [Repo Structure](#repo-structure)
