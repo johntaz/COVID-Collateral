@@ -30,7 +30,7 @@ Study investigating the indirect effects of COVID-19
 
 ##### Docs
 - Storage for any relevant documentation 
-- [Getting Started](gettingStarted.md)
+- [Getting Started](/doc/gettingStarted.md)
 
 ##### Output
 - Storage for aggregate analysis output (masked from git via .gitignore for now)
