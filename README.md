@@ -6,7 +6,7 @@ Study investigating the indirect effects of COVID-19
   + [Code](#code)
   + [Codelists](#codelists)
   + [Data](#data)
-  + [Doc](#doc)
+  + [Docs](#docs)
   + [Output](#output)
 
   
@@ -28,8 +28,9 @@ Study investigating the indirect effects of COVID-19
 - Folder and its contents masked from git via .gitignore
 - Local data storage for working copies of data (this will need to be created locally)
 
-##### Doc
+##### Docs
 - Storage for any relevant documentation 
+- [Getting Started](gettingStarted.md)
 
 ##### Output
 - Storage for aggregate analysis output (masked from git via .gitignore for now)
