@@ -7,6 +7,7 @@
 - [Getting Started](#getting-started)
 - [GitHub Terminology](#github-terminology) 
 - [Example Workflow](#example-workflow)
+- [Learning Resources](#learning-resources)
 
 ### Using Github
 - Some tasks can be performed on https://github.com/ :
@@ -58,8 +59,8 @@ through Horizon
 - Pull:
   + A `pull` will download updates to this repository (made by others) from Github.com
 
-
-- More information [here](https://guides.github.com/activities/hello-world/)
-
-
+### Learning Resources
+- Quick start guide [here](https://guides.github.com/activities/hello-world/)
+- An introductory course [here](https://lab.github.com/githubtraining/introduction-to-github)
+- GitHub Desktop guide [here](https://programminghistorian.org/en/lessons/retired/getting-started-with-github-desktop)
 
