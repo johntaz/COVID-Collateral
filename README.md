@@ -20,7 +20,7 @@ Study investigating the indirect effects of COVID-19
 
 ##### Codelists
 - Storage for finalised codelists 
-- Please use the following naming convention: `concept_codingsystem`
+- Please use the following naming convention: TBC 
   - e.g. `Diabetes_ICD10.csv` 
 - Files should only contain two fields - `code` and `description` 
 
