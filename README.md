@@ -7,7 +7,7 @@ Study investigating the indirect effects of COVID-19
   + [Codelists](#codelists)
   + [Data](#data)
   + [Docs](#docs)
-  + [Output](#output)
+  + [Graphfiles](#graphfiles)
 
   
 ### Project folder structure
@@ -32,7 +32,7 @@ Study investigating the indirect effects of COVID-19
 - Storage for any relevant documentation 
 - [Getting Started](/doc/gettingStarted.md)
 
-##### Output
+##### Graphfiles
 - Storage for aggregate analysis output (masked from git via .gitignore for now)
 - This should not contain any patient-level data (CPRD or otherwise)
 
