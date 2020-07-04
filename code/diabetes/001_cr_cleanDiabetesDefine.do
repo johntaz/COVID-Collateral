@@ -42,12 +42,13 @@ bysort patid eventdate : gen dupFlag = _n
 keep if dupFlag == 1 
 drop dupFlag
 
-save "$dataDir\tempData`i'", replace
+save "$dataDir\tempData`f'", replace //changed from `i' by RM
+di "`f'"
 }
 
 * Append all tempfiles
 forvalues i = 1/4 {
-    append using "$dataDir\tempData`i'"
+    append using "$dataDir\tempData`f'"
     save "$dataDir\diabetesOutcomes", replace
 }
 
