@@ -89,6 +89,7 @@ gen studyDay = eventdate - td(01jan2017) + 1
 
 * Detect errors: study days beyond 2020 (transform this into a macro)
 drop if eventdate > td(11Jun2020)
+drop if eventdate < td(1Jan2017)
 
 qui summ studyDay
 local maxDays = r(max)
@@ -153,7 +154,7 @@ drop if consistentFlag !=2
 drop b consistentFlag
 
 save "$dataDir\dmtypeOutcomes.dta", replace
-
+restore
 * ------------------------------------------------------------------------------
 * Format analysis files and export csv
 * ------------------------------------------------------------------------------
