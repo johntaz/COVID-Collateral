@@ -54,4 +54,6 @@ graphfiles/
 output/
 /output/
 
- 
+ # Presentations
+*.ppt
+*.pptx
