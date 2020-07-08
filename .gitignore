@@ -42,8 +42,8 @@ rsconnect/
 .Rproj.user
 
 # Data folder
-data/
-/data/
+data/*
+/data/*
 datafiles/
 /datafiles
 /datafiles/
@@ -60,3 +60,7 @@ output/
 
 # DS_store
 *.DS_Store
+.DS_Store
+
+# Include aggregated analysis dataset for diabetes
+!/data/an_diabetesOverall.csv
