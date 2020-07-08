@@ -8,7 +8,7 @@
 
 # Example code in package build process
 *-Ex.R
- 
+
 # Output files from R CMD build
 /*.tar.gz
 
@@ -42,8 +42,8 @@ rsconnect/
 .Rproj.user
 
 # Data folder
-data/
-/data/
+data/*
+/data/*
 datafiles/
 /datafiles
 /datafiles/
@@ -54,9 +54,13 @@ graphfiles/
 output/
 /output/
 
- # Presentations
-*.ppt
+# powerpoint
 *.pptx
+*.ppt
 
-# .DS_Store
+# DS_store
 *.DS_Store
+.DS_Store
+
+# Include aggregated analysis dataset for diabetes
+!/data/an_diabetesOverall.csv
