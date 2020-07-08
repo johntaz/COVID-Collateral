@@ -17,9 +17,9 @@ library(lubridate)
 #---------------------------------------------------------------------------------------
 #  Import data
 #---------------------------------------------------------------------------------------
-setwd("J:/EHR-Working/Sinead_Covid_Collaterol/datafiles/diabetes/")
+setwd("~/Documents/COVID-collateral/")
 
-diabetesOverall <- read_csv("an_diabetesOverall.csv") %>%
+diabetesOverall <- read_csv("data/an_diabetesOverall.csv") %>%
   mutate_at(vars(weekDate), dmy) # convert to date
 
 #---------------------------------------------------------------------------------------
@@ -49,7 +49,7 @@ figure1 <- ggplot(diabetesOverall, aes(x = time, y = model1$y)) +
 
 figure1
 
-ggsave("J:/EHR-Working/Sinead_Covid_Collaterol/graphfiles/diabetes/diabetesOverall_noTrend.png" , device = "png")
+#ggsave("J:/EHR-Working/Sinead_Covid_Collaterol/graphfiles/diabetes/diabetesOverall_noTrend.png" , device = "png")
 
 #---------------------------------------------------------------------------------------
 # Analysis including seasonal trend
@@ -91,5 +91,5 @@ figure3 <- ggplot(diabetesOverall, aes(x = time, y = model2$y)) +
 
 figure3
 
-ggsave("J:/EHR-Working/Sinead_Covid_Collaterol/graphfiles/diabetes/diabetesOverall_Trend.png" , device = "png")
+#ggsave("J:/EHR-Working/Sinead_Covid_Collaterol/graphfiles/diabetes/diabetesOverall_Trend.png" , device = "png")
 
