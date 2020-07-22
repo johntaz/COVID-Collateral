@@ -12,7 +12,7 @@ data_files <- list.files(here::here("data/"), pattern = "*RData")
 lapply(here::here("data",data_files), load,.GlobalEnv)
 
 # build main database to plot that groups everything ----------------------
-stratifiers <- stringr::str_to_title(c("gender", "age"))
+stratifiers <- stringr::str_to_title(c("gender", "age", "region"))
 
 apptitle <- "COVID-Collateral"
 
@@ -90,6 +90,21 @@ ui <- shinyUI(
 						 						 )
 						 					)
 						 				),
+						 		tabPanel("Region",
+						 						 sidebarLayout(
+						 						 	position = "left",
+						 						 	sidebarPanel(
+						 						 		selectInput("labRegion", 
+						 						 								multiple = TRUE,
+						 						 								label = "Region", 
+						 						 								choices = as.list(unique(figureRegion_shiny$labels)),
+						 						 								selected = as.list(unique(figureRegion_shiny$labels)))
+						 						 	),
+						 						 	mainPanel(
+						 								plotOutput("mainplot2")
+						 						 )
+						 					)
+						 				),
 						 		tabPanel("Gender",
 						 						 sidebarLayout(
 						 						 	position = "left",
@@ -101,7 +116,7 @@ ui <- shinyUI(
 						 						 								selected = as.list(unique(figureGender_shiny$labels)))
 						 						 	),
 						 						 	mainPanel(
-						 								plotOutput("mainplot2")
+						 								plotOutput("mainplot3")
 						 						 )
 						 					)
 						 				)
@@ -129,12 +144,16 @@ server <- function(input, output, session){
 	df_shiny <- reactive({
 		data <- if (input$stratifier == "Age") {
 			figureAge_shiny
+		} else if (input$stratifier == "Region"){
+			figureRegion_shiny
 		} else if (input$stratifier == "Gender"){
 			figureGender_shiny
 		}
 
 		labs_to_find <- if (input$stratifier == "Age") {
 			input$labAge
+		} else if (input$stratifier == "Region"){
+			input$labRegion
 		} else if (input$stratifier == "Gender"){
 			input$labGender
 		}
@@ -170,6 +189,14 @@ server <- function(input, output, session){
 		}
 	})
 	output$mainplot2 <- renderPlot({
+		if (is.null(v$plot)) return()
+		if(input$lockdownLine) {
+			v$plot + geom_vline(xintercept = as.Date("2020-03-28"), linetype = "dashed", col = 2)
+		}else{
+			v$plot
+		}
+	})
+	output$mainplot3 <- renderPlot({
 		if (is.null(v$plot)) return()
 		if(input$lockdownLine) {
 			v$plot + geom_vline(xintercept = as.Date("2020-03-28"), linetype = "dashed", col = 2)

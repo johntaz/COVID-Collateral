@@ -22,6 +22,9 @@ setwd("/Users/lsh1510922/Documents/COVID-Collateral")
 # Gender
 diabetesGender <- read_csv("data/an_diabetesGender.csv") %>% 
   mutate_at(vars(weekDate), dmy) # convert to date 
+# Gender
+diabetesRegion <- read_csv("data/an_diabetesRegion.csv") %>% 
+  mutate_at(vars(weekDate), dmy) # convert to date 
 
 #---------------------------------------------------------------------------------------
 # Analysis ignoring seasonal trend
@@ -70,7 +73,8 @@ figureGender_shiny <- figureGender %>%
 	bind_rows(mutate(figureGender, outcome = "Alcohol"))
 save(figureGender_shiny, file = paste0(getwd(),"/code/shiny_app/covid_collateral_shiny/data/figureGender_shiny.RData"))
 figureAge_shiny <- figureGender_shiny %>%
-	mutate_at("labels", ~ifelse(.=="Female", ">=50", "<50"))
+	mutate_at("labels", ~ifelse(.=="Female", ">=50", "<50")) %>%
+	mutate_at("model_out", ~ifelse(labels==">=50", 0.004, 0.003))
 save(figureAge_shiny, file = paste0(getwd(),"/code/shiny_app/covid_collateral_shiny/data/figureAge_shiny.RData"))
 
 # Ignoring seasonal trend
@@ -96,24 +100,36 @@ figureRegion <-  diabetesRegion %>%
                       region == 9 ~ "London",
                       region == 10 ~ "South East Coast",
                       region == 11 ~ "Northern Ireland" ) 
-    
   ) %>%
-  ggplot(aes(x=time, y=modelRegion$y)) +
+	mutate(model_out = modelRegion$y) %>%
+	select(weekDate, labels, model_out)
+
+ggplot(figureRegion, aes(x=weekDate, y=model_out)) +
   geom_line(aes(color = labels)) +   
   xlab("Time") +
   ylab("Proportion Overall") +
   theme_classic() +
   theme(axis.text.x=element_text(angle=60, hjust=1)) +
-  scale_x_continuous(breaks = c(0,52, 104, 156, 167, 208), labels = c("2017","2018","2019","2020","Lockdown","2021")) +
+  #scale_x_continuous(breaks = c(0,52, 104, 156, 167, 208), labels = c("2017","2018","2019","2020","Lockdown","2021")) +
   geom_vline(xintercept = 167, linetype = "dashed") + 
   theme(legend.title=element_blank())
 
-figureRegion
-ggsave("J:/EHR-Working/Sinead_Covid_Collaterol/graphfiles/diabetes/diabetesRegion_noTrend.png" , device = "png")
+figureRegion_shiny <- figureRegion %>%  
+	mutate(outcome = "Diabetes") %>%
+	bind_rows(mutate(figureRegion, outcome = "CMI")) %>%
+	bind_rows(mutate(figureRegion, outcome = "SMI")) %>%
+	bind_rows(mutate(figureRegion, outcome = "Asthma")) %>%
+	bind_rows(mutate(figureRegion, outcome = "COPD")) %>%
+	bind_rows(mutate(figureRegion, outcome = "COPD")) %>%
+	bind_rows(mutate(figureRegion, outcome = "Cardiac failure")) %>%
+	bind_rows(mutate(figureRegion, outcome = "MI")) %>%
+	bind_rows(mutate(figureRegion, outcome = "Angina")) %>%
+	bind_rows(mutate(figureRegion, outcome = "Alcohol"))
+
+#ggsave("J:/EHR-Working/Sinead_Covid_Collaterol/graphfiles/diabetes/diabetesRegion_noTrend.png" , device = "png")
+
+save(figureRegion_shiny, file = paste0(getwd(),"/code/shiny_app/covid_collateral_shiny/data/figureRegion_shiny.RData"))
 
 
-#---------------------------------------------------------------------------------------
-# Analysis including seasonal trend
-#---------------------------------------------------------------------------------------
 
 
