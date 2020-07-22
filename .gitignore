@@ -65,5 +65,8 @@ output/
 # Include aggregated analysis dataset for diabetes
 !/data/an_diabetesOverall.csv
 
-# ignore data files in shiny app subdirectory
+## Ignore word files
+*.docx
+
+## Ignore data for the shiny app
 code/shiny_app/covid_collateral_shiny/data/
