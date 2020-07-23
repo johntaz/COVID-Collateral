@@ -11,6 +11,14 @@ adopath + "Z:\Desktop\COVID-Collateral\code\generic"
 do "Z:\Desktop\COVID-Collateral\code\generic\000_globals.do"
 
 * ------------------------------------------------------------------------------
+* Clean outcome data
+* ------------------------------------------------------------------------------
+clear 
+
+cd "$defineDir"
+ 
+cleanDefine, keyword(diabetes) enddate(10jul2020)
+* ------------------------------------------------------------------------------
 * Load Denominator file
 * ------------------------------------------------------------------------------
 
@@ -21,15 +29,6 @@ cd "$dataDir"
 * Generate weekly denominators
 weeklyDenom, startdate(01jan2017) enddate(10jul2020) lockdown(23mar2020) study(diabetes)
 
-
-* ------------------------------------------------------------------------------
-* Clean outcome data
-* ------------------------------------------------------------------------------
-clear 
-
-cd "$defineDir"
- 
-cleanDefine, keyword(diabetes) enddate(10jul2020)
 * ------------------------------------------------------------------------------
 * Load outcome data 
 * ------------------------------------------------------------------------------
