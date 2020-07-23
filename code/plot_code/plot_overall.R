@@ -20,7 +20,7 @@ library(cowplot)
 #---------------------------------------------------------------------------------------
 setwd("~/Documents/COVID-collateral/")
 
-outcome_of_interest <- ""
+outcome_of_interest <- "depression"
 
 files_to_import <- list.files("data/", pattern = outcome_of_interest)
 
@@ -37,8 +37,9 @@ length(files_to_import)
 outcome_1
 
 df_plot_1 <- outcome_1 %>%
+	mutate(proportion = numOutcome/numEligible) %>%
 	rename("value" = proportion) %>%
-	filter(stratifier == "overall")
+	filter(stratifier == "overall") 
 	
 # Week
 figure1 <- ggplot(df_plot_1, aes(x = time, y = value)) +
@@ -77,7 +78,6 @@ df_plot2 <- Plot_fmt %>%
 	left_join(Plot_2020, by = "week") %>%
 	mutate(plotWeek = as.Date("1991-01-01")+(week*7)) 
 
-	
 figure_1b <- ggplot(df_plot2, aes(x = plotWeek, y = value, group = year)) +
 	geom_line(data = filter(df_plot2, year == 2017), alpha = 0.2) + 
 	geom_line(data = filter(df_plot2, year == 2018), alpha = 0.2) + 
@@ -107,11 +107,11 @@ figure_1c <- ggplot(df_plot3, aes(x = as.Date("1991-01-01")+(30*month), y = valu
 	theme_classic()
 
 cowplot::plot_grid(figure1, figure_1b ,figure_1c, ncol = 3)
-#ggsave(cowplot::plot_grid(figure1, figure_1b ,figure_1c, ncol = 3), file = "graphfiles/figure1_options_depression.pdf", width = 8, height = 6)
-#ggsave(figure_1b, file = "graphfiles/figure1_options_depression_B.pdf", width = 8, height = 6)
+ggsave(cowplot::plot_grid(figure1, figure_1b ,figure_1c, ncol = 3), file = paste0("graphfiles/figure1_options_",outcome_of_interest,".pdf"), width = 8, height = 6)
+ggsave(figure_1b, file = paste0("graphfiles/figure1_B_",outcome_of_interest,".pdf"), width = 8, height = 6)
 
 # do plot 1b by strata ----------------------------------------------------
-strata_group <- "age"
+plot_strata <- function(strata_group = "age"){
 
 plot_strata <- outcome_1 %>%
 	rename("value" = proportion) %>%
@@ -150,7 +150,7 @@ figure_1_strata <- ggplot(df_plot2_strata, aes(x = plotWeek, y = value, group = 
 	theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
 	#scale_color_manual(values = c("1" = "deeppink", "2" = "Blue")) +
 	theme_classic()
-figure_1_strata
+#figure_1_strata
 
 df_plot3_strata <- df_plot2_strata %>%
 	mutate(month = month(weekDate))
@@ -163,4 +163,12 @@ figure_1c_strata <- ggplot(df_plot3_strata, aes(x = as.Date("1991-01-01"), y = v
 	labs(x = "Time", y = "Proportion Overall", title = str_to_title(outcome_of_interest), colour = strata_group) +
 	theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
 	theme_classic()
-#ggsave(figure_1c_strata, file = "graphfiles/figure1_options_depression_age.pdf", width = 8, height = 6)
+figure_1c_strata
+}
+unique(outcome_1$stratifier)
+plot_strata(strata_group = "age")
+ggsave(file = paste0("graphfiles/figure1_strata_",outcome_of_interest,"_age.pdf"), width = 8, height = 6)
+plot_strata(strata_group = "gender")
+ggsave(file = paste0("graphfiles/figure1_strata_",outcome_of_interest,"_gender.pdf"), width = 8, height = 6)
+plot_strata(strata_group = "region")
+ggsave(file = paste0("graphfiles/figure1_strata_",outcome_of_interest,"_region.pdf"), width = 8, height = 6)
