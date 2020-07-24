@@ -29,16 +29,16 @@ clear
 
 cd "$defineDir"
  
-cleanDefine, keyword(depression) enddate(10jul2020)
+cleanDefine, keyword(selfharm) enddate(10jul2020)
 * ------------------------------------------------------------------------------
 * Load outcome data 
 * ------------------------------------------------------------------------------
 
 * Load outcome data
-use "$dataDir\generic_depression_Outcomes", replace // to be update to diabetes_outcomess
+use "$dataDir\generic_selfharm_Outcomes.dta", replace // to be update to diabetes_outcomess
 
 * Generate weekly outcome data
-weeklyOutcome, startdate(01jan2017) enddate(10jul2020) lockdown(23mar2020) study(depression) outcomegap(2)
+weeklyOutcome, startdate(01jan2017) enddate(10jul2020) lockdown(23mar2020) study(selfharm) outcomegap(2)
 
 * ------------------------------------------------------------------------------
 * Prepare csv for figures
@@ -47,10 +47,10 @@ weeklyOutcome, startdate(01jan2017) enddate(10jul2020) lockdown(23mar2020) study
 * Merge and export as .csv
 clear
 * Load denominator data
-use "$dataDir\cr_depression_weekly_denoms.dta", replace
+use "$dataDir\cr_selfharm_weekly_denoms.dta", replace
 
 * Merge outcome data
-merge 1:1 weekDate category stratifier using "$dataDir\cr_depression_weekly_outcomes.dta", keepusing(numOutcome) 
+merge 1:1 weekDate category stratifier using "$dataDir\cr_selfharm_weekly_outcomes.dta", keepusing(numOutcome) 
 
 * Keep consistent dates between the two datasets
 keep if _merge==3
@@ -59,5 +59,5 @@ drop _merge
 gen proportion = numOutcome/numEligible
 drop numOutcome numEligible
 
-export delimited using "$dataDir\an_depression.csv", replace
-export delimited using "Z:\Documents\COVID-Collateral\data\an_depression.csv", replace
+export delimited using "$dataDir\an_selfharm.csv", replace
+export delimited using "Z:\Documents\COVID-Collateral\data\an_selfharm.csv", replace

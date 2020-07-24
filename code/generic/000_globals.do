@@ -15,7 +15,7 @@ global logDir "$projectDir\logfiles\diabetes"
 global denomDir "J:\EHR Share\3 Database guidelines and info\CPRD Aurum\Denominator files\2020_05"
 
 * Define files
-global defineDir "J:\EHR-Working\Helena\Collateral\feasibility counts\Depression\CarreiraH20200624145146\355749.depression_Define_Inc1_Observation_001_20200624113532.txt"
+global defineDir "J:\EHR-Working\Helena\Collateral\feasibility counts\Selfharm\CarreiraH20200624210511\355813.selfharm_Define_Inc1_Observation_001.txt"
 
 
 
