@@ -26,6 +26,7 @@ noi di ""
 noi di as text "***********************************************************************" 
 noi di as text "Import and clean data" 	
 
+local i = 1
 * Import extracts and clean data
 foreach f of local list {
 qui import delimited "`f'", encoding(ISO-8859-2) stringcols(_all) clear
@@ -45,7 +46,8 @@ qui bysort patid eventdate : gen dupFlag = _n
 qui keep if dupFlag == 1 
 qui drop dupFlag
 
-qui save "$dataDir\tempData`f'.dta", replace //changed from `i' by RM
+qui save "$dataDir\tempData`i'.dta", replace 
+local i = `i' + 1
 
 }
 noi di ""
@@ -54,21 +56,20 @@ noi di as text "Append individual outcome files "
 noi di as text ""
 * Append all tempfiles
 if `num' > 1 { 
-	foreach i in 1/`num' of local list {
-		qui append using "$dataDir\tempData`f'.dta"
-		qui save "$dataDir\generic_`keyword'_Outcomes.dta", replace
+	forvalues i = 1/`num'  {
+		qui append using "$dataDir\tempData`i'.dta"
+		qui save "$dataDir\cr_`keyword'_outcomes.dta", replace
 	}
 }
 else if `num' == 1 {
     noi di "There is only 1 file"
-	qui save "$dataDir\generic_`keyword'_Outcomes.dta", replace
+	qui save "$dataDir\cr_`keyword'_outcomes.dta", replace
 }
 
 * Clean up unecessary files
 cd "$dataDir\"
-local list : dir . files "tempData*.dta"
-foreach f of local list {
-    erase "`f'"
+forvalues i = 1/`num' {
+    erase "tempData`i'.dta"
 }
 
 noi di as text "...Completed " 
@@ -77,7 +78,7 @@ noi di as text "****************************************************************
 noi di as text "Save output " 	
 noi di as text ""
 noi di as result "Summary outcome file: "
-noi di as result "$dataDir\generic_`keyword'_Outcomes.dta"
+noi di as result "$dataDir\cr_`keyword'_outcomes.dta"
 *
 * ------------------------------------------------------------------------------
 end

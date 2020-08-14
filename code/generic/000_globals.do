@@ -12,7 +12,7 @@ global logDir "$projectDir\logfiles\diabetes"
 # Data in
 *******************************************************************************/
 * Denominator files
-global denomDir "J:\EHR Share\3 Database guidelines and info\CPRD Aurum\Denominator files\2020_05"
+global denomDir "J:\EHR Share\3 Database guidelines and info\CPRD Aurum\Denominator files\2020_08"
 
 * Define files
 *global defineDir "J:\EHR-Working\Sinead_Covid_Collaterol\datafiles\CarreiraH20200608122823\"
@@ -29,7 +29,7 @@ global pathLookUpsAurum		"J:\EHR Share\3 Database guidelines and info\CPRD Aurum
 /*******************************************************************************
 # Data out
 *******************************************************************************/
-global dataDir "$projectDir\datafiles\diabetes"
+global dataDir "$projectDir\datafiles\2020_08\diabetes"
 global estimateDir "$projectDir\estimatefiles" /*estimates from regression models*/
-global graphDir "$projectDir\graphfiles\diabetes" /*tables and graphs exported from Stata in form used for manuscript*/
+global graphDir "$projectDir\graphfiles\diabetes\2020_08" /*tables and graphs exported from Stata in form used for manuscript*/
 global pathCodelists "$projectDir\codelists" /*codelists*/

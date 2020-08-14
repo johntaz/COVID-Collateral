@@ -84,7 +84,24 @@ qui {
 	cap drop studyDay
 	cap label drop genderLab
 	cap label drop ageLab
-	
+
+gen regstartdate2 = date(regstartdate, "DMY")
+drop regstartdate
+rename regstartdate2 regstartdate
+format regstartdate %td
+
+gen regenddate2 = date(regenddate, "DMY")
+drop regenddate
+rename regenddate2 regenddate
+format regenddate %td
+
+gen lcd2 = date(lcd, "DMY")
+drop lcd
+rename lcd2 lcd
+format lcd %td
+
+format lcd %td
+
 gen obsStart = regstartdate + 365.25 
 format obsStart %td
 
