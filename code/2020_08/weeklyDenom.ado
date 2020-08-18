@@ -55,7 +55,7 @@ noi di ""
 noi di as text "Restricting to diabetes denominator population..."
 noi di as text "***********************************************************************" 
 
-qui merge 1:1 patid using "diabetesType.dta", keep(match) nogen keepusing(patid) // update to include type
+qui merge 1:1 patid using "$diabDataDir\diabetesType.dta", keep(match) nogen keepusing(patid) // update to include type
 }
 
 * Restrict to respiratory population  // TO BE ADDED
@@ -66,7 +66,7 @@ noi di ""
 noi di as text "Restricting to respiratory data..."
 noi di as text "***********************************************************************" 
 
-qui merge 1:1 patid using "diabetesType.dta", keep(match) nogen
+qui merge 1:1 patid using "$diabDataDir\diabetesType.dta", keep(match) nogen
 
 }
 
@@ -170,7 +170,7 @@ assert studyDay > 0
 merge 1:1 patid using "$ethnDataDir\ethnicity_define.dta" 
 drop if _merge==2
 replace eth5 = 5 if _merge==1 
-rename eth5 eth6
+rename eth5 ethnicity
 drop _merge
 }
 

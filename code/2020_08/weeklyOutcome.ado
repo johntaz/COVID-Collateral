@@ -72,7 +72,7 @@ qui merge m:1 patid using "$denomDir\cr_`study'_strat_summary.dta", keep(match) 
 if "`study'" != "diabetes" & "`study'" != "resp" {
 noi di ""	
 noi di as text "Using full Aurum population..."
-qui merge m:1 patid using "cr_overall_strat_summary.dta", keep(match) nogen
+qui merge m:1 patid using "$denomDir\cr_overall_strat_summary.dta", keep(match) nogen
 }
 
 
