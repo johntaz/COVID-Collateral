@@ -1,7 +1,8 @@
 * Define ethnicity stratifier
 * Author - john tazare
-clear
+
 forvalues i = 1/3 {
+clear
 import delimited "J:\EHR-Working\Sinead_Covid_Collaterol\datafiles\2020_08\ethnicity\ethnicity_Define_Inc1_Observation_00`i'.txt", encoding(ISO-8859-2) stringcols(1 3)
 merge m:1 medcode using"J:\EHR-Working\Sinead_Covid_Collaterol\datafiles\2020_08\202008_medDict"
 keep if _merge == 3
@@ -21,7 +22,7 @@ gen date2 = date(eventdate, "DMY")
 format date2 %td
 drop if date2==.
 drop eventdate
-rename eventdate
+
 rename date2 eventdate
 
 
@@ -37,7 +38,7 @@ isid patid
 keep patid eventdate eth5
 
 tab eth5
-save "J:\EHR-Working\Sinead_Covid_Collaterol\datafiles\2020_08\ethnicity_define_`i'.dta", replace 
+save "J:\EHR-Working\Sinead_Covid_Collaterol\datafiles\2020_08\ethnicity_define_`i'.dta", replace
 }
 
 
