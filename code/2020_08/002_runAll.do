@@ -114,18 +114,73 @@ weeklyOutcome, startdate(01jan2017) enddate(10aug2020) lockdown(23mar2020) study
 * Prepare csv for figures
 * ------------------------------------------------------------------------------
 
-/* Merge and export as .csv
-clear
-* Load denominator data
-use "$dataDir\cr_diabetes_weekly_denoms.dta", replace
+* Cardiovascular
+cd "$cardioDataDir"
+local outcomes "cba ua hf mi tia vte"
+foreach l of local outcomes {
+	use "$denomDir\cr_overall_weekly_denoms.dta", clear
 
 * Merge outcome data
-merge 1:1 weekDate category stratifier using "$dataDir\cr_diabetes_weekly_outcomes.dta", keepusing(numOutcome) 
+merge 1:1 weekDate category stratifier using "$cardioDataDir\cr_`l'_weekly_outcomes.dta", keepusing(numOutcome) 
 
 * Keep consistent dates between the two datasets
 keep if _merge==3
 drop _merge
 
-export delimited using "$dataDir\an_diabetes.csv", replace*/
+keep if weekDate < td(19jul2020)
+
+export delimited using "$graphData\an_`l'.csv", replace
+}
+
+* Diabetes
+cd "$diabDataDir"
+use "$denomDir\cr_diabetes_weekly_denoms.dta", clear
+
+* Merge outcome data
+merge 1:1 weekDate category stratifier using "$diabDataDir\cr_diabetes_weekly_outcomes.dta", keepusing(numOutcome) 
+
+* Keep consistent dates between the two datasets
+keep if _merge==3
+drop _merge
+
+keep if weekDate < td(19jul2020)
+
+export delimited using "$graphData\an_diabetes.csv", replace
+
+
+* Mental Health
+cd "$mentalDataDir"
+local outcomes "anxiety depression feedingdisorders ocd selfharm smi"
+foreach l of local outcomes {
+	use "$denomDir\cr_overall_weekly_denoms.dta", clear
+
+* Merge outcome data
+merge 1:1 weekDate category stratifier using "$mentalDataDir\cr_`l'_weekly_outcomes.dta", keepusing(numOutcome) 
+
+* Keep consistent dates between the two datasets
+keep if _merge==3
+drop _merge
+
+keep if weekDate < td(19jul2020)
+
+export delimited using "$graphData\an_`l'.csv", replace
+}
+
+
+* Alcohol
+cd "$alcDataDir" 
+* Load denominator data
+use "$denomDir\cr_overall_weekly_denoms.dta", clear
+
+* Merge outcome data
+merge 1:1 weekDate category stratifier using "$alcDataDir\cr_alcohol_weekly_outcomes.dta", keepusing(numOutcome) 
+
+* Keep consistent dates between the two datasets
+keep if _merge==3
+drop _merge
+
+keep if weekDate < td(19jul2020)
+
+export delimited using "$graphData\an_alcohol.csv", replace
 
 

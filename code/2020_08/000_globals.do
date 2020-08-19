@@ -27,3 +27,11 @@ global mentalDataDir "$projectDir\datafiles\2020_08\mental"
 global alcDataDir "$projectDir\datafiles\2020_08\alcohol"
 
 * diabetes type to added (and path updated in code)
+
+/*******************************************************************************
+# Data out
+*******************************************************************************/
+
+* Graph output 
+* Stratifier info
+global graphData "$projectDir\datafiles\2020_08\graphdata"
