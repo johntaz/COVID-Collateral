@@ -1,18 +1,22 @@
+#pacman::p_load(shiny, shinythemes, dplyr, rmarkdown, ggplot2, here)
 library(shiny)
 library(shinythemes)
 library(dplyr)
-#library(tidyr)
 library(rmarkdown)
 library(ggplot2)
 library(here)
 here()
 
 # load data ---------------------------------------------------------------
-data_files <- list.files(here::here("data/"), pattern = "*RData")
-lapply(here::here("data",data_files), load,.GlobalEnv)
+#data_files <- list.files(here::here("../../../data/"), pattern = "*.csv")
+data_file <- list.files(here::here("data/"), pattern = "*.RData")
+lapply(here::here("data",data_file), load,.GlobalEnv)
 
-# build main database to plot that groups everything ----------------------
-stratifiers <- stringr::str_to_title(c("gender", "age", "region"))
+## get unique levels to label choice boxes in app
+ethnicity_choice <- unique(filter(refactored_shiny, stratifier == "ethnicity")$category) %>% as.list()
+gender_choice <- unique(filter(refactored_shiny, stratifier == "gender")$category) %>% as.list()
+region_choice <- unique(filter(refactored_shiny, stratifier == "region")$category) %>% as.list()
+age_choice <- unique(filter(refactored_shiny, stratifier == "age")$category) %>% as.list()
 
 apptitle <- "COVID-Collateral"
 
@@ -39,7 +43,6 @@ theme_collateral <- function (base_size = 11, base_family = ""){
 	)
 }
 
-
 # user interface ----------------------------------------------------------
 ui <- shinyUI(
 	navbarPage(
@@ -59,8 +62,9 @@ ui <- shinyUI(
 						 		helpText("Data can be shown for several outcomes simultaneously or one at a time by checking the boxes below"),
 						 		checkboxGroupInput("var", 
 						 											 label = "Choose outcome variables to display", 
-						 											 choices = as.list(unique(figureAge_shiny$outcome)),
-						 											 selected = as.list(unique(figureAge_shiny$outcome))[[1]]),
+						 											 choices = as.list(unique(refactored_shiny$outcome)),
+						 											 selected = as.list(unique(refactored_shiny$outcome))[[1]]
+						 											 ),
 						 		dateRangeInput("dates", 
 						 									 label = "Date range:", 
 						 									 start = "2017-01-01", 
@@ -75,6 +79,16 @@ ui <- shinyUI(
 						 	## make the main panel
 						 	mainPanel(
 						 		tabsetPanel(id = "stratifier",
+						 		tabPanel("Overall",
+					 								sidebarLayout(
+					 									position = "left",
+					 									sidebarPanel("Outcome totals"
+					 									),
+					 									mainPanel(
+					 										plotOutput("mainplot1")
+					 									)
+					 								)
+						 				),
 						 		tabPanel("Age",
 						 						 sidebarLayout(
 						 						 	position = "left",
@@ -82,11 +96,12 @@ ui <- shinyUI(
 						 						 		selectInput("labAge", 
 						 						 								multiple = TRUE,
 						 						 								label = "Age", 
-						 						 								choices = as.list(unique(figureAge_shiny$labels)),
-						 						 								selected = as.list(unique(figureAge_shiny$labels)))
+						 						 								choices = age_choice,
+						 						 								selected = age_choice
+						 						 								)
 						 						 	),
 						 						 	mainPanel(
-						 								plotOutput("mainplot1")
+						 								plotOutput("mainplot2")
 						 						 )
 						 					)
 						 				),
@@ -97,11 +112,12 @@ ui <- shinyUI(
 						 						 		selectInput("labRegion", 
 						 						 								multiple = TRUE,
 						 						 								label = "Region", 
-						 						 								choices = as.list(unique(figureRegion_shiny$labels)),
-						 						 								selected = as.list(unique(figureRegion_shiny$labels)))
+						 						 								choices = region_choice,
+						 						 								selected = region_choice
+						 						 								)
 						 						 	),
 						 						 	mainPanel(
-						 								plotOutput("mainplot2")
+						 								plotOutput("mainplot3")
 						 						 )
 						 					)
 						 				),
@@ -112,18 +128,42 @@ ui <- shinyUI(
 						 						 		selectInput("labGender", 
 						 						 								multiple = TRUE,
 						 						 								label = "Gender", 
-						 						 								choices = as.list(unique(figureGender_shiny$labels)),
-						 						 								selected = as.list(unique(figureGender_shiny$labels)))
+						 						 								choices = gender_choice,
+						 						 								selected = gender_choice
+						 						 		)
 						 						 	),
 						 						 	mainPanel(
-						 								plotOutput("mainplot3")
+						 								plotOutput("mainplot4")
 						 						 )
 						 					)
-						 				)
+						 				),
+						 		tabPanel("Ethnicity",
+						 						 sidebarLayout(
+						 						 	position = "left",
+						 						 	sidebarPanel(
+						 						 		selectInput("labEthnicity", 
+						 						 								multiple = TRUE,
+						 						 								label = "Ethnicity", 
+						 						 								choices = ethnicity_choice,
+						 						 								selected = ethnicity_choice
+						 						 		)
+						 						 	),
+						 						 	mainPanel(
+						 						 		plotOutput("mainplot5")
+						 						 	)
+						 						 )
+						 		)
 						 		)
 						 		)
 						 )
 					),
+		tabPanel("Simple results",
+						 fluidRow(
+						 	column(8,
+						 				 includeMarkdown(here::here("simple_plot.md"))
+						 	)
+						 )
+		),
 		tabPanel("About",
 						 fluidRow(
 						 	column(8,
@@ -142,13 +182,8 @@ server <- function(input, output, session){
 	})  
 	## define df to plot as reactive
 	df_shiny <- reactive({
-		data <- if (input$stratifier == "Age") {
-			figureAge_shiny
-		} else if (input$stratifier == "Region"){
-			figureRegion_shiny
-		} else if (input$stratifier == "Gender"){
-			figureGender_shiny
-		}
+		data <- refactored_shiny %>%
+			filter(stratifier == stringr::str_to_lower(input$stratifier))
 
 		labs_to_find <- if (input$stratifier == "Age") {
 			input$labAge
@@ -156,13 +191,15 @@ server <- function(input, output, session){
 			input$labRegion
 		} else if (input$stratifier == "Gender"){
 			input$labGender
-		}
+		} else if (input$stratifier == "Ethnicity"){
+			input$labEthnicity
+		} else (1)
 		
 		df_shiny <- data %>% 
-			filter(weekDate >= format(input$dates[1]) & weekDate <= format(input$dates[2])) %>% 
-			filter(labels %in% labs_to_find) %>%
+			filter(weekPlot >= format(input$dates[1]) & weekPlot <= format(input$dates[2])) %>% 
+			filter(category %in% labs_to_find) %>%
 			filter(outcome %in% input$var) %>%
-			mutate_at("labels", ~as.factor(.))
+			mutate_at("category", ~as.factor(.))
 	})
 		
 	## set up reactive values to store plot
@@ -170,28 +207,30 @@ server <- function(input, output, session){
 	
 	## if runPlot button is pressed then build the plot
 	observeEvent(input$runPlot, {
-		v$plot <- ggplot(df_shiny(), aes(x=weekDate, y=model_out, group = labels, colour = labels)) +
+		v$plot <- ggplot(df_shiny(), aes(x=weekPlot, y=model_out, group = category, colour = category)) +
 			geom_line() +
 			xlab("Date") +
 			ylab("Proportion Overall") +
 			theme(axis.text.x = element_text(angle=60, hjust=1)) +
-			labs(colour = "Region") +
-			facet_wrap(~outcome, ncol = 3) +
+			#labs(colour = "Region") +
+			facet_wrap(~outcome, ncol = 3, scales = "free") +
 			theme_collateral()
 	})
 	
 	output$mainplot1 <- renderPlot({
 		if (is.null(v$plot)) return()
 		if(input$lockdownLine) {
-			v$plot + geom_vline(xintercept = as.Date("2020-03-28"), linetype = "dashed", col = 2)
+			v$plot + geom_vline(xintercept = as.Date("2020-03-16"), linetype = "dashed", col = 2) +
+				theme(legend.position = "none")
 		}else{
-			v$plot
+			v$plot +
+				theme(legend.position = "none")
 		}
 	})
 	output$mainplot2 <- renderPlot({
 		if (is.null(v$plot)) return()
 		if(input$lockdownLine) {
-			v$plot + geom_vline(xintercept = as.Date("2020-03-28"), linetype = "dashed", col = 2)
+			v$plot + geom_vline(xintercept = as.Date("2020-03-16"), linetype = "dashed", col = 2)
 		}else{
 			v$plot
 		}
@@ -199,7 +238,23 @@ server <- function(input, output, session){
 	output$mainplot3 <- renderPlot({
 		if (is.null(v$plot)) return()
 		if(input$lockdownLine) {
-			v$plot + geom_vline(xintercept = as.Date("2020-03-28"), linetype = "dashed", col = 2)
+			v$plot + geom_vline(xintercept = as.Date("2020-03-16"), linetype = "dashed", col = 2)
+		}else{
+			v$plot 
+		}
+	})
+	output$mainplot4 <- renderPlot({
+		if (is.null(v$plot)) return()
+		if(input$lockdownLine) {
+			v$plot + geom_vline(xintercept = as.Date("2020-03-16"), linetype = "dashed", col = 2)
+		}else{
+			v$plot
+		}
+	})
+	output$mainplot5 <- renderPlot({
+		if (is.null(v$plot)) return()
+		if(input$lockdownLine) {
+			v$plot + geom_vline(xintercept = as.Date("2020-03-16"), linetype = "dashed", col = 2)
 		}else{
 			v$plot
 		}
