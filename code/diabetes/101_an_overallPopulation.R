@@ -17,11 +17,11 @@ library(lubridate)
 #---------------------------------------------------------------------------------------
 #  Import data
 #---------------------------------------------------------------------------------------
-setwd("~/Documents/COVID-collateral/")
+setwd("J:/EHR-Working/Sinead_Covid_Collaterol/datafiles")
 
-diabetesOverall <- read_csv("data/an_diabetesOverall.csv") %>%
-  mutate_at(vars(weekDate), dmy) # convert to date
-
+diabetesOverall <- read_csv("J:/EHR-Working/Sinead_Covid_Collaterol/datafiles/2020_08/diabetes/an_diabetes.csv") %>%
+  mutate_at(vars(weekDate), dmy)  %>% 
+  filter(numOutcome > 23)
 #---------------------------------------------------------------------------------------
 # Analysis ignoring seasonal trend
 #--------------------------------------------------------------------------------------
@@ -31,7 +31,7 @@ model1 <- glm(outcome ~ time * lockdown, data = diabetesOverall, family = binomi
 summary(model1)
 
 lockdownWeek <- diabetesOverall %>%
-  filter(weekDate == date("2020-03-15")) # week 167 is lockdown
+  filter(weekDate == date("2020-03-22")) # week 167 is lockdown
 
 # figure
 figure1 <- ggplot(diabetesOverall, aes(x = time, y = model1$y)) +
@@ -42,7 +42,7 @@ figure1 <- ggplot(diabetesOverall, aes(x = time, y = model1$y)) +
   theme_classic() +
   theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
   scale_x_continuous(
-    breaks = c(0, 52, 104, 156, 167, 208),
+    breaks = c(0, 52, 104, 156, 168, 208),
     labels = c("2017", "2018", "2019", "2020", "Lockdown", "2021")
   ) +
   geom_vline(xintercept = 167, linetype = "dashed")
