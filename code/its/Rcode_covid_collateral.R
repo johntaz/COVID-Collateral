@@ -30,7 +30,7 @@ outcomes <- stringr::str_remove_all(all_files, c("an_|.csv"))
 
 ## this bit is all manual and shit for now
 outcome_of_interest_namematch <- bind_cols("outcome" = outcomes, 
-																					 "outcome_name" = sort(c("Alcohol", "Anxiety", "Asthma", "COPD", "Cerebrovascular Accident", "Depression", "Diabetes", "Feeding Disortders", "Heart Failure", "Myocardial Infarction", "OCD", "Self-harm", "Severe Mental Illness", "Transient Ischaemic Attacks", "Unstable Angina", "Venous Thromboembolism"))
+																					 "outcome_name" = sort(c("Alcohol", "Anxiety", "Asthma", "COPD", "Cerebrovascular Accident", "Depression", "Diabetes", "Feeding Disorders", "Heart Failure", "Myocardial Infarction", "OCD", "Self-harm", "Severe Mental Illness", "Transient Ischaemic Attacks", "Unstable Angina", "Venous Thromboembolism"))
 )
 # load data ---------------------------------------------------------------
 for(ii in 1:length(outcomes)){
@@ -206,10 +206,10 @@ its_function <- function(outcomes_vec = outcomes,
 			# the data
 			geom_line(col = "gray60") +
 			# the probability if therer was no lockdwon
-			geom_line(aes(y = probline_noLdn), col = 2, lty = 2) +
+			#geom_line(aes(y = probline_noLdn), col = 2, lty = 2) +
 			# probability with model zeroed (inc. std. error)
-			geom_line(aes(y = probline_0), col = 2, lty = 2) +
-			geom_ribbon(aes(ymin = lci0, ymax=uci0), fill = alpha(2,0.4), lty = 0) +
+			#geom_line(aes(y = probline_0), col = 2, lty = 2) +
+			#geom_ribbon(aes(ymin = lci0, ymax=uci0), fill = alpha(2,0.4), lty = 0) +
 			# probability with model (inc. std. error)
 			geom_line(aes(y = predicted_vals), col = 4, lty = 2) +
 			geom_ribbon(aes(ymin = lci, ymax=uci), fill = alpha(4,0.4), lty = 0) +
@@ -217,7 +217,7 @@ its_function <- function(outcomes_vec = outcomes,
 			facet_wrap(~outcome_name, scales = "free", ncol = 4) +
 			geom_vline(xintercept = c(start_lockdown, 
 																start_lockdown + (7*lockdown_adjustment_period_wks)), col = 1, lwd = 1) + # 2020-04-05 is first week/data After lockdown gap
-			geom_vline(xintercept = c(end_post_lockdown_period), col = 1, lwd = 0.5, lty = 2) + # 2020-04-05 is first week/data After lockdown gap
+			#geom_vline(xintercept = c(end_post_lockdown_period), col = 1, lwd = 0.5, lty = 2) + # 2020-04-05 is first week/data After lockdown gap
 			labs(x = "Date", y = "Proportion of people consulting for outcome", title = "") + # stringr::str_to_title(outcome)) +
 			theme_classic() +
 			theme(axis.text.x = element_text(angle = 60, hjust = 1),
@@ -273,15 +273,16 @@ its_function <- function(outcomes_vec = outcomes,
 		
 		# Export plot -------------------------------------------------------------
 		layout = "
-			AAAAAAB
-			AAAAAAB
-			AAAAAAB
+			AAAAAAAAB
+			AAAAAAAAB
+			AAAAAAAAB
 			"
 		plot1 + fp + 
 			plot_layout(design = layout) +
-			plot_annotation('Quantifying the reduction in GP consultations over lockdown', subtitle = 'An interrupted time series analysis',
-											caption = "A - full model; B - estimated reduction in consultations during lockdown",
-											tag_levels = 'A')
+			plot_annotation(tag_levels = 'A')
+			#plot_annotation('Quantifying the reduction in GP consultations over lockdown', subtitle = 'An interrupted time series analysis',
+			#								caption = "A - full model; B - estimated reduction in consultations during lockdown",
+			#								tag_levels = 'A')
 }
 
 its_function(outcomes_vec = outcomes, 
