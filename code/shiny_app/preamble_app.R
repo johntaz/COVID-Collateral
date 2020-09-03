@@ -19,8 +19,7 @@ for(ii in 1:length(data_files)){
 
 ## delete old file types that had prooportion
 shiny_file <- shiny_file %>%
-	filter(!is.na(numOutcome)) %>%
-	select(-proportion)
+	filter(!is.na(numOutcome)) 
 
 ## create proportion and a proper R object for date
 shiny_file <- shiny_file %>% 
@@ -29,16 +28,30 @@ shiny_file <- shiny_file %>%
 	mutate(weekPlot = (time*7) + as.Date("2017-01-01")) 
 
 # build main database to plot that groups everything ----------------------
-stratifiers <- stringr::str_to_title(c("gender", "age", "region"))
+stratifiers <- stringr::str_to_title(c("gender", "age", "region", "ethnicity"))
 strats <- unique(shiny_file$stratifier)
 strats <- strats[strats!="overall"]
 ## ethnicity 
 ## gender
 ## region
 ## age
-ethnicity_cats <- c(paste0("cat", 0:5))
-gender_cats <- c(paste0("gender", 1:2))
-region_cats <- c(paste0("region", 1:11))
+#ethnicity_cats <- c(paste0("cat", 0:5))
+ethnicity_cats <- c("White", "South Asian", "Black", "Other", "Mixed", "Missing")
+#gender_cats <- c(paste0("gender", 1:2))
+gender_cats <- c("Female", "male")
+#region_cats <- c(paste0("region", 1:11))
+region_cats <- c("North East" ,
+								 "North West" ,
+								 "Yorkshire And The Humber" ,
+								 "East Midlands" ,
+								 "West Midlands" ,
+								 "East of England" ,
+								 "South West" ,
+								 "South Central" ,
+								 "London" ,
+								 "South East Coast" ,
+								 "Northern Ireland")
+
 age_cats <- c("(0-10]","(10-20]","(20-30]","(30-40]","(40-50]","(50-60]","(60-70]","(70-80]","(80-90]","90+")
 categories <- list( ## careful of the order  here -- has to match the order of "strats" i.e. alphabetical
 	ethnicity = ethnicity_cats,
