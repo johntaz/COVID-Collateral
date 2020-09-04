@@ -4,14 +4,14 @@
 * Add extra adopath 
 * ------------------------------------------------------------------------------
 * update to where repo is cloned
-*adopath + "Z:\Desktop\COVID-Collateral\code\2020_08"
-adopath + "V:\VolumeQ\Diabetic Retinopathy Extract\COVID-19\COVID-Collateral\code\2020_08"
+adopath + "Z:\Desktop\COVID-Collateral\code\2020_08"
+*adopath + "V:\VolumeQ\Diabetic Retinopathy Extract\COVID-19\COVID-Collateral\code\2020_08"
 * ------------------------------------------------------------------------------
 * Run Globals
 * ------------------------------------------------------------------------------
 * update to where repo is cloned
-*do "Z:\Desktop\COVID-Collateral\code\2020_08\000_globals.do"
-do "V:\VolumeQ\Diabetic Retinopathy Extract\COVID-19\COVID-Collateral\code\2020_08\000_globals.do"
+do "Z:\Desktop\COVID-Collateral\code\2020_08\000_globals.do"
+*do "V:\VolumeQ\Diabetic Retinopathy Extract\COVID-19\COVID-Collateral\code\2020_08\000_globals.do"
 
 * ------------------------------------------------------------------------------
 * Generate weekly denominators
@@ -25,6 +25,15 @@ weeklyDenom, startdate(01jan2017) enddate(10aug2020) lockdown(23mar2020) study(d
 * overall 
 use "$aurumDenomDir\202008_CPRDAurum_AcceptablePats.dta", replace
 weeklyDenom, startdate(01jan2017) enddate(10aug2020) lockdown(23mar2020) study(overall)
+
+* asthma 
+use "$aurumDenomDir\202008_CPRDAurum_AcceptablePats.dta", replace
+weeklyDenom, startdate(01jan2017) enddate(10aug2020) lockdown(23mar2020) study(asthma)
+
+* copd 
+use "$aurumDenomDir\202008_CPRDAurum_AcceptablePats.dta", replace
+weeklyDenom, startdate(01jan2017) enddate(10aug2020) lockdown(23mar2020) study(copd)
+
 
 * ------------------------------------------------------------------------------
 * Clean outcome data
@@ -109,6 +118,16 @@ cd "$alcDataDir"
 use "cr_alcohol_outcomes"
 weeklyOutcome, startdate(01jan2017) enddate(10aug2020) lockdown(23mar2020) study(alcohol) outcomegap(2)
 
+* Asthma
+cd "$asthmaDataDir"
+use "cr_asthma_outcomes"
+weeklyOutcome, startdate(01jan2017) enddate(10aug2020) lockdown(23mar2020) study(asthma) outcomegap(2)
+
+* COPD
+cd "$copdDataDir"
+use "cr_copd_outcomes"
+weeklyOutcome, startdate(01jan2017) enddate(10aug2020) lockdown(23mar2020) study(copd) outcomegap(2)
+
 
 * ------------------------------------------------------------------------------
 * Prepare csv for figures
@@ -182,5 +201,39 @@ drop _merge
 keep if weekDate < td(19jul2020)
 
 export delimited using "$graphData\an_alcohol.csv", replace
+
+* Asthma
+cd "$asthmaDataDir" 
+* Load denominator data
+use "$denomDir\cr_asthma_weekly_denoms.dta", clear
+
+* Merge outcome data
+merge 1:1 weekDate category stratifier using "$asthmaDataDir\cr_asthma_weekly_outcomes.dta", keepusing(numOutcome) 
+
+* Keep consistent dates between the two datasets
+keep if _merge==3
+drop _merge
+
+keep if weekDate < td(19jul2020)
+
+export delimited using "$graphData\an_asthma.csv", replace
+
+
+* COPD
+cd "$copdDataDir" 
+* Load denominator data
+use "$denomDir\cr_copd_weekly_denoms.dta", clear
+
+* Merge outcome data
+merge 1:1 weekDate category stratifier using "$copdDataDir\cr_copd_weekly_outcomes.dta", keepusing(numOutcome) 
+
+* Keep consistent dates between the two datasets
+keep if _merge==3
+drop _merge
+
+keep if weekDate < td(19jul2020)
+
+export delimited using "$graphData\an_copd.csv", replace
+
 
 

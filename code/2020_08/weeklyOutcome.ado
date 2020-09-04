@@ -34,7 +34,7 @@ program define weeklyOutcome
 	if "`study'"!= "" {
 		noi di ""	
 		noi di as result "Study type chosen: `study' "
-		noi di as result "Note: Enter 'resp' or 'diabetes' if specifying these study types"
+		noi di as result "Note: Enter 'asthma', 'copd' or 'diabetes' if specifying these study types"
 		}
 	else {
 	noi di as error "Enter a study type"
@@ -56,20 +56,30 @@ noi di as text "Restricting to diabetes population..."
 qui merge m:1 patid using "$denomDir\cr_`study'_strat_summary.dta", keep(match) nogen
 }
 
-* Restrict to respiratory population  // TO BE ADDED
+* Restrict to asthma population  
 
-if "`study'" == "resp" {
+if "`study'" == "asthma" {
 
 noi di ""	
-noi di as text "Restricting to respiratory population..."
+noi di as text "Restricting to asthma population..."
+qui merge m:1 patid using "$denomDir\cr_`study'_strat_summary.dta", keep(match) nogen
 
+}
 
+* Restrict to copd population  
+
+if "`study'" == "copd" {
+
+noi di ""	
+noi di as text "Restricting to COPD population..."
 qui merge m:1 patid using "$denomDir\cr_`study'_strat_summary.dta", keep(match) nogen
 
 }
 
 
-if "`study'" != "diabetes" & "`study'" != "resp" {
+
+
+if "`study'" != "diabetes" & "`study'" != "asthma" & "`study'" != "copd" {
 noi di ""	
 noi di as text "Using full Aurum population..."
 qui merge m:1 patid using "$denomDir\cr_overall_strat_summary.dta", keep(match) nogen

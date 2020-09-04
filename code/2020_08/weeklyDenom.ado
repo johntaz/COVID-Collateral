@@ -35,7 +35,7 @@ program define weeklyDenom
 	if "`study'"!= "" {
 		noi di ""	
 		noi di as result "Study type chosen: `study' "
-		noi di as result "Note: Enter 'resp' or 'diabetes' if specifying these study types"
+		noi di as result "Note: Enter 'asthma', 'copd' or 'diabetes' if specifying these study types"
 		}
 	else {
 	noi di as error "Enter a study type"
@@ -58,20 +58,30 @@ noi di as text "****************************************************************
 qui merge 1:1 patid using "$diabDataDir\diabetesType.dta", keep(match) nogen keepusing(patid) // update to include type
 }
 
-* Restrict to respiratory population  // TO BE ADDED
+* Restrict to asthma population  
 
-if "`study'" == "resp" {
+if "`study'" == "asthma" {
 
 noi di ""	
-noi di as text "Restricting to respiratory data..."
+noi di as text "Restricting to asthma data..."
 noi di as text "***********************************************************************" 
 
-qui merge 1:1 patid using "$diabDataDir\diabetesType.dta", keep(match) nogen
+qui merge 1:1 patid using "$asthmaDataDir\asthma_dx.dta", keep(match) nogen keepusing(patid)
 
 }
+* Restrict to asthma population 
 
+if "`study'" == "copd" {
 
-if "`study'" != "diabetes" & "`study'" != "resp" {
+noi di ""	
+noi di as text "Restricting to COPD data..."
+noi di as text "***********************************************************************" 
+
+qui merge 1:1 patid using "$copdDataDir\copd_dx.dta", keep(match) nogen keepusing(patid)
+
+} 
+
+if "`study'" != "diabetes" & "`study'" != "asthma" & "`study'" != "copd" {
 noi di ""	
 noi di as text "Using full Aurum denominator population..."
 noi di as text "***********************************************************************" 
