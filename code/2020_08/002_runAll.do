@@ -26,6 +26,14 @@ weeklyDenom, startdate(01jan2017) enddate(10aug2020) lockdown(23mar2020) study(d
 use "$aurumDenomDir\202008_CPRDAurum_AcceptablePats.dta", replace
 weeklyDenom, startdate(01jan2017) enddate(10aug2020) lockdown(23mar2020) study(overall)
 
+* alcohol
+use "$aurumDenomDir\202008_CPRDAurum_AcceptablePats.dta", replace
+weeklyDenom, startdate(01jan2017) enddate(10aug2020) lockdown(23mar2020) study(alcohol)
+
+* cvd
+use "$aurumDenomDir\202008_CPRDAurum_AcceptablePats.dta", replace
+weeklyDenom, startdate(01jan2017) enddate(10aug2020) lockdown(23mar2020) study(cvd)
+
 * asthma 
 use "$aurumDenomDir\202008_CPRDAurum_AcceptablePats.dta", replace
 weeklyDenom, startdate(01jan2017) enddate(10aug2020) lockdown(23mar2020) study(asthma)
@@ -137,7 +145,7 @@ weeklyOutcome, startdate(01jan2017) enddate(10aug2020) lockdown(23mar2020) study
 cd "$cardioDataDir"
 local outcomes "cba ua hf mi tia vte"
 foreach l of local outcomes {
-	use "$denomDir\cr_overall_weekly_denoms.dta", clear
+	use "$denomDir\cr_cvd_weekly_denoms.dta", clear
 
 * Merge outcome data
 merge 1:1 weekDate category stratifier using "$cardioDataDir\cr_`l'_weekly_outcomes.dta", keepusing(numOutcome) 
@@ -189,7 +197,7 @@ export delimited using "$graphData\an_`l'.csv", replace
 * Alcohol
 cd "$alcDataDir" 
 * Load denominator data
-use "$denomDir\cr_overall_weekly_denoms.dta", clear
+use "$denomDir\cr_alcohol_weekly_denoms.dta", clear
 
 * Merge outcome data
 merge 1:1 weekDate category stratifier using "$alcDataDir\cr_alcohol_weekly_outcomes.dta", keepusing(numOutcome) 

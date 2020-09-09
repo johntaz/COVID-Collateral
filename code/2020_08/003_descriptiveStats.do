@@ -1,6 +1,6 @@
 cd "$graphData\"
 
-foreach t in alcohol copd asthma diabetes {
+foreach t in depression copd asthma diabetes {
 clear
 import delimited using "$graphData\an_`t'.csv"
     
@@ -35,7 +35,6 @@ label define varLab 0 "White" ///
 					5 "Missing" ///
 					101 "Female" ///
 					102 "Male" ///
-					10 "0 - 10" ///
 					20 "11 - 20" ///
 					30 "21 - 30" ///
 					40 "31 - 40" ///
@@ -67,7 +66,7 @@ restore
 }
 
 
-foreach t in alcohol copd asthma diabetes {
+foreach t in depression copd asthma diabetes {
 
     use "$graphData\table_`t'_2017", replace
 	
@@ -83,7 +82,7 @@ foreach t in alcohol copd asthma diabetes {
    erase "$graphData\table_`t'_2020.dta"
 }
 
-use "$graphData\table1_alcohol_pop", clear
+use "$graphData\table1_depression_pop", clear
      
   foreach t in copd asthma diabetes {
 	
