@@ -87,7 +87,8 @@ noi di as text "Using full Aurum denominator population..."
 noi di as text "***********************************************************************" 
 }
 
-qui {	
+qui {	cap drop age
+        Cap drop age group
 	cap drop obsStart 
 	cap drop obsEnd 
 	cap drop lcdDate 
@@ -181,7 +182,7 @@ label define ageLab 40 "31 - 40" ///
 label values agegroup ageLab	
 }
 
-else{
+if "`study'"!= "cvd" & "`study'" != "alcohol" {
 drop if age < 10 | age > 100 
 gen agegroup = 10*ceil(age/10 )
 label define ageLab 20 "10 - 20" ///
