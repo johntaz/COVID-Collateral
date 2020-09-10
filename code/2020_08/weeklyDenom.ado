@@ -87,8 +87,9 @@ noi di as text "Using full Aurum denominator population..."
 noi di as text "***********************************************************************" 
 }
 
-qui {	cap drop age
-        Cap drop age group
+qui {	
+	cap drop age
+        cap drop age group
 	cap drop obsStart 
 	cap drop obsEnd 
 	cap drop lcdDate 
