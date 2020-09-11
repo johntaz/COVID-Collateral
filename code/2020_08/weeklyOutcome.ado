@@ -81,14 +81,14 @@ if "`study'" == "cba" & "`study'" == "hf" & "`study'" == "mi" & "`study'" == "ti
 noi di as text "Using full Aurum population..."
 qui merge m:1 patid using "$denomDir\cr_cvd_strat_summary.dta", keep(match) nogen
 }
-}
+
 
 if "`study'" == "alcohol" {
 	noi di ""	
 noi di as text "Using alcohol Aurum population..."
 qui merge m:1 patid using "$denomDir\cr_alcohol_strat_summary.dta", keep(match) nogen
 }
-}
+
 
 if "`study'" != "diabetes" & "`study'" != "asthma" & "`study'" != "copd" if "`study'" != "cba" & "`study'" != "hf" & "`study'" != "mi" & "`study'" != "tia" & "`study'" != "ua" & "`study'" != "vte" {
 noi di ""	
