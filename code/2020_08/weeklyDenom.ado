@@ -89,7 +89,7 @@ noi di as text "****************************************************************
 
 qui {	
 	cap drop age
-        cap drop age group
+        cap drop agegroup
 	cap drop obsStart 
 	cap drop obsEnd 
 	cap drop lcdDate 
