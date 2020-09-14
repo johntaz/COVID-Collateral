@@ -76,12 +76,11 @@ qui merge m:1 patid using "$denomDir\cr_`study'_strat_summary.dta", keep(match) 
 
 }
 
-if "`study'" == "cba" & "`study'" == "hf" & "`study'" == "mi" & "`study'" == "tia" & "`study'" == "ua" & "`study'" == "vte" {
+if "`study'" == "cba" | "`study'" == "hf" | "`study'" == "mi" | "`study'" == "tia" | "`study'" == "ua" | "`study'" == "vte" {
 	noi di ""	
-noi di as text "Using full Aurum population..."
+noi di as text "Using cvd Aurum population..."
 qui merge m:1 patid using "$denomDir\cr_cvd_strat_summary.dta", keep(match) nogen
 }
-
 
 if "`study'" == "alcohol" {
 	noi di ""	
@@ -90,7 +89,7 @@ qui merge m:1 patid using "$denomDir\cr_alcohol_strat_summary.dta", keep(match) 
 }
 
 
-if "`study'" != "diabetes" & "`study'" != "asthma" & "`study'" != "copd" if "`study'" != "cba" & "`study'" != "hf" & "`study'" != "mi" & "`study'" != "tia" & "`study'" != "ua" & "`study'" != "vte" {
+if "`study'" != "diabetes" & "`study'" != "asthma" & "`study'" != "copd" & "`study'" != "cba" & "`study'" != "hf" & "`study'" != "mi" & "`study'" != "tia" & "`study'" != "ua" & "`study'" != "vte" {
 noi di ""	
 noi di as text "Using full Aurum population..."
 qui merge m:1 patid using "$denomDir\cr_overall_strat_summary.dta", keep(match) nogen
@@ -116,8 +115,15 @@ qui drop if eventdate < `startdate'
 qui summ studyDay
 local maxDays = r(max)
 
-	
-if "`study'" == "cba" & "`study'" == "hf" & "`study'" == "mi" & "`study'" == "tia" & "`study'" == "ua" & "`study'" == "vte" { 
+* age
+
+gen startdate = `startdate'
+gen year = year(startdate)
+drop startdate
+gen age = year - yob
+drop year
+
+if "`study'" == "cba" | "`study'" == "hf" | "`study'" == "mi" | "`study'" == "tia" |"`study'" == "ua" | "`study'" == "vte" { 
 drop if age < 31 | age > 100 
 gen agegroup = 10*ceil(age/10 )
 label define ageLab 40 "31 - 40" /// 
@@ -219,7 +225,7 @@ postclose `denom'
 noi di as text "...Completed"
 noi di ""
 
-if "`study'" == "cba" & "`study'" == "hf" & "`study'" == "mi" & "`study'" == "tia" & "`study'" == "ua" & "`study'" == "vte" {
+if "`study'" == "cba" | "`study'" == "hf" | "`study'" == "mi" | "`study'" == "tia" |"`study'" == "ua" | "`study'" == "vte" {
 noi di as text "***********************************************************************" 
 noi di as text "Generating weekly outcomes by age..." 
 noi di as text "***********************************************************************" 
