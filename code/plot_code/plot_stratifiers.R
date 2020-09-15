@@ -109,7 +109,7 @@ plot_strata_by_outcome <- function(run_no = 4,
 		return(df_plot3_strata)
 }
 
-pdf("~/Documents/COVID-Collateral/graphfiles/ageOutcomes.pdf", width = 14, height = 14)
+pdf("~/Documents/COVID-Collateral/graphfiles/ageOutcomes_09-15.pdf", width = 14, height = 14)
 	strat_plot_data <- NULL
 	for(ii in plot_order){
 		strat_plot_data <- strat_plot_data %>%
