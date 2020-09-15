@@ -23,8 +23,12 @@ setwd("~/Documents/COVID-collateral/")
 outcome_of_interest <- sort(c("alcohol","anxiety","asthma","copd", "cba", "depression", "diabetes", "feedingdisorders", "hf", "mi", "ocd", "selfharm","smi", "tia", "ua", "vte"))
 
 outcome_of_interest_namematch <- bind_cols("outcome" = outcome_of_interest, 
-																					 "outcome_name" = sort(c("Alcohol", "Anxiety", "Asthma", "COPD", "Cerebrovascular Accident", "Depression", "Diabetes", "Feeding Disortders", "Heart Failure", "Myocardial Infarction", "OCD", "Self-harm", "Severe Mental Illness", "Transient Ischaemic Attacks", "Unstable Angina", "Venous Thromboembolism"))
+																					 "outcome_name" = (c("Acute Alcohol Abuse", "Anxiety", "Asthma exacerbations",  "Cerebrovascular Accident", "COPD",
+																					 										"Depression", "Diabetes emergencies", "Feeding Disorders", 
+																					 										"Heart Failure", "Myocardial Infarction", "Obsessive Compulsive Disorder", "Self-harm", "Severe Mental Illness", "Transient Ischaemic Attacks", 
+																					 										"Unstable Angina", "Venous Thromboembolism"))
 )
+plot_order <- c(7,1,2,6,8,11,12,13,4,9,10,14,15,16,3,5)
 
 files_to_import <- list.files("data/", pattern = paste0(outcome_of_interest, collapse = "|"))
 
@@ -40,7 +44,7 @@ length(files_to_import)
 
 
 # do plot 1b by strata ----------------------------------------------------
-plot_strata_by_outcome <- function(run_no = NA,
+plot_strata_by_outcome <- function(run_no = 4,
 											 strata_group = "age"){
 	
 		outcome_temp <- get(paste0("outcome_", run_no))
@@ -75,6 +79,7 @@ plot_strata_by_outcome <- function(run_no = NA,
 		
 		Plot_2020_strata <- Plot_fmt_strata %>%
 			filter(year == 2020) %>% 
+			mutate_at("value", ~ifelse(.==0, NA, .)) %>%
 			select(week, "value_20" = value, category_cat)
 		
 		Plot_historical_strata <- Plot_fmt_strata %>%
@@ -96,66 +101,87 @@ plot_strata_by_outcome <- function(run_no = NA,
 			filter(outcome == outcome_of_interest[run_no]) %>%
 			select(outcome_name) 
 		
-		figure_1c_strata <- ggplot(df_plot3_strata, aes(x = as.Date("1991-01-01"), y = value, group = factor(category_cat), col = factor(category_cat), fill = factor(category_cat))) +
-			geom_boxplot(width=20, outlier.size=0, position="identity", alpha=.5) +
-			geom_line(data = filter(df_plot3_strata, !is.na(value_20)), aes(x = plotWeek, y = value_20), lwd = 1.2) + 
-			scale_x_date(date_labels = "%b") +
-			geom_vline(xintercept = as.Date("1991-03-23"), linetype = "dashed", col = 2) +
-			labs(x = "Date", y = "Prop. of people consulting for outcome", title = name_to_title, colour = stringr::str_to_title(strata_group), fill = stringr::str_to_title(strata_group)) +
-			theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
-			theme_classic()
+		df_plot3_strata <- df_plot3_strata %>%
+			mutate(plot_name = pull(name_to_title)) 
+		##
 		
-		figure_1c_strata
-		return(figure_1c_strata)
+
+		return(df_plot3_strata)
 }
 
 pdf("~/Documents/COVID-Collateral/graphfiles/ageOutcomes.pdf", width = 14, height = 14)
-cowplot::plot_grid(
-	plot_strata_by_outcome(1),
-	plot_strata_by_outcome(2),
-	plot_strata_by_outcome(3),
-	plot_strata_by_outcome(4),
-	plot_strata_by_outcome(5),
-	plot_strata_by_outcome(6),
-	plot_strata_by_outcome(7),
-	plot_strata_by_outcome(8),
-	plot_strata_by_outcome(9),
-	plot_strata_by_outcome(10),
-	plot_strata_by_outcome(11),
-	plot_strata_by_outcome(12),
-	plot_strata_by_outcome(13),
-	plot_strata_by_outcome(14),
-	plot_strata_by_outcome(15),
-	plot_strata_by_outcome(16),
-	ncol = 4
-)
+	strat_plot_data <- NULL
+	for(ii in plot_order){
+		strat_plot_data <- strat_plot_data %>%
+			bind_rows(
+				plot_strata_by_outcome(ii, strata_group = "age")
+			)
+	}
+	strat_plot_data$plot_name <- factor(strat_plot_data$plot_name, levels = outcome_of_interest_namematch$outcome_name[plot_order])
+	bkg_colour <- "white"
+	figure_1c_strata <- ggplot(strat_plot_data, aes(x = as.Date("1991-01-01"), y = value, group = factor(category_cat), col = factor(category_cat), fill = factor(category_cat))) +
+		geom_boxplot(width=20, outlier.size=0, position="identity", alpha=.5) +
+		geom_line(data = filter(strat_plot_data, !is.na(value_20)), aes(x = plotWeek, y = value_20), lwd = 1.2) + 
+		scale_x_date(date_labels = "%b") +
+		facet_wrap(~plot_name, scales = "free", ncol = 4) +
+		geom_vline(xintercept = as.Date("1991-03-23"), linetype = "dashed", col = 2) +
+		labs(x = "Date", y = "Prop. of people consulting for outcome", title = "", colour = "Age", fill = "Age") +
+		theme_classic()  +
+		theme(axis.text.x = element_text(angle = 60, hjust = 1),
+					strip.background = element_rect(fill = bkg_colour, colour =  NA),
+					strip.text = element_text(hjust = 0)) 
+	figure_1c_strata
 dev.off()
+
+
+
 
 pdf("~/Documents/COVID-Collateral/graphfiles/genderOutcomes.pdf", width = 14, height = 14)
-cowplot::plot_grid(
-	plot_strata_by_outcome(1, strata_group = "gender"),
-	plot_strata_by_outcome(2, strata_group = "gender"),
-	plot_strata_by_outcome(3, strata_group = "gender"),
-	plot_strata_by_outcome(4, strata_group = "gender"),
-	plot_strata_by_outcome(5, strata_group = "gender"),
-	plot_strata_by_outcome(6, strata_group = "gender"),
-	plot_strata_by_outcome(7, strata_group = "gender"),
-	plot_strata_by_outcome(8, strata_group = "gender"),
-	plot_strata_by_outcome(9, strata_group = "gender"),
-	plot_strata_by_outcome(10, strata_group = "gender"),
-	plot_strata_by_outcome(11, strata_group = "gender"),
-	plot_strata_by_outcome(12, strata_group = "gender"),
-	plot_strata_by_outcome(13, strata_group = "gender"),
-	plot_strata_by_outcome(14, strata_group = "gender"),
-	plot_strata_by_outcome(15, strata_group = "gender"),
-	plot_strata_by_outcome(16, strata_group = "gender"),
-	ncol = 4
-)
+	strat_plot_data <- NULL
+	for(ii in plot_order){
+		strat_plot_data <- strat_plot_data %>%
+			bind_rows(
+				plot_strata_by_outcome(ii, strata_group = "gender")
+			)
+	}
+	strat_plot_data$plot_name <- factor(strat_plot_data$plot_name, levels = outcome_of_interest_namematch$outcome_name[plot_order])
+	bkg_colour <- "white"
+	figure_1c_strata <- ggplot(strat_plot_data, aes(x = as.Date("1991-01-01"), y = value, group = factor(category_cat), col = factor(category_cat), fill = factor(category_cat))) +
+		geom_boxplot(width=20, outlier.size=0, position="identity", alpha=.5) +
+		geom_line(data = filter(strat_plot_data, !is.na(value_20)), aes(x = plotWeek, y = value_20), lwd = 1.2) + 
+		scale_x_date(date_labels = "%b") +
+		facet_wrap(~plot_name, scales = "free", ncol = 4) +
+		geom_vline(xintercept = as.Date("1991-03-23"), linetype = "dashed", col = 2) +
+		labs(x = "Date", y = "Prop. of people consulting for outcome", title = "", colour = "Gender", fill = "Gender") +
+		theme_classic()  +
+		theme(axis.text.x = element_text(angle = 60, hjust = 1),
+					strip.background = element_rect(fill = bkg_colour, colour =  NA),
+					strip.text = element_text(hjust = 0)) 
+	figure_1c_strata
 dev.off()
 
-# plot_strata(strata_group = "age")
-# ggsave(file = paste0("graphfiles/figure1_strata_",outcome_of_interest,"_age.pdf"), width = 8, height = 6)
-# plot_strata(strata_group = "gender")
-# ggsave(file = paste0("graphfiles/figure1_strata_",outcome_of_interest,"_gender.pdf"), width = 8, height = 6)
-# plot_strata(strata_group = "region")
-# ggsave(file = paste0("graphfiles/figure1_strata_",outcome_of_interest,"_region.pdf"), width = 8, height = 6)
+
+pdf("~/Documents/COVID-Collateral/graphfiles/regionOutcomes.pdf", width = 14, height = 14)
+strat_plot_data <- NULL
+for(ii in plot_order){
+	strat_plot_data <- strat_plot_data %>%
+		bind_rows(
+			plot_strata_by_outcome(ii, strata_group = "region")
+		)
+}
+strat_plot_data$plot_name <- factor(strat_plot_data$plot_name, levels = outcome_of_interest_namematch$outcome_name[plot_order])
+bkg_colour <- "white"
+figure_1c_strata <- ggplot(strat_plot_data, aes(x = as.Date("1991-01-01"), y = value, group = factor(category_cat), col = factor(category_cat), fill = factor(category_cat))) +
+	geom_boxplot(width=20, outlier.size=0, position="identity", alpha=.5) +
+	geom_line(data = filter(strat_plot_data, !is.na(value_20)), aes(x = plotWeek, y = value_20), lwd = 1.2) + 
+	scale_x_date(date_labels = "%b") +
+	facet_wrap(~plot_name, scales = "free", ncol = 4) +
+	geom_vline(xintercept = as.Date("1991-03-23"), linetype = "dashed", col = 2) +
+	labs(x = "Date", y = "Prop. of people consulting for outcome", title = "", colour = "Region", fill = "Region") +
+	theme_classic()  +
+	theme(axis.text.x = element_text(angle = 60, hjust = 1),
+				axis.text = element_text(size = 10), 
+				strip.background = element_rect(fill = bkg_colour, colour =  NA),
+				strip.text = element_text(hjust = 0, size = 10)) 
+figure_1c_strata
+dev.off()
