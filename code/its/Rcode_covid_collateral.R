@@ -28,18 +28,19 @@ bkg_colour <- "gray99"
 all_files <- list.files(here::here("data/"), pattern = "an_")
 outcomes <- stringr::str_remove_all(all_files, c("an_|.csv"))
 
-## this bit is all manual and shit for now
 outcome_of_interest_namematch <- bind_cols("outcome" = outcomes, 
-																					 "outcome_name" = sort(c("Alcohol", "Anxiety", "Asthma", "COPD", "Cerebrovascular Accident", "Depression", "Diabetes", "Feeding Disorders", "Heart Failure", "Myocardial Infarction", "OCD", "Self-harm", "Severe Mental Illness", "Transient Ischaemic Attacks", "Unstable Angina", "Venous Thromboembolism"))
+																					 "outcome_name" = (c("Acute Alcohol Abuse", "Anxiety", "Asthma exacerbations",  "Cerebrovascular Accident", "COPD",
+																					 										"Depression", "Diabetes emergencies", "Feeding Disorders", 
+																					 										"Heart Failure", "Myocardial Infarction", "Obsessive Compulsive Disorder", "Self-harm", "Severe Mental Illness", "Transient Ischaemic Attacks", 
+																					 										"Unstable Angina", "Venous Thromboembolism"))
 )
+plot_order <- c(7,1,2,6,8,11,12,13,4,9,10,14,15,16,3,5)
+
 # load data ---------------------------------------------------------------
 for(ii in 1:length(outcomes)){
 	load_file <- read.csv(here::here("data", paste0("an_", outcomes[ii], ".csv")))
 	assign(outcomes[ii], load_file)
 }
-
-plot_name <- "ITS_attempt3_2019data_4wkLdn"
-use_data_from <- as.Date("2019-01-01")
 
 its_function <- function(outcomes_vec = outcomes,
 												 cutData = as.Date("2018-01-01"), 
@@ -81,13 +82,13 @@ its_function <- function(outcomes_vec = outcomes,
 			
 			ldn_centre <- data_frame_of_joy$time[min(which(data_frame_of_joy$lockdown == 1))]
 			
-			binom_model1 <- glm(as.matrix(cbind(numOutcome, numEligible)) ~ lockdown + time + I(time-ldn_centre):lockdown + as.factor(months) + xmas, family=binomial, data = filter(data_frame_of_joy, !is.na(lockdown)))
+			binom_model1 <- glm(as.matrix(cbind(numOutcome, numEligible)) ~ lockdown + I(time-ldn_centre) + I(time-ldn_centre):lockdown + as.factor(months) + xmas, family=binomial, data = filter(data_frame_of_joy, !is.na(lockdown)))
 			ci.exp(binom_model1)
 			binom_lagres <- lag(residuals(binom_model1)) %>% as.numeric()
 			res1 <- residuals(binom_model1,type="deviance")
 			#pacf(res1)
 			
-			binom_model2 <- glm(as.matrix(cbind(numOutcome, numEligible)) ~ lockdown + time + I(time-ldn_centre):lockdown + as.factor(months) + xmas + binom_lagres, family=binomial, data = filter(data_frame_of_joy, !is.na(lockdown)))
+			binom_model2 <- glm(as.matrix(cbind(numOutcome, numEligible)) ~ lockdown + I(time-ldn_centre) + I(time-ldn_centre):lockdown + as.factor(months) + xmas + binom_lagres, family=binomial, data = filter(data_frame_of_joy, !is.na(lockdown)))
 			ci.exp(binom_model2)
 			summary.glm(binom_model2)
 			
@@ -112,9 +113,6 @@ its_function <- function(outcomes_vec = outcomes,
 			binom_lagres_timing <- bind_cols("time" = data_frame_of_joy$time[!is.na(data_frame_of_joy$lockdown)],
 																			 "binom_lagres" = binom_lagres)
 			
-			#binom_lagres_missing <- c(binom_lagres[1:missing_data_start-1],
-			#													rep(NA, missing_data_end - missing_data_start +1),
-			#													binom_lagres[missing_data_start:length(binom_lagres)])
 			outcome_pred <- data_frame_of_joy %>%
 				left_join(binom_lagres_timing, by = "time") %>%
 				mutate_at("binom_lagres", ~(. = 0)) 
@@ -129,32 +127,41 @@ its_function <- function(outcomes_vec = outcomes,
 			pred1 <- predict(binom_model2, newdata = outcome_pred, se.fit = TRUE, interval="confidence", dispersion = deviance_adjustment)
 				predicted_vals <- pred1$fit
 				stbp <- pred1$se.fit
+			
 			pred0 <- predict(binom_model2, newdata = outcome_pred_zeroed, se.fit = TRUE, interval="confidence", dispersion = deviance_adjustment)
 				predicted_vals_0 <- pred0$fit
 				stbp0 <- pred0$se.fit
 			
-			outcome_pred_nointervention <- outcome_pred_zeroed %>%
+			outcome_pred_nointervention <- outcome_pred %>%
 				mutate_at("lockdown", ~(.=0))
-			predicted_vals_nointervention <- predict(binom_model2, newdata = outcome_pred_nointervention) 
-			
+			pred_noLockdown <- predict(binom_model2, newdata = outcome_pred_nointervention, se.fit = TRUE, interval="confidence", dispersion = deviance_adjustment) 
+				pred_noLdn <- pred_noLockdown$fit
+				stbp_noLdn <- pred_noLockdown$se.fit
+				
 			## standard errors
-			df_se <- bind_cols(stbp = stbp, stbp0 = stbp0, pred = predicted_vals, pred0 = predicted_vals_0, pred_noLdn = predicted_vals_nointervention) %>%
+			df_se <- bind_cols(stbp = stbp, stbp0 = stbp0, stbp_noLdn = stbp_noLdn, 
+												 pred = predicted_vals, pred0 = predicted_vals_0, pred_noLdn = pred_noLdn) %>%
 				mutate(
 					#CIs
 					upp = pred + (1.96*stbp),
 					low = pred - (1.96*stbp),
 					upp0 = pred0 + (1.96*stbp0),
 					low0 = pred0 - (1.96*stbp0),
+					upp_noLdn = pred_noLdn + (1.96*stbp_noLdn),
+					low0_noLdn = pred_noLdn - (1.96*stbp_noLdn),
 					# probline
 					predicted_vals = exp(pred)/(1+exp(pred)),
-					probline_noLdn = exp(pred_noLdn)/(1+exp(pred_noLdn)),
 					probline_0 = exp(pred0)/(1+exp(pred0)),
+					probline_noLdn = exp(pred_noLdn)/(1+exp(pred_noLdn)),
 					#
 					uci = exp(upp)/(1+exp(upp)),
 					lci = exp(low)/(1+exp(low)),
 					#
 					uci0 = exp(upp0)/(1+exp(upp0)),
-					lci0 = exp(low0)/(1+exp(low0)) 
+					lci0 = exp(low0)/(1+exp(low0)),
+					#
+					uci_noLdn = exp(upp_noLdn)/(1+exp(upp_noLdn)),
+					lci_noLdn = exp(low0_noLdn)/(1+exp(low0_noLdn)) 
 					)
 			
 			outcome_plot <- bind_cols(outcome_pred, df_se)
@@ -169,9 +176,7 @@ its_function <- function(outcomes_vec = outcomes,
 			vals_to_print <- paramter_estimates %>%
 				mutate(var = rownames(paramter_estimates)) %>%
 				filter(var == "lockdown") %>%
-			#	mutate_at(1:3, ~signif(., 2)) %>%
 				mutate(var = outcome)
-				#annotate("text", x = as.Date("2019-06-01"), y = plot_text_height, label= text_to_print)
 		return(list(df_1 = outcome_plot, vals_to_print = vals_to_print))
 		}
 		
@@ -190,43 +195,42 @@ its_function <- function(outcomes_vec = outcomes,
 		}
 		
 		main_plot_data <- main_plot_data %>%
-			mutate(prop_consult = numOutcome/numEligible) %>%
+			mutate(pc_consult = (numOutcome/numEligible)*100) %>%
+			mutate_at(.vars = c("predicted_vals", "lci", "uci", "probline_noLdn", "uci_noLdn", "lci_noLdn", "probline_0", "lci0", "uci0"), 
+								~.*100) %>%
 			left_join(outcome_of_interest_namematch, by = c("var" = "outcome"))
-			#mutate_at("var", ~stringr::str_replace(., "_", " ")) %>%
-			#mutate_at("var", ~stringr::str_to_title(.)) %>%
-			#mutate_at("var", ~ifelse(stringr::str_to_upper(.) %in% 
-			#												 	c("OCD", "SMI", "VTE", "CBA", "HF", "TIA", "UA", "MI", "COPD"), 
-			#												 stringr::str_to_upper(.), 
-			#												 .)) %>%
-			#mutate_at("var", ~ifelse(. == "CBA", "CVA", .))
-			
+		main_plot_data$outcome_name <- factor(main_plot_data$outcome_name, levels = outcome_of_interest_namematch$outcome_name[plot_order])
 		
-		plot1 <- ggplot(filter(main_plot_data, weekPlot >= cutData), aes(x = weekPlot, y = prop_consult, group = outcome_name)) +
+		abline_min <- main_plot_data$weekPlot[min(which(is.na(main_plot_data$lockdown)))]-7
+		abline_max <- main_plot_data$weekPlot[max(which(is.na(main_plot_data$lockdown)))+1]
+		plot1 <- ggplot(filter(main_plot_data, weekPlot >= as.Date("2020-01-01")), aes(x = weekPlot, y = pc_consult, group = outcome_name)) +
 			#geom_point(col = "gray60", shape = 16) +
 			# the data
 			geom_line(col = "gray60") +
-			# the probability if therer was no lockdwon
-			#geom_line(aes(y = probline_noLdn), col = 2, lty = 2) +
-			# probability with model zeroed (inc. std. error)
+			### the probability if therer was no lockdwon
+			geom_line(data = filter(main_plot_data, weekPlot >= abline_min), aes(y = probline_noLdn), col = 2, lty = 2) +
+			geom_ribbon(data = filter(main_plot_data, weekPlot >= abline_min), aes(ymin = lci_noLdn, ymax=uci_noLdn), fill = alpha(2,0.4), lty = 0) +
+			### probability with model zeroed (inc. std. error)
 			#geom_line(aes(y = probline_0), col = 2, lty = 2) +
 			#geom_ribbon(aes(ymin = lci0, ymax=uci0), fill = alpha(2,0.4), lty = 0) +
-			# probability with model (inc. std. error)
+			### probability with model (inc. std. error)
 			geom_line(aes(y = predicted_vals), col = 4, lty = 2) +
 			geom_ribbon(aes(ymin = lci, ymax=uci), fill = alpha(4,0.4), lty = 0) +
 			### format the plot
 			facet_wrap(~outcome_name, scales = "free", ncol = 4) +
-			geom_vline(xintercept = c(start_lockdown, 
-																start_lockdown + (7*lockdown_adjustment_period_wks)), col = 1, lwd = 1) + # 2020-04-05 is first week/data After lockdown gap
+			scale_x_date(breaks = "1 month", date_labels = "%b") +
+			geom_vline(xintercept = c(abline_min, 
+																abline_max), col = 1, lwd = 1) + # 2020-04-05 is first week/data After lockdown gap
 			#geom_vline(xintercept = c(end_post_lockdown_period), col = 1, lwd = 0.5, lty = 2) + # 2020-04-05 is first week/data After lockdown gap
-			labs(x = "Date", y = "Proportion of people consulting for outcome", title = "") + # stringr::str_to_title(outcome)) +
+			labs(x = "Date", y = "% of people consulting for outcome", title = "") + # stringr::str_to_title(outcome)) +
 			theme_classic() +
-			theme(axis.text.x = element_text(angle = 60, hjust = 1),
+			theme(axis.text.x = element_text(angle = 60, hjust = 1, size = 12),
 						legend.position = "top",
 						plot.background = element_rect(fill = bkg_colour, colour =  NA),
 						panel.background = element_rect(fill = bkg_colour, colour =  NA),
 						legend.background = element_rect(fill = bkg_colour, colour = NA),
 						strip.background = element_rect(fill = bkg_colour, colour =  NA),
-						strip.text = element_text(hjust = 0),
+						strip.text = element_text(size = 10, hjust = 0),
 						panel.grid.major = element_blank(),
 						panel.grid.minor.x = element_blank(),
 						panel.grid.minor.y = element_line(size=.2, color=rgb(0,0,0,0.2)) ,
@@ -238,23 +242,13 @@ its_function <- function(outcomes_vec = outcomes,
 		forest_plot_df <- forest_plot_data %>%
 			rename("Est" = "exp(Est.)", "lci" = "2.5%", "uci" = "97.5%") %>%
 			left_join(outcome_of_interest_namematch, by = c("var" = "outcome"))
-			
-			# mutate_at("var", ~stringr::str_replace(., "_", " ")) %>%
-			# mutate_at("var", ~stringr::str_to_title(.)) %>% 
-			# mutate_at("var", ~ifelse(stringr::str_to_upper(.) %in% 
-			# 												 	c("OCD", "SMI", "VTE", "CBA", "HF", "TIA", "UA", "MI", "COPD"), 
-			# 												 stringr::str_to_upper(.), 
-			# 												 .)) %>%
-			# mutate_at("var", ~ifelse(. == "CBA", "CVA", .)) 
-			
 		
 		# orders the factor by the size of the effect
-		forest_plot_df$outcome_name <- factor(forest_plot_df$outcome_name, levels=unique(forest_plot_df$outcome_name[order(forest_plot_df$Est)]), ordered = T)
+		forest_plot_df$outcome_name <- factor(forest_plot_df$outcome_name, levels = outcome_of_interest_namematch$outcome_name[plot_order])
 		
 		fp <- ggplot(data=forest_plot_df, aes(x=outcome_name, y=Est, ymin=lci, ymax=uci)) +
-			geom_point(size = 0.8, pch = 1) +
+			geom_point(size = 0.2, pch = 1) +
 			geom_errorbar(width = 0.2) +
-			#ylim(c(0,1)) + 
 			geom_hline(yintercept=1, lty=2) +  # add a dotted line at x=1 after flip
 			coord_flip() +  # flip coordinates (puts labels on y axis)
 			labs(x = "", y = "OR (95% CI)", title = "") + 
@@ -268,7 +262,8 @@ its_function <- function(outcomes_vec = outcomes,
 						panel.grid.major = element_blank(),
 						panel.grid.minor.x = element_blank(),
 						panel.grid.minor.y = element_line(size=.2, color=rgb(0,0,0,0.2)) ,
-						panel.grid.major.y = element_line(size=.2, color=rgb(0,0,0,0.3)))
+						panel.grid.major.y = element_line(size=.2, color=rgb(0,0,0,0.3))) +
+			scale_x_discrete(limits = rev(levels(as.factor(forest_plot_df$outcome_name))))
 		#fp
 		
 		# Export plot -------------------------------------------------------------
@@ -278,50 +273,15 @@ its_function <- function(outcomes_vec = outcomes,
 			AAAAAAAAB
 			"
 		plot1 + fp + 
-			plot_layout(design = layout) +
-			plot_annotation(tag_levels = 'A')
-			#plot_annotation('Quantifying the reduction in GP consultations over lockdown', subtitle = 'An interrupted time series analysis',
-			#								caption = "A - full model; B - estimated reduction in consultations during lockdown",
-			#								tag_levels = 'A')
+			plot_layout(design = layout) 
 }
 
-its_function(outcomes_vec = outcomes, 
+pdf(file = here::here("graphfiles", paste0("its_attempt7_SA_2019_data_ldn_3wk", ".pdf")), width = 14, height = 7)
+its_function(outcomes_vec = outcomes,
 						 cutData = as.Date("2019-01-01"),
-						 start_lockdown =   as.Date("2020-03-16"),
-						 lockdown_adjustment_period_wks =  4,
+						 start_lockdown = as.Date("2020-03-22"),
+						 lockdown_adjustment_period_wks = 3,
 						 end_post_lockdown_period = as.Date("2020-07-31")
 						 )
-ggsave(here::here("graphfiles", paste0("its_attempt5_2019_data", ".pdf")), width = 12, height = 10)
-
-
-# its_function(outcomes_vec = c("alcohol", "selfharm", "ua"), 
-# 						 cutData = as.Date("2019-01-01"),
-# 						 start_lockdown =   as.Date("2020-03-16"),
-# 						 lockdown_adjustment_period_wks =  4,
-# 						 end_post_lockdown_period = as.Date("2020-07-31")
-# 						 )
-# ggsave(here::here("graphfiles", paste0("its_attempt4_2019_data_subset", ".pdf")), width = 12, height = 4)
-# 
-# its_function(outcomes_vec = c("alcohol", "selfharm", "ua"), 
-# 						 cutData = as.Date("2019-01-01"),
-# 						 start_lockdown =   as.Date("2020-03-23"),
-# 						 lockdown_adjustment_period_wks =  4,
-# 						 end_post_lockdown_period = as.Date("2020-07-31")
-# 						 )
-# ggsave(here::here("graphfiles", paste0("its_attempt4_2019_data_subset_latestart", ".pdf")), width = 12, height = 4)
-# 
-# its_function(outcomes_vec = c("alcohol", "selfharm", "ua"), 
-# 						 cutData = as.Date("2019-01-01"),
-# 						 start_lockdown =   as.Date("2020-03-16"),
-# 						 lockdown_adjustment_period_wks =  2,
-# 						 end_post_lockdown_period = as.Date("2020-07-31")
-# )
-# ggsave(here::here("graphfiles", paste0("its_attempt4_2019_data_subset_shortadj", ".pdf")), width = 12, height = 4)
-# 
-# its_function(outcomes_vec = c("alcohol", "selfharm", "ua"), 
-# 						 cutData = as.Date("2019-01-01"),
-# 						 start_lockdown =   as.Date("2020-03-16"),
-# 						 lockdown_adjustment_period_wks =  4,
-# 						 end_post_lockdown_period = as.Date("2020-06-15")
-# )
-# ggsave(here::here("graphfiles", paste0("its_attempt4_2019_data_subset_endLdn", ".pdf")), width = 12, height = 4)
+dev.off()
+#ggsave(here::here("graphfiles", paste0("its_attempt7_2019_data_SA", ".pdf")), width = 14, height = 7)
