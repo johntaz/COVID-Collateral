@@ -20,10 +20,15 @@ outcome <- "diabetes"
 all_files <- list.files(here::here("data/"), pattern = "an_")
 outcomes <- stringr::str_remove_all(all_files, c("an_|.csv"))
 
-## this bit is all manual and shit for now
 outcome_of_interest_namematch <- bind_cols("outcome" = outcomes, 
-																					 "outcome_name" = sort(c("Alcohol", "Anxiety", "Asthma", "COPD", "Cerebrovascular Accident", "Depression", "Diabetes", "Feeding Disorders", "Heart Failure", "Myocardial Infarction", "OCD", "Self-harm", "Severe Mental Illness", "Transient Ischaemic Attacks", "Unstable Angina", "Venous Thromboembolism"))
+																					 "outcome_name" = (c("Acute Alcohol Abuse", "Anxiety", "Asthma exacerbations",  "Cerebrovascular Accident", "COPD",
+																					 										"Depression", "Diabetes emergencies", "Feeding Disorders", 
+																					 										"Heart Failure", "Myocardial Infarction", "Obsessive Compulsive Disorder", "Self-harm", "Severe Mental Illness", "Transient Ischaemic Attacks", 
+																					 										"Unstable Angina", "Venous Thromboembolism"))
 )
+
+plot_order <- c(7,1,2,6,8,11,12,13,4,9,10,14,15,16,3,5)
+
 # load data ---------------------------------------------------------------
 for(ii in 1:length(outcomes)){
 	load_file <- read.csv(here::here("data", paste0("an_", outcomes[ii], ".csv")))
@@ -76,8 +81,8 @@ tab3_function <- function(outcome){
 																		 "lagres1" = lagres1)
 		
 		outcome_pred <- data_frame_of_joy %>%
-			left_join(po_lagres_timing, by = "time") #%>%
-			#mutate_at("lagres1", ~(. = 0))# %>%
+			left_join(po_lagres_timing, by = "time") %>%
+			mutate_at("lagres1", ~(. = 0))# %>%
 			#mutate_at("xmas", ~(. = 0)) %>%
 			#mutate_at("months", ~(. = 6)) 
 		
@@ -107,53 +112,57 @@ tab3_function <- function(outcome){
 				upp_noLdn = pred_noLdn + (1.96*stbp_noLdn),
 				low_noLdn = pred_noLdn - (1.96*stbp_noLdn),
 				# probline
-				predicted_vals = exp(pred)/denom*10^2,
-				probline_noLdn = exp(pred_noLdn)/denom*10^2,
+				predicted_vals = exp(pred)/denom,
+				probline_noLdn = exp(pred_noLdn)/denom,
 				#
-				uci = exp(upp)/denom*10^2,
-				lci = exp(low)/denom*10^2,
-				uci_noLdn = exp(upp_noLdn)/denom*10^2,
-				lci_noLdn = exp(low_noLdn)/denom*10^2,
+				uci = exp(upp)/denom,
+				lci = exp(low)/denom,
+				uci_noLdn = exp(upp_noLdn)/denom,
+				lci_noLdn = exp(low_noLdn)/denom,
 				#
 				pred_difference_log = pred-pred_noLdn,
 				upp_diff = pred_difference_log + (1.96*stbp_diff),
 				low_diff = pred_difference_log - (1.96*stbp_diff),
 				#
-				predicted_diff = exp(pred_difference_log)/denom*10^2,
-				uci_diff = exp(upp_diff)/denom*10^2,
-				lci_diff = exp(low_diff)/denom*10^2
+				predicted_diff = exp(pred_difference_log)/denom,
+				uci_diff = exp(upp_diff)/denom,
+				lci_diff = exp(low_diff)/denom
 				)
 		
-		wk1_post_ldn <- start_lockdown + ((1+lockdown_adjustment_period_wks)*7)
-		#mo1_post_ldn <- start_lockdown + (lockdown_adjustment_period_wks*7) + 30
-		mo2_post_ldn <- start_lockdown + (lockdown_adjustment_period_wks*7) + 60
+		mo1_post_ldn <- start_lockdown + (lockdown_adjustment_period_wks*7) + 30
+		mo3_post_ldn <- start_lockdown + (lockdown_adjustment_period_wks*7) + 92
 		
 		sigdig <- 2
 		model_out <- signif(ci.exp(po_model2)[2,], sigdig)
 		
 		tab3_dates <- bind_cols("weekPlot" = data_frame_of_joy$weekPlot, df_se) %>%
-			mutate(target_1wk = wk1_post_ldn,
-						 #target_1mo = mo1_post_ldn,
-						 target_2mo = mo2_post_ldn,
-						 days1 = abs(target_1wk - weekPlot),
-						 #days2 = abs(target_1mo - weekPlot),
-						 days3 = abs(target_2mo - weekPlot),
+			mutate(#target_1wk = wk1_post_ldn,
+						 target_1mo = mo1_post_ldn,
+						 target_3mo = mo3_post_ldn,
+						 #days1 = abs(target_1wk - weekPlot),
+						 days2 = abs(target_1mo - weekPlot),
+						 days3 = abs(target_3mo - weekPlot),
 						 #
-						 col1 = paste0(signif(probline_noLdn,sigdig), "% (", signif(lci_noLdn,sigdig), " - ", signif(uci_noLdn,sigdig),"%)"),
-						 col2 = paste0(round(probline_noLdn*1e4,0), " (", round(lci_noLdn*1e4,0), " - ", round(uci_noLdn*1e4,0),")"),
-						 col3 = paste0(round(predicted_vals*1e4,0), " (", round(lci*1e4,0), " - ", round(uci*1e4,0),")"),
-						 col4 = paste0(model_out[1], " (", model_out[2], " - ", model_out[3], ")")
+						 col1 = paste0(prettyNum(probline_noLdn*1e6,big.mark=",",digits = 0, scientific=FALSE), 
+						 							" (", prettyNum(lci_noLdn*1e6,big.mark=",",digits = 0, scientific=FALSE), 
+						 							" - ", prettyNum(uci_noLdn*1e6,big.mark=",",digits = 0, scientific=FALSE),")"),
+						 col2 = paste0(signif(probline_noLdn*100,sigdig), "% (", signif(lci_noLdn*100,sigdig), " - ", signif(uci_noLdn*100,sigdig),"%)"),
+						 col3 = paste0(prettyNum(predicted_vals*1e6,big.mark=",",digits = 0, scientific=FALSE), 
+						 							" (", prettyNum(lci*1e6,big.mark=",",digits = 0, scientific=FALSE), 
+						 							" - ", prettyNum(uci*1e6,big.mark=",",digits = 0, scientific=FALSE),")")
 						 ) %>%
 			filter(weekPlot >= start_lockdown+(lockdown_adjustment_period_wks*7)) %>%
-			mutate(cumsum_ldn = cumsum(exp(pred)/denom)*1e6,
-						 lci_cumsum_ldn = cumsum(exp(low)/denom)*1e6,
-						 uci_cumsum_ldn = cumsum(exp(upp)/denom)*1e6,
-							cumsum_noLdn = cumsum(exp(pred_noLdn)/denom)*1e6,
-							lci_cumsum_noLdn = cumsum(exp(low_noLdn)/denom)*1e6,
-							uci_cumsum_noLdn = cumsum(exp(upp_noLdn)/denom)*1e6,
-						 col5 = paste0(round(cumsum_noLdn - cumsum_ldn, 0))
+			mutate(cumsum_ldn = cumsum(predicted_vals*1e6),
+						 lci_cumsum_ldn = cumsum(lci*1e6),
+						 uci_cumsum_ldn = cumsum(uci*1e6),
+							cumsum_noLdn = cumsum(probline_noLdn*1e6),
+							lci_cumsum_noLdn = cumsum(low_noLdn*1e6),
+							uci_cumsum_noLdn = cumsum(upp_noLdn*1e6),
+						 prettyNum(uci*1e6,big.mark=",",digits = 0, scientific=FALSE),
+						 col5 = prettyNum(signif((probline_noLdn*1e6) - (predicted_vals*1e6),3), big.mark=",", digits = 0, scientific=FALSE),
+						 col6 = prettyNum(signif((cumsum_noLdn) - (cumsum_ldn),3), big.mark=",", digits = 0, scientific=FALSE)
 			)  %>%
-			filter(days1 == min(days1) | #days2 == min(days2) | 
+			filter(days2 == min(days2) | 
 						 	days3 == min(days3)) 
 		
 		rate_diff <- tab3_dates %>% 
@@ -167,22 +176,18 @@ tab3_function <- function(outcome){
 		
 		tab3_fmt <- tab3_dates %>% 
 			bind_cols(rate_diff) %>%
-			mutate(outcome = outcome_of_interest_namematch$outcome_name[outcome_of_interest_namematch$outcome == outcome]
-						 #col1 = paste0(signif(probline_noLdn,sigdig), "% (", signif(lci_noLdn,sigdig), " - ", signif(uci_noLdn,sigdig),"%)"),
-						 #col2 = paste0(round(probline_noLdn*1e4,0), " (", round(lci_noLdn*1e4,0), " - ", round(uci_noLdn*1e4,0),")"),
-						 #col3 = paste0(round(predicted_vals*1e4,0), " (", round(lci*1e4,0), " - ", round(uci*1e4,0),")"),
-						 #col4 = paste0(model_out[1], " (", model_out[2], " - ", model_out[3], ")"),
-						 #col5 = paste0(round(probline_noLdn*1e4*model_out[1],0), " (", round(lci_noLdn*1e4*model_out[2],0), " - ", round(uci_noLdn*1e4*model_out[2],0), ")")
-						 #col5 = paste0(round(probline_noLdn*1e4-predicted_vals*1e4))
-						 ) %>%
+			mutate(outcome = outcome_of_interest_namematch$outcome_name[outcome_of_interest_namematch$outcome == outcome]) %>%
 			select(outcome, weekPlot, starts_with("col")) %>%
-			pivot_wider(values_from = starts_with("col"))
-	return(tab3_fmt)
+			pivot_wider(values_from = starts_with("col")) %>%
+			mutate_at("weekPlot", ~as.character(format.Date(., "%d-%b"))) %>%
+			mutate_at("outcome", ~ifelse(row_number(.)==2, "", .))
+	return(tab3_fmt) 
 }
 tab3 <- NULL
-for(ii in 1:length(outcomes)){
+for(ii in plot_order){
 	tab3 <- bind_rows(tab3,
 										tab3_function(outcomes[ii]))
+	tab3[nrow(tab3)+1,] <- ""
 }
 tab3
 write.csv(tab3, file = here::here("graphfiles/table3.csv"), row.names = F)
@@ -203,7 +208,7 @@ write.csv(tab3, file = here::here("graphfiles/table3.csv"), row.names = F)
 	#
 	df_1 <- outcome_plot %>%
 		mutate(prop_consult = numOutcome/numEligible,
-					 rate = numOutcome/numEligible*10^2)
+					 rate = numOutcome/numEligible)
 	
 	# the plot ----------------------------------------------------------------
 	plot1 <- ggplot(filter(df_1, weekPlot > as.Date("2019-01-01")), aes(x = weekPlot, y = rate, group = var)) +
