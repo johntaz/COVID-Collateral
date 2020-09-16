@@ -124,7 +124,7 @@ gen age = year - yob
 drop year
 
 if "`study'" == "cba" | "`study'" == "hf" | "`study'" == "mi" | "`study'" == "tia" |"`study'" == "ua" | "`study'" == "vte" { 
-drop if age < 31 | age > 100 
+
 gen agegroup = 10*ceil(age/10 )
 label define ageLab 40 "31 - 40" /// 
 					50 "41 - 50" ///
@@ -136,7 +136,7 @@ label define ageLab 40 "31 - 40" ///
 label values agegroup ageLab	
 }
 else{
-drop if age < 10 | age > 100 
+
 gen agegroup = 10*ceil(age/10 )
 label define ageLab 20 "10 - 20" ///
 					30 "21 - 30" ///

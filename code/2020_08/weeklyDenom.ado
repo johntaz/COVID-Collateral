@@ -99,8 +99,8 @@ qui {
 
 		local startdate = td(01jan2017)
 		local enddate = td(20aug2020)
-		
-gen regstartdate2 = date(regstartdate, "DMY")
+
+/*gen regstartdate2 = date(regstartdate, "DMY")
 drop regstartdate
 rename regstartdate2 regstartdate
 format regstartdate %td
@@ -115,9 +115,10 @@ drop lcd
 rename lcd2 lcd
 format lcd %td
 
-format lcd %td
+format lcd %td */
 
-gen obsStart = regstartdate + 365.25 
+		
+		gen obsStart = regstartdate + 365.25 
 format obsStart %td
 
 gen obsEnd = regenddate
@@ -157,7 +158,7 @@ drop year
 *clean values
 *clean values
 if "`study'" == "alcohol" {
-drop if age < 18 | age > 100 
+
 gen agegroup = 10*ceil(age/10 )
 label define ageLab 20 "18 - 20" ///
 					30 "21 - 30" ///
@@ -171,7 +172,7 @@ label define ageLab 20 "18 - 20" ///
 label values agegroup ageLab	
 }
 if "`study'" == "cvd" {
-drop if age < 31 | age > 100 
+
 gen agegroup = 10*ceil(age/10 )
 label define ageLab 40 "31 - 40" ///
 					50 "41 - 50" ///
@@ -184,7 +185,7 @@ label values agegroup ageLab
 }
 
 if "`study'"!= "cvd" & "`study'" != "alcohol" {
-drop if age < 10 | age > 100 
+
 gen agegroup = 10*ceil(age/10 )
 label define ageLab 20 "10 - 20" ///
 					30 "21 - 30" ///
@@ -295,12 +296,14 @@ qui {
 		}
 	* Correct age for next loop
 		qui replace age = age - 3
+		qui	replace agegroup = 10*ceil(age/10)
 	}
 postclose `denom'
 noi di as text "...Completed"
 noi di ""
 }
 else {
+
 noi di as text "***********************************************************************" 
 noi di as text "Generating weekly denominators by age..." 
 noi di as text "***********************************************************************" 
@@ -317,6 +320,7 @@ qui postfile `denom' weekDate numEligible time category str15(stratifier) using 
 		* Identify eligible patients 
 		gen eligibleFlag = cond(obsStart <= `weekDate' & obsEnd >= `weekDate' & agegroup == `g', 1, 0)
 
+		
 		qui count if eligibleFlag == 1 
 		local numEligible = r(N)
 
@@ -342,10 +346,12 @@ qui {
 			noi di as text "Strata age, level `g' : Week `i' out of `numWeeks'"
 	
 			}	
+
 	post `denom' (`weekDate') (`numEligible') (`k') (`g') ("age")
 		}
 	* Correct age for next loop
 		qui replace age = age - 3
+		qui replace agegroup = 10*ceil(age/10)
 	}
 postclose `denom'
 noi di as text "...Completed"
