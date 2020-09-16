@@ -114,7 +114,7 @@ plot_main <- function(ii){
 	df_plot2
 }
 
-pdf("~/Documents/COVID-Collateral/graphfiles/outcomesOverall_09-16.pdf", width = 14, height = 14)
+pdf("~/Documents/COVID-Collateral/graphfiles/overallOutcomes_09-16.pdf", width = 12, height = 10)
 
 plot_full <- NULL
 for(ii in plot_order){
