@@ -147,6 +147,9 @@ replace gender = 2 if gender == 3 // 2 = M, 1 = F
 label define genderLab 1 "F" 2 "M"
 label values gender genderLab
 
+
+* region
+replace region = 12 if region ==.
 * age
 
 gen startdate = `startdate'

@@ -115,6 +115,8 @@ qui drop if eventdate < `startdate'
 qui summ studyDay
 local maxDays = r(max)
 
+* region
+replace region =12 if region ==.
 * age
 
 gen startdate = `startdate'
