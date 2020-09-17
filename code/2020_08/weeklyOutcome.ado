@@ -115,6 +115,8 @@ qui drop if eventdate < `startdate'
 qui summ studyDay
 local maxDays = r(max)
 
+* region
+replace region =12 if region ==.
 * age
 
 gen startdate = `startdate'
@@ -123,8 +125,23 @@ drop startdate
 gen age = year - yob
 drop year
 
-if "`study'" == "cba" | "`study'" == "hf" | "`study'" == "mi" | "`study'" == "tia" |"`study'" == "ua" | "`study'" == "vte" { 
+if "`study'" == "alcohol" { 
+drop if age <19 | age >100
+gen agegroup = 10*ceil(age/10 )
+label define ageLab 20 "10 - 20" ///
+					30 "21 - 30" ///
+					40 "31 - 40" ///
+					 50 "41 - 50" ///
+					60 "51 - 60" ///
+					70 "61 - 70" ///
+					80 "71 - 80" ///
+					90 "81 - 90" ///
+					100 "91 - 100" 
+label values agegroup ageLab	
+}
 
+if "`study'" == "cba" | "`study'" == "hf" | "`study'" == "mi" | "`study'" == "tia" |"`study'" == "ua" | "`study'" == "vte" { 
+drop if age <31 | age >100
 gen agegroup = 10*ceil(age/10 )
 label define ageLab 40 "31 - 40" /// 
 					50 "41 - 50" ///
@@ -135,8 +152,20 @@ label define ageLab 40 "31 - 40" ///
 					100 "91 - 100" 
 label values agegroup ageLab	
 }
-else{
+if "`study'" == "copd" { 
+drop if age <41 | age >100
+gen agegroup = 10*ceil(age/10 )
+label define ageLab  50 "41 - 50" ///
+					60 "51 - 60" ///
+					70 "61 - 70" ///
+					80 "71 - 80" ///
+					90 "81 - 90" ///
+					100 "91 - 100" 
+label values agegroup ageLab	
+}
 
+else{
+drop if age <10 | age >100
 gen agegroup = 10*ceil(age/10 )
 label define ageLab 20 "10 - 20" ///
 					30 "21 - 30" ///
