@@ -200,7 +200,7 @@ label values agegroup ageLab
 }
 
 if "`study'"!= "cvd" & "`study'" != "alcohol" & "`study'" != "copd" {
-drop if age <10 | age >100
+drop if age <11 | age >100
 gen agegroup = 10*ceil(age/10 )
 label define ageLab 20 "10 - 20" ///
 					30 "21 - 30" ///
