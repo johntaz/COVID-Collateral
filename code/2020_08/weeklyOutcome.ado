@@ -164,7 +164,7 @@ label define ageLab  50 "41 - 50" ///
 label values agegroup ageLab	
 }
 
-else{
+if "`study'" != "alcohol" & "`study'" != "copd" & "`study'" != "cba" & "`study'" != "hf" & "`study'" != "mi" & "`study'" != "tia" & "`study'" != "ua" & "`study'" != "vte" {
 drop if age <11 | age >100
 gen agegroup = 10*ceil(age/10 )
 label define ageLab 20 "10 - 20" ///
