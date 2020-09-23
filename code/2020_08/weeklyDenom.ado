@@ -163,8 +163,7 @@ drop year
 if "`study'" == "alcohol" {
 gen agegroup = 10*ceil(age/10 )
 replace agegroup = 99 if age < 18
-
-label define ageLab 10 "15 - 17" /// 
+label define ageLab 99 "<18"	 ///
 					20 "18 - 20" ///
 					30 "21 - 30" ///
 					40 "31 - 40" ///
@@ -180,7 +179,8 @@ label values agegroup ageLab
 if "`study'" == "copd" {
 gen agegroup = 10*ceil(age/10 )
 replace agegroup = 99 if age < 41
-label define ageLab	50 "41 - 50" ///
+label define ageLab	99 "<41"     ///
+					50 "41 - 50" ///
 					60 "51 - 60" ///
 					70 "61 - 70" ///
 					80 "71 - 80" ///
@@ -189,9 +189,10 @@ label define ageLab	50 "41 - 50" ///
 label values agegroup ageLab	
 }
 if "`study'" == "cvd" {
-replace agegroup = 99 if age < 31
 gen agegroup = 10*ceil(age/10 )
-label define ageLab 40 "31 - 40" ///
+replace agegroup = 99 if age < 31
+label define ageLab 99 "<31"     ///
+					40 "31 - 40" ///
 					50 "41 - 50" ///
 					60 "51 - 60" ///
 					70 "61 - 70" ///
@@ -202,10 +203,10 @@ label values agegroup ageLab
 }
 
 if "`study'"!= "cvd" & "`study'" != "alcohol" & "`study'" != "copd" {
-
+gen agegroup = 10*ceil(age/10)
 replace agegroup = 99 if age < 11
-gen agegroup = 10*ceil(age/10 )
-label define ageLab 20 "10 - 20" ///
+label define ageLab 99 "<11" 	 ///
+					20 "11 - 20" ///
 					30 "21 - 30" ///
 					40 "31 - 40" ///
 					50 "41 - 50" ///
@@ -216,9 +217,6 @@ label define ageLab 20 "10 - 20" ///
 					100 "91 - 100" 
 label values agegroup ageLab
 }
-
-
-
 
 * Find out how many weeks of data
 gen studyDay = obsEnd - `startdate' + 1
@@ -236,7 +234,6 @@ replace eth5 = 5 if _merge==1
 rename eth5 ethnicity
 drop _merge
 }
-
 
 
 if "`study'" == "cvd" {
@@ -291,6 +288,8 @@ postclose `denom'
 noi di as text "...Completed"
 noi di ""
 }
+
+
 if "`study'" == "copd" {
 noi di as text "***********************************************************************" 
 noi di as text "Generating weekly denominators by age..." 
@@ -345,6 +344,7 @@ noi di ""
 }
 else {
 
+/* for all other studies that are not COPD or CVD */
 noi di as text "***********************************************************************" 
 noi di as text "Generating weekly denominators by age..." 
 noi di as text "***********************************************************************" 
@@ -498,13 +498,20 @@ save "cr_`study'_strat_summary.dta", replace
 *****
 
 noi di as text "***********************************************************************" 
+noi di as text "Collapse Gender denom file to calculate overall denom..." 
+noi di as text "***********************************************************************" 
+
+use "cr_`study`_denom_gender.dta", replace
+collapse (sum) numEligible (mean) time (min) category (mean) lockdown , by(weekDate)
+generate stratifier = "overall"
+
+noi di as text "***********************************************************************" 
 noi di as text "Appending weekly denominator files..." 
 noi di as text "***********************************************************************" 
 
-
 * Append all denominators 
 clear 
-local denominators "overall age gender ethnicity region"
+local denominators "age gender ethnicity region"
 	foreach i of local denominators {
 		qui append using "cr_`study'_denom_`i'.dta"
 		format weekDate %td

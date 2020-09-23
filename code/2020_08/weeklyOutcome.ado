@@ -172,7 +172,7 @@ if "`study'" != "alcohol" & "`study'" != "copd" & "`study'" != "cba" & "`study'"
 drop age <11 | age >100
 gen agegroup = 10*ceil(age/10 )
 
-label define ageLab 20 "10 - 20" ///
+label define ageLab 20 "11 - 20" ///
 					30 "21 - 30" ///
 					40 "31 - 40" ///
 					50 "41 - 50" ///
