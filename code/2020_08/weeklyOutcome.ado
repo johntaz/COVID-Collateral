@@ -119,16 +119,16 @@ local maxDays = r(max)
 replace region =12 if region ==.
 * age
 
-gen startdate = `startdate'
-gen year = year(startdate)
-drop startdate
+gen year = year(eventdate)
 gen age = year - yob
 drop year
 
 if "`study'" == "alcohol" { 
-drop if age <19 | age >100
+
+
 gen agegroup = 10*ceil(age/10 )
-label define ageLab 20 "10 - 20" ///
+replace agegroup = 99 if age <18
+label define ageLab 20 "18 - 20" ///
 					30 "21 - 30" ///
 					40 "31 - 40" ///
 					 50 "41 - 50" ///
@@ -141,8 +141,9 @@ label values agegroup ageLab
 }
 
 if "`study'" == "cba" | "`study'" == "hf" | "`study'" == "mi" | "`study'" == "tia" |"`study'" == "ua" | "`study'" == "vte" { 
-drop if age <31 | age >100
+
 gen agegroup = 10*ceil(age/10 )
+replace agegroup = 99 if age <31
 label define ageLab 40 "31 - 40" /// 
 					50 "41 - 50" ///
 					60 "51 - 60" ///
@@ -153,8 +154,10 @@ label define ageLab 40 "31 - 40" ///
 label values agegroup ageLab	
 }
 if "`study'" == "copd" { 
-drop if age <41 | age >100
+
+
 gen agegroup = 10*ceil(age/10 )
+replace agegroup = 99 if age <41
 label define ageLab  50 "41 - 50" ///
 					60 "51 - 60" ///
 					70 "61 - 70" ///
@@ -165,8 +168,8 @@ label values agegroup ageLab
 }
 
 if "`study'" != "alcohol" & "`study'" != "copd" & "`study'" != "cba" & "`study'" != "hf" & "`study'" != "mi" & "`study'" != "tia" & "`study'" != "ua" & "`study'" != "vte" {
-drop if age <11 | age >100
 gen agegroup = 10*ceil(age/10 )
+replace agegroup = 99 if age <11
 label define ageLab 20 "10 - 20" ///
 					30 "21 - 30" ///
 					40 "31 - 40" ///
@@ -224,35 +227,6 @@ drop outcomeGap a
 }
 qui gen numOutcome = 1
 
-
-noi di as text "***********************************************************************" 
-noi di as text "Generating overall weekly outcomes..." 
-noi di as text "***********************************************************************" 
-noi di as text "Progress..."
-* overall
-tempname denom
-qui postfile `denom' weekDate numOutcome time category str15(stratifier) using "cr_`study'_outcome_overall.dta", replace
-		forvalues i = 1/`numWeeks' {
-		cap drop outcome
-		local k = `i' - 1 
-		local weekDate = `startdate' + 7*`k'
-
-		* Identify eligible patients 
-		gen outcomeFlag = cond(week == `i', 1, 0)
-
-		qui count if outcomeFlag == 1 
-		local numOutcome = r(N)
-
-		if mod(`i', 100)==0 {
-			noi di as text "Week `i' out of `numWeeks'"
-	
-			}	
-	post `denom' (`weekDate') (`numOutcome') (`k') (1) ("overall")
-		}
-	
-postclose `denom'
-noi di as text "...Completed"
-noi di ""
 
 if "`study'" == "cba" | "`study'" == "hf" | "`study'" == "mi" | "`study'" == "tia" |"`study'" == "ua" | "`study'" == "vte" {
 noi di as text "***********************************************************************" 

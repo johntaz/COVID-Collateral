@@ -161,9 +161,11 @@ drop year
 *clean values
 *clean values
 if "`study'" == "alcohol" {
-drop if age <19 | age >100
 gen agegroup = 10*ceil(age/10 )
-label define ageLab 20 "18 - 20" ///
+replace agegroup = 99 if age < 18
+
+label define ageLab 10 "15 - 17" /// 
+					20 "18 - 20" ///
 					30 "21 - 30" ///
 					40 "31 - 40" ///
 					50 "41 - 50" ///
@@ -176,8 +178,8 @@ label values agegroup ageLab
 }
 
 if "`study'" == "copd" {
-drop if age <41 | age >100
 gen agegroup = 10*ceil(age/10 )
+replace agegroup = 99 if age < 41
 label define ageLab	50 "41 - 50" ///
 					60 "51 - 60" ///
 					70 "61 - 70" ///
@@ -187,7 +189,7 @@ label define ageLab	50 "41 - 50" ///
 label values agegroup ageLab	
 }
 if "`study'" == "cvd" {
-drop if age <31 | age >100
+replace agegroup = 99 if age < 31
 gen agegroup = 10*ceil(age/10 )
 label define ageLab 40 "31 - 40" ///
 					50 "41 - 50" ///
@@ -200,7 +202,8 @@ label values agegroup ageLab
 }
 
 if "`study'"!= "cvd" & "`study'" != "alcohol" & "`study'" != "copd" {
-drop if age <11 | age >100
+
+replace agegroup = 99 if age < 11
 gen agegroup = 10*ceil(age/10 )
 label define ageLab 20 "10 - 20" ///
 					30 "21 - 30" ///
@@ -234,36 +237,7 @@ rename eth5 ethnicity
 drop _merge
 }
 
-noi di ""
-noi di as text "***********************************************************************" 
-noi di as text "Generating overall weekly denominators..." 
-noi di as text "***********************************************************************" 
-noi di as text "Progress..."
-tempname denom
-qui postfile `denom' weekDate numEligible time category str15(stratifier) using "cr_`study'_denom_overall.dta", replace
 
-* Generate weekly denominators
-forvalues i = 1/`numWeeks' {
-cap drop eligibleFlag
-local k = `i' - 1 
-local weekDate = `startdate' + 7*`k'
-
-* Identify eligible patients 
-gen eligibleFlag = cond(obsStart <= `weekDate' & obsEnd >= `weekDate' , 1, 0)
-
-qui count if eligibleFlag == 1
-local numEligible = r(N)
-
-if mod(`i', 100)==0 {
-	noi di as text  "Week `i' out of `numWeeks'"
-	
-	}	
-	post `denom' (`weekDate') (`numEligible') (`k') (1) ("overall")
-}
-
-postclose `denom'
-noi di as text "...Completed"
-noi di ""
 
 if "`study'" == "cvd" {
 noi di as text "***********************************************************************" 
