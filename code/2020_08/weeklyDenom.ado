@@ -244,7 +244,7 @@ noi di as text "Progress..."
 * age
 tempname denom
 qui postfile `denom' weekDate numEligible time category str15(stratifier) using "cr_`study'_denom_age.dta", replace
-	forvalues g = 40(10)100 {
+	forvalues g = 40(10)40 {
 		forvalues i = 1/`numWeeks' {
 		cap drop eligibleFlag
 		local k = `i' - 1 
@@ -298,7 +298,7 @@ noi di as text "Progress..."
 * gender
 tempname denom
 qui postfile `denom' weekDate numEligible time category str15(stratifier) using "cr_`study'_denom_age.dta", replace
-	forvalues g = 50(10)100 {
+	forvalues g = 50(10)50 {
 		forvalues i = 1/`numWeeks' {
 		cap drop eligibleFlag
 		local k = `i' - 1 
@@ -352,7 +352,7 @@ noi di as text "Progress..."
 * age
 tempname denom
 qui postfile `denom' weekDate numEligible time category str15(stratifier) using "cr_`study'_denom_age.dta", replace
-	forvalues g = 20(10)100 {
+	forvalues g = 20(10)20 {
 		forvalues i = 1/`numWeeks' {
 		cap drop eligibleFlag
 		local k = `i' - 1 
@@ -408,7 +408,7 @@ noi di as text "Progress..."
 * gender
 tempname denom
 qui postfile `denom' weekDate numEligible time category str15(stratifier) using "cr_`study'_denom_gender.dta", replace
-	forvalues g = 1/2 {
+	forvalues g = 1 {
 		forvalues i = 1/`numWeeks' {
 		cap drop eligibleFlag
 		local k = `i' - 1 
