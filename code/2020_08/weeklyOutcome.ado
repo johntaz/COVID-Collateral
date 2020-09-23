@@ -229,6 +229,34 @@ drop outcomeGap a
 }
 qui gen numOutcome = 1
 
+noi di as text "***********************************************************************" 
+noi di as text "Generating overall weekly outcomes..." 
+noi di as text "***********************************************************************" 
+noi di as text "Progress..."
+* overall
+tempname denom
+qui postfile `denom' weekDate numOutcome time category str15(stratifier) using "cr_`study'_outcome_overall.dta", replace
+		forvalues i = 1/`numWeeks' {
+		cap drop outcome
+		local k = `i' - 1 
+		local weekDate = `startdate' + 7*`k'
+
+		* Identify eligible patients 
+		gen outcomeFlag = cond(week == `i', 1, 0)
+
+		qui count if outcomeFlag == 1 
+		local numOutcome = r(N)
+
+		if mod(`i', 100)==0 {
+			noi di as text "Week `i' out of `numWeeks'"
+
+			}	
+	post `denom' (`weekDate') (`numOutcome') (`k') (1) ("overall")
+		}
+
+postclose `denom'
+noi di as text "...Completed"
+noi di ""
 
 if "`study'" == "cba" | "`study'" == "hf" | "`study'" == "mi" | "`study'" == "tia" |"`study'" == "ua" | "`study'" == "vte" {
 noi di as text "***********************************************************************" 
