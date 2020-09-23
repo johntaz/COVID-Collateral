@@ -44,7 +44,7 @@ for(ii in 1:length(outcomes)){
 
 its_function <- function(outcomes_vec = outcomes,
 												 cutData = as.Date("2018-01-01"), 
-												 start_lockdown =   as.Date("2020-03-16"),
+												 start_lockdown =   as.Date("2020-03-08"),
 												 lockdown_adjustment_period_wks = 4,
 												 end_post_lockdown_period = as.Date("2020-08-01")
 												 ){
@@ -69,7 +69,7 @@ its_function <- function(outcomes_vec = outcomes,
 																			ifelse(weekPlot >= end_post_lockdown_period, NA, .))) %>%
 				mutate(xmas = ifelse(weekPlot %in% xmas_dates, 1, 0)) %>%
 				filter(weekPlot >= cutData)
-			
+	
 			## model binomial 
 			# Change in level + slope:
 			### include interaction with time (centred at end of Lockdown adjustment period)
@@ -78,8 +78,6 @@ its_function <- function(outcomes_vec = outcomes,
 			# Calculate Pearson X2 gof/d.f. as dispersion parameter for std.errors (and predicted values)
 			### Only do this from the final model that will be used for predictions 
 			# And add in a year variable because there are some strange things going on -- see selfharm and MI
-			
-			
 			ldn_centre <- data_frame_of_joy$time[min(which(data_frame_of_joy$lockdown == 1))]
 			
 			binom_model1 <- glm(as.matrix(cbind(numOutcome, numEligible)) ~ lockdown + I(time-ldn_centre) + I(time-ldn_centre):lockdown + as.factor(months) + xmas, family=binomial, data = filter(data_frame_of_joy, !is.na(lockdown)))
@@ -276,11 +274,11 @@ its_function <- function(outcomes_vec = outcomes,
 			plot_layout(design = layout) 
 }
 
-pdf(file = here::here("graphfiles", paste0("its_attempt7_SA_2019_data_ldn_3wk", ".pdf")), width = 14, height = 7)
+pdf(file = here::here("graphfiles", paste0("its_attempt7_SA_2019_data_5wk_09-22", ".pdf")), width = 14, height = 7)
 its_function(outcomes_vec = outcomes,
 						 cutData = as.Date("2019-01-01"),
-						 start_lockdown = as.Date("2020-03-22"),
-						 lockdown_adjustment_period_wks = 3,
+						 start_lockdown = as.Date("2020-03-08"),
+						 lockdown_adjustment_period_wks = 5,
 						 end_post_lockdown_period = as.Date("2020-07-31")
 						 )
 dev.off()

@@ -190,7 +190,7 @@ for(ii in plot_order){
 	tab3[nrow(tab3)+1,] <- ""
 }
 tab3
-write.csv(tab3, file = here::here("graphfiles/table3.csv"), row.names = F)
+write.csv(tab3, file = here::here("graphfiles/table3_09-22.csv"), row.names = F)
 
 	outcome_plot <- bind_cols(outcome_pred, df_se)
 	
