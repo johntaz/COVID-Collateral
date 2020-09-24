@@ -292,7 +292,7 @@ qui {
 			noi di as text "Strata age, level `g' : Week `i' out of `numWeeks'"
 	
 			}	
-	post `denom' (`weekDate') (`numEligible') (`k') (`g') ("alcohol")
+	post `denom' (`weekDate') (`numEligible') (`k') (`g') ("age")
 		}
 	* Correct age for next loop
 		qui replace age = age - 3
