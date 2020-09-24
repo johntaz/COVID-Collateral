@@ -80,13 +80,13 @@ its_function <- function(outcomes_vec = outcomes,
 			# And add in a year variable because there are some strange things going on -- see selfharm and MI
 			ldn_centre <- data_frame_of_joy$time[min(which(data_frame_of_joy$lockdown == 1))]
 			
-			binom_model1 <- glm(as.matrix(cbind(numOutcome, numEligible)) ~ lockdown + I(time-ldn_centre) + I(time-ldn_centre):lockdown + as.factor(months) + xmas, family=binomial, data = filter(data_frame_of_joy, !is.na(lockdown)))
+			binom_model1 <- glm(as.matrix(cbind(numOutcome, numEligible)) ~ lockdown + I(time-ldn_centre) + I(time-ldn_centre):lockdown + as.factor(months) , family=binomial, data = filter(data_frame_of_joy, !is.na(lockdown)))
 			ci.exp(binom_model1)
 			binom_lagres <- lag(residuals(binom_model1)) %>% as.numeric()
 			res1 <- residuals(binom_model1,type="deviance")
 			#pacf(res1)
 			
-			binom_model2 <- glm(as.matrix(cbind(numOutcome, numEligible)) ~ lockdown + I(time-ldn_centre) + I(time-ldn_centre):lockdown + as.factor(months) + xmas + binom_lagres, family=binomial, data = filter(data_frame_of_joy, !is.na(lockdown)))
+			binom_model2 <- glm(as.matrix(cbind(numOutcome, numEligible)) ~ lockdown + I(time-ldn_centre) + I(time-ldn_centre):lockdown + as.factor(months)  + binom_lagres, family=binomial, data = filter(data_frame_of_joy, !is.na(lockdown)))
 			ci.exp(binom_model2)
 			summary.glm(binom_model2)
 			
@@ -274,7 +274,7 @@ its_function <- function(outcomes_vec = outcomes,
 			plot_layout(design = layout) 
 }
 
-pdf(file = here::here("graphfiles", paste0("its_attempt7_SA_2019_data_5wk_09-22", ".pdf")), width = 14, height = 7)
+pdf(file = here::here("graphfiles", paste0("its_attempt7_SA_2019_data_5wk_09-24", ".pdf")), width = 14, height = 7)
 its_function(outcomes_vec = outcomes,
 						 cutData = as.Date("2019-01-01"),
 						 start_lockdown = as.Date("2020-03-08"),

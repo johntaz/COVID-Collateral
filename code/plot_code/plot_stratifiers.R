@@ -39,15 +39,14 @@ for(i in 1:length(files_to_import)){
 }
 length(files_to_import)
 
-
-
-
+running_manually <- F
 
 # do plot 1b by strata ----------------------------------------------------
 plot_strata_by_outcome <- function(run_no = 4,
 											 strata_group = "age"){
 	
 		outcome_temp <- get(paste0("outcome_", run_no))
+		
 		## recode all the factor variables
 		outcome_temp <- outcome_temp %>%
 			mutate(category_cat = category) %>%
@@ -142,7 +141,7 @@ plot_strata_by_outcome <- function(run_no = 4,
 		return(df_plot3_strata)
 }
 
-pdf("~/Documents/COVID-Collateral/graphfiles/ageOutcomes_09-22.pdf", width = 14, height = 14)
+pdf("~/Documents/COVID-Collateral/graphfiles/ageOutcomes_09-24.pdf", width = 14, height = 14)
 	strat_plot_data <- NULL
 	for(ii in plot_order){
 		strat_plot_data <- strat_plot_data %>%

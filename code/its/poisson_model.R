@@ -67,10 +67,10 @@ tab3_function <- function(outcome){
 	ldn_centre <- data_frame_of_joy$time[min(which(data_frame_of_joy$lockdown == 1))]
 	
 	## model Poisson 
-	po_model1 <- glm(numOutcome ~ offset(log(numEligible)) + lockdown + time + I(time-ldn_centre):lockdown + as.factor(months) + xmas, family=quasipoisson, data = filter(data_frame_of_joy, !is.na(lockdown)))
+	po_model1 <- glm(numOutcome ~ offset(log(numEligible)) + lockdown + time + I(time-ldn_centre):lockdown + as.factor(months) , family=quasipoisson, data = filter(data_frame_of_joy, !is.na(lockdown)))
 	lagres1 <- lag(residuals(po_model1))
 	
-	po_model2 <- glm(numOutcome ~ offset(log(numEligible)) + lockdown + time + I(time-ldn_centre):lockdown + as.factor(months)  + xmas + lagres1, family=quasipoisson, data = filter(data_frame_of_joy, !is.na(lockdown)))
+	po_model2 <- glm(numOutcome ~ offset(log(numEligible)) + lockdown + time + I(time-ldn_centre):lockdown + as.factor(months)   + lagres1, family=quasipoisson, data = filter(data_frame_of_joy, !is.na(lockdown)))
 	
 		### put option in to turn on or off variables for the predicted vars
 		pearson_gof <- sum(residuals(po_model2, type = "pearson")^2)
