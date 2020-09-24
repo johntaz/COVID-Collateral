@@ -4,9 +4,9 @@
 * Add extra adopath 
 * ------------------------------------------------------------------------------
 * update to where repo is cloned
-*adopath + "Z:\Desktop\COVID-Collateral\code\2020_08"
+adopath + "Z:\Desktop\COVID-Collateral\code\2020_08"
 *adopath + "Z:\Documents\COVID-Collateral\code\2020_08"
-adopath + "V:\VolumeQ\Diabetic Retinopathy Extract\COVID-19\COVID-Collateral\code\2020_08"
+*adopath + "V:\VolumeQ\Diabetic Retinopathy Extract\COVID-19\COVID-Collateral\code\2020_08"
 * ------------------------------------------------------------------------------
 * Run Globals
 * ------------------------------------------------------------------------------

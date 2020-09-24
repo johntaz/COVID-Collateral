@@ -125,7 +125,7 @@ drop year
 
 if "`study'" == "alcohol" { 
 
-drop age <18 | age >100
+drop if age <18 | age >100
 gen agegroup = 10*ceil(age/10 )
 
 label define ageLab 20 "18 - 20" ///
@@ -141,7 +141,7 @@ label values agegroup ageLab
 }
 
 if "`study'" == "cba" | "`study'" == "hf" | "`study'" == "mi" | "`study'" == "tia" |"`study'" == "ua" | "`study'" == "vte" { 
-drop age <31 | age >100
+drop if age <31 | age >100
 gen agegroup = 10*ceil(age/10 )
 
 label define ageLab 40 "31 - 40" /// 
@@ -157,7 +157,7 @@ if "`study'" == "copd" {
 
 
 gen agegroup = 10*ceil(age/10 )
-drop age <41 | age >100
+drop if age <41 | age >100
 label define ageLab  50 "41 - 50" ///
 					60 "51 - 60" ///
 					70 "61 - 70" ///
@@ -169,7 +169,7 @@ label values agegroup ageLab
 
 if "`study'" != "alcohol" & "`study'" != "copd" & "`study'" != "cba" & "`study'" != "hf" & "`study'" != "mi" & "`study'" != "tia" & "`study'" != "ua" & "`study'" != "vte" {
 
-drop age <11 | age >100
+drop if age <11 | age >100
 gen agegroup = 10*ceil(age/10 )
 
 label define ageLab 20 "11 - 20" ///
