@@ -1,10 +1,10 @@
 ###########################
 ## Process data for shiny app
 ## basically move and process data ready for app deployment
+library(dplyr)
 
 # load data ---------------------------------------------------------------
 data_files <- list.files(here::here("../../../data/"), pattern = "*.csv")
-
 ## append all datafiles
 shiny_file <- NULL
 for(ii in 1:length(data_files)){
@@ -23,7 +23,7 @@ shiny_file <- shiny_file %>%
 
 ## create proportion and a proper R object for date
 shiny_file <- shiny_file %>% 
-	mutate(model_out = numOutcome/numEligible) %>%
+	mutate(model_out = (numOutcome/numEligible)*100) %>%
 	mutate_at("model_out", ~ifelse(numOutcome == 5, NA, .)) %>%
 	mutate(weekPlot = (time*7) + as.Date("2017-01-01")) 
 
@@ -38,11 +38,11 @@ strats <- strats[strats!="overall"]
 #ethnicity_cats <- c(paste0("cat", 0:5))
 ethnicity_cats <- c("White", "South Asian", "Black", "Other", "Mixed", "Missing")
 #gender_cats <- c(paste0("gender", 1:2))
-gender_cats <- c("Female", "male")
+gender_cats <- c("Female", "Male")
 #region_cats <- c(paste0("region", 1:11))
 region_cats <- c("North East" ,
 								 "North West" ,
-								 "Yorkshire And The Humber" ,
+								 "Yorkshire & the Humber" ,
 								 "East Midlands" ,
 								 "West Midlands" ,
 								 "East of England" ,
@@ -50,7 +50,8 @@ region_cats <- c("North East" ,
 								 "South Central" ,
 								 "London" ,
 								 "South East Coast" ,
-								 "Northern Ireland")
+								 "Northern Ireland",
+								 "Missing")
 
 age_cats <- c("(0-10]","(10-20]","(20-30]","(30-40]","(40-50]","(50-60]","(60-70]","(70-80]","(80-90]","90+")
 categories <- list( ## careful of the order  here -- has to match the order of "strats" i.e. alphabetical
