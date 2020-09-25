@@ -27,7 +27,7 @@ outcomes <- stringr::str_remove_all(all_files, c("an_|.csv"))
 outcome_of_interest_namematch <- bind_cols("outcome" = outcomes, 
 																					 "outcome_name" = (c("Acute Alcohol Abuse", "Anxiety", "Asthma exacerbations",  "Cerebrovascular Accident", "COPD",
 																					 										"Depression", "Diabetes emergencies", "Feeding Disorders", 
-																					 										"Heart Failure", "Myocardial Infarction", "Obsessive Compulsive Disorder", "Self-harm", "Severe Mental Illness", "Transient Ischaemic Attacks", 
+																					 										"Heart Failure", "Myocardial Infarction", "OCD", "Self-harm", "Severe Mental Illness", "Transient Ischaemic Attacks", 
 																					 										"Unstable Angina", "Venous Thromboembolism"))
 )
 plot_order <- c(7,1,2,6,8,11,12,13,4,9,10,14,15,16,3,5)
@@ -136,18 +136,22 @@ figure_1b <- ggplot(plot_full, aes(x = plotWeek, y = value, group = year)) +
 	geom_line(aes(y = value_hist, col = "2017-2019 average"), lwd = 1.2) +
 	geom_ribbon(aes(ymin = value_20_low, ymax = value_hist), fill = alpha(2, 0.2), lty = 0) +
 	geom_ribbon(aes(ymin = value_20_hi, ymax = value_hist), fill = alpha(4, 0.2), lty = 0) +
-	scale_x_date(date_labels = "%b") +
+	scale_x_date(date_labels = "%b", breaks = "2 months") +
 	facet_wrap(~plot_name, scales = "free", ncol = 4) +
 	geom_vline(xintercept = as.Date("1991-03-23"), linetype = "dashed", col = 2) +
 	labs(x = "Date", y = "% of people consulting for outcome") +
 	theme_classic() +
-	theme(axis.text.x = element_text(angle = 60, hjust = 1, size = 12),
+	theme(axis.title = element_text(size = 16),
+				axis.text.y = element_text(size = 12),
+				axis.text.x = element_text(angle = 60, hjust = 1, size = 12),
 				legend.position = "top",
 				plot.background = element_rect(fill = bkg_colour, colour =  NA),
 				panel.background = element_rect(fill = bkg_colour, colour =  NA),
+				legend.text = element_text(size = 12),
+				legend.title = element_text(size = 12),
 				legend.background = element_rect(fill = bkg_colour, colour = NA),
 				strip.background = element_rect(fill = bkg_colour, colour =  NA),
-				strip.text = element_text(size = 10, hjust = 0),
+				strip.text = element_text(size = 12, hjust = 0),
 				panel.grid.major = element_blank(),
 				panel.grid.minor.x = element_blank(),
 				panel.grid.minor.y = element_line(size=.2, color=rgb(0,0,0,0.2)) ,
