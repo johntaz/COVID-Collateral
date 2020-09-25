@@ -25,6 +25,8 @@ global cardioDataDir "$projectDir\datafiles\2020_08\cardiovascular"
 global diabDataDir "$projectDir\datafiles\2020_08\diabetes"
 global mentalDataDir "$projectDir\datafiles\2020_08\mental"
 global alcDataDir "$projectDir\datafiles\2020_08\alcohol"
+global asthmaDataDir "$projectDir\datafiles\2020_08\asthma"
+global copdDataDir "$projectDir\datafiles\2020_08\copd"
 
 * diabetes type to added (and path updated in code)
 

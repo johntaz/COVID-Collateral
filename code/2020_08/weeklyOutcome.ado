@@ -34,7 +34,7 @@ program define weeklyOutcome
 	if "`study'"!= "" {
 		noi di ""	
 		noi di as result "Study type chosen: `study' "
-		noi di as result "Note: Enter 'resp' or 'diabetes' if specifying these study types"
+		noi di as result "Note: Enter 'asthma', 'copd' or 'diabetes' if specifying these study types"
 		}
 	else {
 	noi di as error "Enter a study type"
@@ -56,20 +56,40 @@ noi di as text "Restricting to diabetes population..."
 qui merge m:1 patid using "$denomDir\cr_`study'_strat_summary.dta", keep(match) nogen
 }
 
-* Restrict to respiratory population  // TO BE ADDED
+* Restrict to asthma population  
 
-if "`study'" == "resp" {
+if "`study'" == "asthma" {
 
 noi di ""	
-noi di as text "Restricting to respiratory population..."
-
-
+noi di as text "Restricting to asthma population..."
 qui merge m:1 patid using "$denomDir\cr_`study'_strat_summary.dta", keep(match) nogen
 
 }
 
+* Restrict to copd population  
 
-if "`study'" != "diabetes" & "`study'" != "resp" {
+if "`study'" == "copd" {
+
+noi di ""	
+noi di as text "Restricting to COPD population..."
+qui merge m:1 patid using "$denomDir\cr_`study'_strat_summary.dta", keep(match) nogen
+
+}
+
+if "`study'" == "cba" | "`study'" == "hf" | "`study'" == "mi" | "`study'" == "tia" | "`study'" == "ua" | "`study'" == "vte" {
+	noi di ""	
+noi di as text "Using cvd Aurum population..."
+qui merge m:1 patid using "$denomDir\cr_cvd_strat_summary.dta", keep(match) nogen
+}
+
+if "`study'" == "alcohol" {
+	noi di ""	
+noi di as text "Using alcohol Aurum population..."
+qui merge m:1 patid using "$denomDir\cr_alcohol_strat_summary.dta", keep(match) nogen
+}
+
+
+if "`study'" != "diabetes" & "`study'" != "asthma" & "`study'" != "copd" & "`study'" != "cba" & "`study'" != "hf" & "`study'" != "mi" & "`study'" != "tia" & "`study'" != "ua" & "`study'" != "vte" {
 noi di ""	
 noi di as text "Using full Aurum population..."
 qui merge m:1 patid using "$denomDir\cr_overall_strat_summary.dta", keep(match) nogen
@@ -95,12 +115,64 @@ qui drop if eventdate < `startdate'
 qui summ studyDay
 local maxDays = r(max)
 
+* region
+replace region =12 if region ==.
 * age
-gen age = year(eventdate) - yob
-qui drop if age < 10 | age > 100 // Update this!
+
+gen year = year(eventdate)
+gen age = year - yob
+drop year
+
+if "`study'" == "alcohol" { 
+
+drop if age <18 | age >100
 gen agegroup = 10*ceil(age/10 )
-label define ageLab 10 "0 - 10" ///
-					20 "11 - 20" ///
+
+label define ageLab 20 "18 - 20" ///
+					30 "21 - 30" ///
+					40 "31 - 40" ///
+					 50 "41 - 50" ///
+					60 "51 - 60" ///
+					70 "61 - 70" ///
+					80 "71 - 80" ///
+					90 "81 - 90" ///
+					100 "91 - 100" 
+label values agegroup ageLab	
+}
+
+if "`study'" == "cba" | "`study'" == "hf" | "`study'" == "mi" | "`study'" == "tia" |"`study'" == "ua" | "`study'" == "vte" { 
+drop if age <31 | age >100
+gen agegroup = 10*ceil(age/10 )
+
+label define ageLab 40 "31 - 40" /// 
+					50 "41 - 50" ///
+					60 "51 - 60" ///
+					70 "61 - 70" ///
+					80 "71 - 80" ///
+					90 "81 - 90" ///
+					100 "91 - 100" 
+label values agegroup ageLab	
+}
+if "`study'" == "copd" { 
+
+
+gen agegroup = 10*ceil(age/10 )
+drop if age <41 | age >100
+label define ageLab  50 "41 - 50" ///
+					60 "51 - 60" ///
+					70 "61 - 70" ///
+					80 "71 - 80" ///
+					90 "81 - 90" ///
+					100 "91 - 100" 
+label values agegroup ageLab	
+}
+
+if "`study'" != "alcohol" & "`study'" != "copd" & "`study'" != "cba" & "`study'" != "hf" & "`study'" != "mi" & "`study'" != "tia" & "`study'" != "ua" & "`study'" != "vte" {
+
+drop if age <11 | age >100
+gen agegroup = 10*ceil(age/10 )
+
+label define ageLab 20 "11 - 20" ///
 					30 "21 - 30" ///
 					40 "31 - 40" ///
 					50 "41 - 50" ///
@@ -110,6 +182,9 @@ label define ageLab 10 "0 - 10" ///
 					90 "81 - 90" ///
 					100 "91 - 100" 
 label values agegroup ageLab
+}
+
+
 
 * Generate number of weeks 
 * If we calculate floor can later drop missing (as these are the last days which don't make up a full week)
@@ -154,7 +229,6 @@ drop outcomeGap a
 }
 qui gen numOutcome = 1
 
-
 noi di as text "***********************************************************************" 
 noi di as text "Generating overall weekly outcomes..." 
 noi di as text "***********************************************************************" 
@@ -175,15 +249,16 @@ qui postfile `denom' weekDate numOutcome time category str15(stratifier) using "
 
 		if mod(`i', 100)==0 {
 			noi di as text "Week `i' out of `numWeeks'"
-	
+
 			}	
 	post `denom' (`weekDate') (`numOutcome') (`k') (1) ("overall")
 		}
-	
+
 postclose `denom'
 noi di as text "...Completed"
 noi di ""
 
+if "`study'" == "cba" | "`study'" == "hf" | "`study'" == "mi" | "`study'" == "tia" |"`study'" == "ua" | "`study'" == "vte" {
 noi di as text "***********************************************************************" 
 noi di as text "Generating weekly outcomes by age..." 
 noi di as text "***********************************************************************" 
@@ -191,7 +266,7 @@ noi di as text "Progress..."
 * overall
 tempname denom
 qui postfile `denom' weekDate numOutcome time category str15(stratifier) using "cr_`study'_outcome_age.dta", replace
-	forvalues g = 10(10)100 {
+	forvalues g = 40(10)100 {
 		forvalues i = 1/`numWeeks' {
 		cap drop outcome
 		local k = `i' - 1 
@@ -214,6 +289,41 @@ qui postfile `denom' weekDate numOutcome time category str15(stratifier) using "
 postclose `denom'
 noi di as text "...Completed"
 noi di ""
+}
+
+
+else {
+noi di as text "***********************************************************************" 
+noi di as text "Generating weekly outcomes by age..." 
+noi di as text "***********************************************************************" 
+noi di as text "Progress..."
+* overall
+tempname denom
+qui postfile `denom' weekDate numOutcome time category str15(stratifier) using "cr_`study'_outcome_age.dta", replace
+	forvalues g = 20(10)100 {
+		forvalues i = 1/`numWeeks' {
+		cap drop outcome
+		local k = `i' - 1 
+		local weekDate = `startdate' + 7*`k'
+
+		* Identify eligible patients 
+		gen outcomeFlag = cond(week == `i' & agegroup == `g', 1, 0)
+
+		qui count if outcomeFlag == 1 
+		local numOutcome = r(N)
+
+		if mod(`i', 100)==0 {
+			noi di as text "Strata age, level `g' : Week `i' out of `numWeeks'"
+	
+			}	
+	post `denom' (`weekDate') (`numOutcome') (`k') (`g') ("age")
+		}
+	}
+	
+postclose `denom'
+noi di as text "...Completed"
+noi di ""
+}
 
 noi di as text "***********************************************************************" 
 noi di as text "Generating weekly outcomes by gender..." 

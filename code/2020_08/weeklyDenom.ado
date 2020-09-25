@@ -35,7 +35,7 @@ program define weeklyDenom
 	if "`study'"!= "" {
 		noi di ""	
 		noi di as result "Study type chosen: `study' "
-		noi di as result "Note: Enter 'resp' or 'diabetes' if specifying these study types"
+		noi di as result "Note: Enter 'asthma', 'copd' or 'diabetes' if specifying these study types"
 		}
 	else {
 	noi di as error "Enter a study type"
@@ -58,26 +58,38 @@ noi di as text "****************************************************************
 qui merge 1:1 patid using "$diabDataDir\diabetesType.dta", keep(match) nogen keepusing(patid) // update to include type
 }
 
-* Restrict to respiratory population  // TO BE ADDED
+* Restrict to asthma population  
 
-if "`study'" == "resp" {
+if "`study'" == "asthma" {
 
 noi di ""	
-noi di as text "Restricting to respiratory data..."
+noi di as text "Restricting to asthma data..."
 noi di as text "***********************************************************************" 
 
-qui merge 1:1 patid using "$diabDataDir\diabetesType.dta", keep(match) nogen
+qui merge 1:1 patid using "$asthmaDataDir\asthma_dx.dta", keep(match) nogen keepusing(patid)
 
 }
+* Restrict to asthma population 
 
+if "`study'" == "copd" {
 
-if "`study'" != "diabetes" & "`study'" != "resp" {
+noi di ""	
+noi di as text "Restricting to COPD data..."
+noi di as text "***********************************************************************" 
+
+qui merge 1:1 patid using "$copdDataDir\copd_dx.dta", keep(match) nogen keepusing(patid)
+
+} 
+
+if "`study'" != "diabetes" & "`study'" != "asthma" & "`study'" != "copd" {
 noi di ""	
 noi di as text "Using full Aurum denominator population..."
 noi di as text "***********************************************************************" 
 }
 
 qui {	
+	cap drop age
+    cap drop agegroup
 	cap drop obsStart 
 	cap drop obsEnd 
 	cap drop lcdDate 
@@ -86,9 +98,11 @@ qui {
 	cap label drop ageLab
 
 		local startdate = td(01jan2017)
-		local enddate = td(20aug2020)
+		local enddate = td(20aug2020)		
 		
-gen regstartdate2 = date(regstartdate, "DMY")
+		
+		
+/*gen regstartdate2 = date(regstartdate, "DMY")
 drop regstartdate
 rename regstartdate2 regstartdate
 format regstartdate %td
@@ -103,8 +117,9 @@ drop lcd
 rename lcd2 lcd
 format lcd %td
 
-format lcd %td
+format lcd %td */
 
+		
 gen obsStart = regstartdate + 365.25 
 format obsStart %td
 
@@ -134,6 +149,9 @@ replace gender = 2 if gender == 3 // 2 = M, 1 = F
 label define genderLab 1 "F" 2 "M"
 label values gender genderLab
 
+
+* region
+replace region = 12 if region ==.
 * age
 
 gen startdate = `startdate'
@@ -143,9 +161,60 @@ gen age = year - yob
 drop year
 
 *clean values
-drop if age < 10 | age > 100 // Update this!
+*clean values
+if "`study'" == "alcohol" {
+drop if age < 14 | age > 100
 gen agegroup = 10*ceil(age/10 )
-label define ageLab 10 "0 - 10" ///
+replace agegroup = 999 if age < 18
+label define ageLab 999 "<18"	 ///
+					20 "18 - 20" ///
+					30 "21 - 30" ///
+					40 "31 - 40" ///
+					50 "41 - 50" ///
+					60 "51 - 60" ///
+					70 "61 - 70" ///
+					80 "71 - 80" ///
+					90 "81 - 90" ///
+					100 "91 - 100" 
+label values agegroup ageLab	
+local min_age_eligible = 18
+}
+
+if "`study'" == "copd" {
+drop if age < 37 | age > 100
+gen agegroup = 10*ceil(age/10 )
+replace agegroup = 999 if age < 41
+label define ageLab	999 "<41"     ///
+					50 "41 - 50" ///
+					60 "51 - 60" ///
+					70 "61 - 70" ///
+					80 "71 - 80" ///
+					90 "81 - 90" ///
+					100 "91 - 100" 
+label values agegroup ageLab	
+local min_age_eligible = 41
+}
+if "`study'" == "cvd" {
+drop if age < 27 | age > 100
+gen agegroup = 10*ceil(age/10 )
+replace agegroup = 999 if age < 31
+label define ageLab 999 "<31"     ///
+					40 "31 - 40" ///
+					50 "41 - 50" ///
+					60 "51 - 60" ///
+					70 "61 - 70" ///
+					80 "71 - 80" ///
+					90 "81 - 90" ///
+					100 "91 - 100" 
+label values agegroup ageLab	
+local min_age_eligible = 31
+}
+
+if "`study'"!= "cvd" & "`study'" != "alcohol" & "`study'" != "copd" {
+drop if age < 7 | age > 100
+gen agegroup = 10*ceil(age/10)
+replace agegroup = 999 if age < 11
+label define ageLab 999 "<11" 	 ///
 					20 "11 - 20" ///
 					30 "21 - 30" ///
 					40 "31 - 40" ///
@@ -156,6 +225,8 @@ label define ageLab 10 "0 - 10" ///
 					90 "81 - 90" ///
 					100 "91 - 100" 
 label values agegroup ageLab
+local min_age_eligible = 11
+}
 
 * Find out how many weeks of data
 gen studyDay = obsEnd - `startdate' + 1
@@ -167,51 +238,83 @@ local numWeeks = ceil(`maxDays'/7)
 assert studyDay > 0 
 
 * merge ethnicity 
-merge 1:1 patid using "$ethnDataDir\ethnicity_define.dta" 
+merge 1:1 patid using "$ethnDataDir\ethnicity_define.dta" 	
 drop if _merge==2
 replace eth5 = 5 if _merge==1 
 rename eth5 ethnicity
 drop _merge
 }
 
-noi di ""
-noi di as text "***********************************************************************" 
-noi di as text "Generating overall weekly denominators..." 
-noi di as text "***********************************************************************" 
-noi di as text "Progress..."
-tempname denom
-qui postfile `denom' weekDate numEligible time category str15(stratifier) using "cr_`study'_denom_overall.dta", replace
 
-* Generate weekly denominators
-forvalues i = 1/`numWeeks' {
-cap drop eligibleFlag
-local k = `i' - 1 
-local weekDate = `startdate' + 7*`k'
 
-* Identify eligible patients 
-gen eligibleFlag = cond(obsStart <= `weekDate' & obsEnd >= `weekDate' , 1, 0)
-
-qui count if eligibleFlag == 1
-local numEligible = r(N)
-
-if mod(`i', 100)==0 {
-	noi di as text  "Week `i' out of `numWeeks'"
-	
-	}	
-	post `denom' (`weekDate') (`numEligible') (`k') (1) ("overall")
-}
-
-postclose `denom'
-noi di as text "...Completed"
-noi di ""
+if "`study'" == "alcohol" {
 noi di as text "***********************************************************************" 
 noi di as text "Generating weekly denominators by age..." 
 noi di as text "***********************************************************************" 
 noi di as text "Progress..."
-* gender
+* age
 tempname denom
 qui postfile `denom' weekDate numEligible time category str15(stratifier) using "cr_`study'_denom_age.dta", replace
-	forvalues g = 10(10)100 {
+	forvalues g = 20(10)100 {
+		forvalues i = 1/`numWeeks' {
+		cap drop eligibleFlag
+		local k = `i' - 1 
+		local weekDate = `startdate' + 7*`k'
+
+		* Identify eligible patients 
+		gen eligibleFlag = cond(obsStart <= `weekDate' & obsEnd >= `weekDate' & agegroup == `g', 1, 0)
+
+		qui count if eligibleFlag == 1 
+		local numEligible = r(N)
+
+		* Update age each year
+		* 2018
+qui {
+		if td(01jan2018) >= `weekDate' & td(01jan2018) <= `weekDate' + 7 {
+			replace age = age + 1 
+			replace agegroup = 10*ceil(age/10)
+			replace agegroup = 999 if age < 18
+		}
+		* 2019
+			if td(01jan2019) >= `weekDate' & td(01jan2019) <= `weekDate' + 7 {
+			replace age = age + 1 
+			replace agegroup = 10*ceil(age/10)
+			replace agegroup = 999 if age < 18
+		}
+		* 2020
+			if td(01jan2020) >= `weekDate' & td(01jan2020) <= `weekDate' + 7 {
+			replace age = age + 1 
+			replace agegroup = 10*ceil(age/10)
+			replace agegroup = 999 if age < 18
+		}
+}
+		if mod(`i', 100)==0 {
+			noi di as text "Strata age, level `g' : Week `i' out of `numWeeks'"
+	
+			}	
+	post `denom' (`weekDate') (`numEligible') (`k') (`g') ("age")
+		}
+	* Correct age for next loop
+		qui replace age = age - 3
+		qui	replace agegroup = 10*ceil(age/10)
+		qui replace agegroup = 999 if age < 18
+	}
+postclose `denom'
+noi di as text "...Completed"
+noi di ""
+}
+
+
+
+if "`study'" == "cvd" {
+noi di as text "***********************************************************************" 
+noi di as text "Generating weekly denominators by age..." 
+noi di as text "***********************************************************************" 
+noi di as text "Progress..."
+* age
+tempname denom
+qui postfile `denom' weekDate numEligible time category str15(stratifier) using "cr_`study'_denom_age.dta", replace
+	forvalues g = 40(10)100 {
 		forvalues i = 1/`numWeeks' {
 		cap drop eligibleFlag
 		local k = `i' - 1 
@@ -249,15 +352,131 @@ qui {
 		}
 	* Correct age for next loop
 		qui replace age = age - 3
+		qui	replace agegroup = 10*ceil(age/10)
 	}
 postclose `denom'
 noi di as text "...Completed"
 noi di ""
+}
+
+
+if "`study'" == "copd" {
+noi di as text "***********************************************************************" 
+noi di as text "Generating weekly denominators by age..." 
+noi di as text "***********************************************************************" 
+noi di as text "Progress..."
+tempname denom
+qui postfile `denom' weekDate numEligible time category str15(stratifier) using "cr_`study'_denom_age.dta", replace
+	forvalues g = 50(10)100 {
+		forvalues i = 1/`numWeeks' {
+		cap drop eligibleFlag
+		local k = `i' - 1 
+		local weekDate = `startdate' + 7*`k'
+
+		* Identify eligible patients 
+		gen eligibleFlag = cond(obsStart <= `weekDate' & obsEnd >= `weekDate' & agegroup == `g', 1, 0)
+
+		qui count if eligibleFlag == 1 
+		local numEligible = r(N)
+
+		* Update age each year
+		* 2018
+qui {
+		if td(01jan2018) >= `weekDate' & td(01jan2018) <= `weekDate' + 7 {
+			replace age = age + 1 
+			replace agegroup = 10*ceil(age/10)
+		}
+		* 2019
+			if td(01jan2019) >= `weekDate' & td(01jan2019) <= `weekDate' + 7 {
+			replace age = age + 1 
+			replace agegroup = 10*ceil(age/10)
+		}
+		* 2020
+			if td(01jan2020) >= `weekDate' & td(01jan2020) <= `weekDate' + 7 {
+			replace age = age + 1 
+			replace agegroup = 10*ceil(age/10)
+		}
+}
+		if mod(`i', 100)==0 {
+			noi di as text "Strata age, level `g' : Week `i' out of `numWeeks'"
+	
+			}	
+	post `denom' (`weekDate') (`numEligible') (`k') (`g') ("age")
+		}
+	* Correct age for next loop
+		qui replace age = age - 3
+		qui	replace agegroup = 10*ceil(age/10)
+	}
+postclose `denom'
+noi di as text "...Completed"
+noi di ""
+}
+
+
+/* for all other studies that are not COPD or CVD */
+if "`study'" != "cvd" & "`study'" != "copd" & "`study'" != "alcohol" {
+noi di as text "***********************************************************************" 
+noi di as text "Generating weekly denominators by age..." 
+noi di as text "***********************************************************************" 
+noi di as text "Progress..."
+* age
+tempname denom
+qui postfile `denom' weekDate numEligible time category str15(stratifier) using "cr_`study'_denom_age.dta", replace
+	forvalues g = 20(10)100 {
+		forvalues i = 1/`numWeeks' {
+		cap drop eligibleFlag
+		local k = `i' - 1 
+		local weekDate = `startdate' + 7*`k'
+
+		* Identify eligible patients 
+		gen eligibleFlag = cond(obsStart <= `weekDate' & obsEnd >= `weekDate' & agegroup == `g', 1, 0)
+
+		
+		qui count if eligibleFlag == 1 
+		local numEligible = r(N)
+
+		* Update age each year
+		* 2018
+qui {
+		if td(01jan2018) >= `weekDate' & td(01jan2018) <= `weekDate' + 7 {
+			replace age = age + 1 
+			replace agegroup = 10*ceil(age/10)
+		}
+		* 2019
+			if td(01jan2019) >= `weekDate' & td(01jan2019) <= `weekDate' + 7 {
+			replace age = age + 1 
+			replace agegroup = 10*ceil(age/10)
+		}
+		* 2020
+			if td(01jan2020) >= `weekDate' & td(01jan2020) <= `weekDate' + 7 {
+			replace age = age + 1 
+			replace agegroup = 10*ceil(age/10)
+		}
+}
+		if mod(`i', 100)==0 {
+			noi di as text "Strata age, level `g' : Week `i' out of `numWeeks'"
+	
+			}	
+
+	post `denom' (`weekDate') (`numEligible') (`k') (`g') ("age")
+		}
+	* Correct age for next loop
+		qui replace age = age - 3
+		qui replace agegroup = 10*ceil(age/10)
+	}
+postclose `denom'
+noi di as text "...Completed"
+noi di ""
+
+}
+
+
 noi di as text "***********************************************************************" 
 noi di as text "Generating weekly denominators by gender..." 
 noi di as text "***********************************************************************" 
 noi di as text "Progress..."
 * gender
+	
 tempname denom
 qui postfile `denom' weekDate numEligible time category str15(stratifier) using "cr_`study'_denom_gender.dta", replace
 	forvalues g = 1/2 {
@@ -267,17 +486,39 @@ qui postfile `denom' weekDate numEligible time category str15(stratifier) using 
 		local weekDate = `startdate' + 7*`k'
 
 		* Identify eligible patients 
-		gen eligibleFlag = cond(obsStart <= `weekDate' & obsEnd >= `weekDate' & gender == `g', 1, 0)
+		gen eligibleFlag = cond(obsStart <= `weekDate' & obsEnd >= `weekDate' & gender == `g' & age >= `min_age_eligible' & age <= 100, 1, 0)
+		
 
 		qui count if eligibleFlag == 1 
 		local numEligible = r(N)
-
+		* Update age each year
+		* 2018
+qui {
+		if td(01jan2018) >= `weekDate' & td(01jan2018) <= `weekDate' + 7 {
+			replace age = age + 1 
+			replace agegroup = 10*ceil(age/10)
+		}
+		* 2019
+			if td(01jan2019) >= `weekDate' & td(01jan2019) <= `weekDate' + 7 {
+			replace age = age + 1 
+			replace agegroup = 10*ceil(age/10)
+		}
+		* 2020
+			if td(01jan2020) >= `weekDate' & td(01jan2020) <= `weekDate' + 7 {
+			replace age = age + 1 
+			replace agegroup = 10*ceil(age/10)
+		}
+}
 		if mod(`i', 100)==0 {
 			noi di as text "Strata gender, level `g' : Week `i' out of `numWeeks'"
 	
 			}	
+
 	post `denom' (`weekDate') (`numEligible') (`k') (`g') ("gender")
 		}
+	* Correct age for next loop
+		qui replace age = age - 3
+		qui replace agegroup = 10*ceil(age/10)
 	}
 postclose `denom'
 noi di as text "...Completed"
@@ -296,17 +537,39 @@ qui postfile `denom' weekDate numEligible time category str15(stratifier) using 
 		local weekDate = `startdate' + 7*`k'
 
 		* Identify eligible patients 
-		gen eligibleFlag = cond(obsStart <= `weekDate' & obsEnd >= `weekDate' & ethnicity == `g', 1, 0)
+		gen eligibleFlag = cond(obsStart <= `weekDate' & obsEnd >= `weekDate' & ethnicity == `g' & age >= `min_age_eligible' & age <= 100, 1, 0)
 
 		qui count if eligibleFlag == 1 
 		local numEligible = r(N)
 
+		* Update age each year
+		* 2018
+qui {
+		if td(01jan2018) >= `weekDate' & td(01jan2018) <= `weekDate' + 7 {
+			replace age = age + 1 
+			replace agegroup = 10*ceil(age/10)
+		}
+		* 2019
+			if td(01jan2019) >= `weekDate' & td(01jan2019) <= `weekDate' + 7 {
+			replace age = age + 1 
+			replace agegroup = 10*ceil(age/10)
+		}
+		* 2020
+			if td(01jan2020) >= `weekDate' & td(01jan2020) <= `weekDate' + 7 {
+			replace age = age + 1 
+			replace agegroup = 10*ceil(age/10)
+		}
+}
 		if mod(`i', 100)==0 {
 			noi di as text "Strata ethnicity, level `g' : Week `i' out of `numWeeks'"
 	
 			}	
+
 	post `denom' (`weekDate') (`numEligible') (`k') (`g') ("ethnicity")
 		}
+	* Correct age for next loop
+		qui replace age = age - 3
+		qui replace agegroup = 10*ceil(age/10)
 	}
 postclose `denom'
 noi di as text "...Completed"
@@ -328,17 +591,39 @@ qui postfile `denom' weekDate numEligible time category str15(stratifier) using 
 		local weekDate = `startdate' + 7*`k'
 
 		* Identify eligible patients 
-		gen eligibleFlag = cond(obsStart <= `weekDate' & obsEnd >= `weekDate' & region == `g', 1, 0)
+		gen eligibleFlag = cond(obsStart <= `weekDate' & obsEnd >= `weekDate' & region == `g' & age >= `min_age_eligible' & age <= 100, 1, 0)
 
 		qui count if eligibleFlag == 1 
 		local numEligible = r(N)
 
+		* Update age each year
+		* 2018
+qui {
+		if td(01jan2018) >= `weekDate' & td(01jan2018) <= `weekDate' + 7 {
+			replace age = age + 1 
+			replace agegroup = 10*ceil(age/10)
+		}
+		* 2019
+			if td(01jan2019) >= `weekDate' & td(01jan2019) <= `weekDate' + 7 {
+			replace age = age + 1 
+			replace agegroup = 10*ceil(age/10)
+		}
+		* 2020
+			if td(01jan2020) >= `weekDate' & td(01jan2020) <= `weekDate' + 7 {
+			replace age = age + 1 
+			replace agegroup = 10*ceil(age/10)
+		}
+}
 		if mod(`i', 100)==0 {
 			noi di as text "Strata region, level `g' : Week `i' out of `numWeeks'"
 	
 			}	
+
 	post `denom' (`weekDate') (`numEligible') (`k') (`g') ("region")
 		}
+	* Correct age for next loop
+		qui replace age = age - 3
+		qui replace agegroup = 10*ceil(age/10)
 	}
 postclose `denom'
 noi di as text "...Completed"
@@ -350,13 +635,22 @@ save "cr_`study'_strat_summary.dta", replace
 *****
 
 noi di as text "***********************************************************************" 
-noi di as text "Appending weekly denominator files..." 
+noi di as text "Collapse Gender denom file to calculate overall denom..." 
 noi di as text "***********************************************************************" 
 
 
+use "cr_`study'_denom_gender.dta", replace
+collapse (sum) numEligible (mean) time , by(weekDate)
+gen stratifier = "overall"
+gen category = 1
+
+noi di as text "***********************************************************************" 
+noi di as text "Appending weekly denominator files..." 
+noi di as text "***********************************************************************" 
+
 * Append all denominators 
-clear 
-local denominators "overall age gender ethnicity region"
+*clear 
+local denominators "age gender ethnicity region"
 	foreach i of local denominators {
 		qui append using "cr_`study'_denom_`i'.dta"
 		format weekDate %td
