@@ -142,4 +142,3 @@ cowplot::plot_grid(
 	ncol = 3
 )
 ggsave(file = paste0("J:/EHR-Working/Sinead_Covid_Collaterol/graphfiles/overallOutcomes.pdf"), width = 14, height = 20)
-
