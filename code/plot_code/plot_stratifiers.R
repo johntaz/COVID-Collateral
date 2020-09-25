@@ -3,7 +3,8 @@
 # Program Name: 101_an_overallPopulation
 # Author: Alasdair Henderson 
 # Date Created: 16/06/2020
-# Notes: Trend of diabetes recording over time in whole population
+# Notes: all outcomes, by straifiers
+# Ref: https://github.com/johntaz/COVID-Collateral 
 #---------------------------------------------------------------------------------------
 
 # Flag missing libraries and install those required
@@ -15,11 +16,10 @@ library(tidyverse)
 library(lubridate)
 library(cowplot)
 
-#---------------------------------------------------------------------------------------
-#  Import data
-#---------------------------------------------------------------------------------------
+
 setwd("~/Documents/COVID-collateral/")
 
+# import data -------------------------------------------------------------
 outcome_of_interest <- sort(c("alcohol","anxiety","asthma","copd", "cba", "depression", "diabetes", "feedingdisorders", "hf", "mi", "ocd", "selfharm","smi", "tia", "ua", "vte"))
 
 outcome_of_interest_namematch <- bind_cols("outcome" = outcome_of_interest, 
@@ -45,11 +45,8 @@ for(i in 1:length(files_to_import)){
 }
 length(files_to_import)
 
-running_manually <- F
-
 # do plot 1b by strata ----------------------------------------------------
-plot_strata_by_outcome <- function(run_no = 4,
-											 strata_group = "age"){
+plot_strata_by_outcome <- function(run_no = 4,strata_group = "age"){
 	
 		outcome_temp <- get(paste0("outcome_", run_no))
 		
@@ -98,26 +95,12 @@ plot_strata_by_outcome <- function(run_no = 4,
 																				 )
 			)
 		)
-		# label define ageLab 
-		#		`10` = "0 - 10", 
-		# 	`20` = "11 - 20",
-		# 	`30` = "21 - 30",
-		# 	`40` = "31 - 40",
-		# 	`50` = "41 - 50",
-		# 	`60` = "51 - 60",
-		# 	`70` = "61 - 70",
-		# 	`80` = "71 - 80",
-		# 	`90` = "81 - 90",
-		# 	`100` = "91 - 100"
-		## manual bodge
-		#if(strata_group == "age" & outcome_of_interest[run_no] == "copd"){
-		#	outcome_temp <- outcome_temp %>%
-		#		filter(category_cat != "30-50")
-		#}
+		## calc proportion consulting overall
 		plot_strata <- outcome_temp %>%
 			mutate(value = (numOutcome/numEligible)*100) %>%
 			filter(stratifier == strata_group)
 		
+		# get year and week of data
 		Plot_fmt_strata <- plot_strata %>%
 			group_by(weekDate, category_cat) %>%
 			summarise(value = mean(value, na.rm = T)) %>%
@@ -125,17 +108,20 @@ plot_strata_by_outcome <- function(run_no = 4,
 			mutate(year = year(weekDate)) %>%
 			mutate(week = week(weekDate)) 
 		
+		# take data from 2020 and creat as a new variable
 		Plot_2020_strata <- Plot_fmt_strata %>%
 			filter(year == 2020) %>% 
 			mutate_at("value", ~ifelse(.==0, NA, .)) %>%
 			select(week, "value_20" = value, category_cat)
 		
+		# take historic data (<2020) and calculate weekly mean
 		Plot_historical_strata <- Plot_fmt_strata %>%
 			filter(year != 2020) %>%
 			group_by(week, category_cat) %>%
 			summarise(value = mean(value, na.rm = T)) %>% 
 			rename("value_hist" = value)
 		
+		# merge historic data with historic average and 2020 data
 		df_plot2_strata <- Plot_fmt_strata %>% 
 			filter(year != 2020) %>%
 			left_join(Plot_historical_strata, by = c("week", "category_cat")) %>%
@@ -144,6 +130,8 @@ plot_strata_by_outcome <- function(run_no = 4,
 		
 		df_plot3_strata <- df_plot2_strata %>%
 			mutate(month = month(weekDate)) 
+		
+		## change the names used for plots slightly if age 
 		if(strata_group == "age"){
 			name_to_title <- outcome_of_interest_namematch_Age %>%
 				filter(outcome == outcome_of_interest[run_no]) %>%
@@ -156,23 +144,12 @@ plot_strata_by_outcome <- function(run_no = 4,
 		df_plot3_strata <- df_plot3_strata %>%
 			mutate(plot_name = pull(name_to_title)) 
 		##
-		if(running_manually){
-			ggplot(df_plot3_strata, aes(x = as.Date("1991-01-01"), y = value, group = factor(category_cat), col = factor(category_cat), fill = factor(category_cat))) +
-				geom_boxplot(width=20, outlier.size=0, position="identity", alpha=.5) +
-				geom_line(data = filter(strat_plot_data, !is.na(value_20)), aes(x = plotWeek, y = value_20), lwd = 1.2) + 
-				scale_x_date(date_labels = "%b") +
-				facet_wrap(~plot_name, scales = "free", ncol = 4) +
-				geom_vline(xintercept = as.Date("1991-03-23"), linetype = "dashed", col = 2) +
-				labs(x = "Date", y = "Prop. of people consulting for outcome", title = "", colour = "Age", fill = "Age") +
-				theme_classic()  +
-				theme(axis.text.x = element_text(angle = 60, hjust = 1),
-							strip.background = element_rect(fill = bkg_colour, colour =  NA),
-							strip.text = element_text(hjust = 0)) 
-			}
 		return(df_plot3_strata)
 }
 
-pdf("~/Documents/COVID-Collateral/graphfiles/ageOutcomes_09-24.pdf", width = 14.5, height = 14.5)
+
+# plot by age -------------------------------------------------------------
+pdf("~/Documents/COVID-Collateral/graphfiles/ageOutcomes.pdf", width = 14.5, height = 14.5)
 	strat_plot_data <- NULL
 	for(ii in plot_order){
 		strat_plot_data <- strat_plot_data %>%
@@ -203,6 +180,8 @@ pdf("~/Documents/COVID-Collateral/graphfiles/ageOutcomes_09-24.pdf", width = 14.
 	figure_1c_strata
 dev.off()
 
+
+# plot by ethnicity -------------------------------------------------------
 pdf("~/Documents/COVID-Collateral/graphfiles/ethnicityOutcomes.pdf", width = 14, height = 14)
 	strat_plot_data <- NULL
 	for(ii in plot_order){
@@ -234,6 +213,8 @@ pdf("~/Documents/COVID-Collateral/graphfiles/ethnicityOutcomes.pdf", width = 14,
 figure_1c_strata
 dev.off()
 
+
+# plot by gender ----------------------------------------------------------
 pdf("~/Documents/COVID-Collateral/graphfiles/genderOutcomes.pdf", width = 14, height = 14)
 	strat_plot_data <- NULL
 	for(ii in plot_order){
@@ -263,7 +244,7 @@ pdf("~/Documents/COVID-Collateral/graphfiles/genderOutcomes.pdf", width = 14, he
 	figure_1c_strata
 dev.off()
 
-
+# plot by region ----------------------------------------------------------
 pdf("~/Documents/COVID-Collateral/graphfiles/regionOutcomes.pdf", width = 14, height = 14)
 strat_plot_data <- NULL
 for(ii in plot_order){

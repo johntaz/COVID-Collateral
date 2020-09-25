@@ -15,9 +15,6 @@ library(tidyverse)
 library(lubridate)
 library(cowplot)
 
-#setwd("J:/EHR-Working/Sinead_Covid_Collaterol/datafiles/2020_08/graphdata")
-setwd(here::here("data/"))
-
 # Import data -------------------------------------------------------------
 outcome_of_interest <- sort(c("alcohol","anxiety","asthma","copd", "cba", "depression", "diabetes", "feedingdisorders", "hf", "mi", "ocd", "selfharm","smi", "tia", "ua", "vte"))
 
@@ -114,7 +111,7 @@ plot_main <- function(ii){
 	df_plot2
 }
 
-pdf("~/Documents/COVID-Collateral/graphfiles/overallOutcomes_09-24.pdf", width = 12, height = 10)
+pdf("~/Documents/COVID-Collateral/graphfiles/overallOutcomes.pdf", width = 12, height = 10)
 
 plot_full <- NULL
 for(ii in plot_order){
