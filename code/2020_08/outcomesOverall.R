@@ -18,7 +18,7 @@ library(cowplot)
 setwd("J:/EHR-Working/Sinead_Covid_Collaterol/datafiles/2020_08/graphdata")
 
 # Import data -------------------------------------------------------------
-outcome_of_interest <- sort(c("alcohol","anxiety", "cba", "depression", "diabetes", "feedingdisorders", "hf", "mi", "ocd", "selfharm","smi", "tia", "ua", "vte"))
+outcome_of_interest <- sort(c("alcohol","anxiety", "cba", "depression", "diabetes", "feedingdisorders", "hf", "mi", "ocd", "selfharm","smi", "tia", "ua", "vte",  "asthma", "copd"))
 
 files_to_import <- list.files(pattern = paste0("an_", outcome_of_interest, collapse = "|"))
 
@@ -136,6 +136,8 @@ cowplot::plot_grid(
 	plot_main(12),
 	plot_main(13),
 	plot_main(14),
+	plot_main(15), 
+	plot_main(16),
 	
 	ncol = 3
 )
