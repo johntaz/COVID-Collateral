@@ -172,7 +172,16 @@ its_function <- function(outcomes_vec = outcomes,
 				mutate(var = rownames(paramter_estimates)) %>%
 				filter(var == "lockdown") %>%
 				mutate(var = outcome)
-		return(list(df_1 = outcome_plot, vals_to_print = vals_to_print))
+			
+			## Get ORs for effect of time on outcome after lockdown (time + interaction of time:lockdown)
+			interaction_lincom <- glht(binom_model2, linfct = c("timeC + lockdown:timeC = 0"))
+			out <- confint(interaction_lincom)
+			time_grad_postLdn <- out$confint[1,] %>% exp() %>% t() %>% as.data.frame() 
+			interaction_to_print <- time_grad_postLdn %>%
+				mutate(var = outcome)
+			
+			## output
+		return(list(df_1 = outcome_plot, vals_to_print = vals_to_print, interaction_to_print = interaction_to_print))
 		}
 		
 		# the plot ----------------------------------------------------------------
