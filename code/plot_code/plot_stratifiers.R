@@ -28,6 +28,12 @@ outcome_of_interest_namematch <- bind_cols("outcome" = outcome_of_interest,
 																					 										"Heart Failure", "Myocardial Infarction", "Obsessive Compulsive Disorder", "Self-harm", "Severe Mental Illness", "Transient Ischaemic Attacks", 
 																					 										"Unstable Angina", "Venous Thromboembolism"))
 )
+outcome_of_interest_namematch_Age <- bind_cols("outcome" = outcome_of_interest, 
+																					 "outcome_name" = (c("Acute Alcohol Abuse (18+)", "Anxiety", "Asthma exacerbations",  "Cerebrovascular Accident (31+)", "COPD (41+)",
+																					 										"Depression", "Diabetes emergencies", "Feeding Disorders", 
+																					 										"Heart Failure (31+)", "Myocardial Infarction (31+)", "Obsessive Compulsive Disorder", "Self-harm", "Severe Mental Illness", "Transient Ischaemic Attacks (31+)", 
+																					 										"Unstable Angina (31+)", "Venous Thromboembolism (31+)"))
+)
 plot_order <- c(7,1,2,6,8,11,12,13,4,9,10,14,15,16,3,5)
 
 files_to_import <- list.files("data/", pattern = paste0(outcome_of_interest, collapse = "|"))
@@ -55,19 +61,40 @@ plot_strata_by_outcome <- function(run_no = 4,
 																				 ifelse(stratifier == "age", 
 																				 			 recode(.,
 																				 			 			 `10` = "0 - 10", 
-																				 			 			 `20` = "11 - 20",
-																				 			 			 `30` = "21 - 30",
-																				 			 			 `40` = "31 - 40",
-																				 			 			 `50` = "41 - 50",
-																				 			 			 `60` = "51 - 60",
-																				 			 			 `70` = "61 - 70",
-																				 			 			 `80` = "71 - 80",
-																				 			 			 `90` = "81 - 90",
-																				 			 			 `100` = "91 - 100"
+																				 			 			 `20` = "11 - 30",
+																				 			 			 `30` = "11 - 30",
+																				 			 			 `40` = "31 - 50",
+																				 			 			 `50` = "31 - 50",
+																				 			 			 `60` = "51 - 70",
+																				 			 			 `70` = "51 - 70",
+																				 			 			 `80` = "71+",
+																				 			 			 `90` = "71+",
+																				 			 			 `100` = "71+"
 																				 			 			 ),
 																				 			 ifelse(stratifier == "region", 
-																				 			 			 recode(.,`1` = "North East",`2` = "North West",`3` = "Yorkshire & the Humber",`4` = "East Midlands",`5` = "West Midlands",`6` = "Eastern",`7` = "South West",`8` = "South Central",`9` = "London",`10` = "South East",`11` = "Northern Ireland"),
+																				 			 			 recode(.,
+																				 			 			 			 `1` = "North East",
+																				 			 			 			 `2` = "North West",
+																				 			 			 			 `3` = "Yorkshire & the Humber",
+																				 			 			 			 `4` = "East Midlands",
+																				 			 			 			 `5` = "West Midlands",
+																				 			 			 			 `6` = "Eastern",
+																				 			 			 			 `7` = "South West",
+																				 			 			 			 `8` = "South Central",
+																				 			 			 			 `9` = "London",
+																				 			 			 			 `10` = "South East",
+																				 			 			 			 `11` = "Northern Ireland"
+																				 			 			 			 ),
+																				 			 ifelse(stratifier == "ethnicity", 
+																				 			 			 recode(.,
+																				 			 			 			 `0` = "White",
+																				 			 			 			 `1` = "South Asian",
+																				 			 			 			 `2` = "Black",
+																				 			 			 			 `3` = "Other",
+																				 			 			 			 `4` = "Other",
+																				 			 			 			 `5` = "Missing"),
 																				 			 			 .)
+																				 			 )
 																				 )
 			)
 		)
@@ -83,12 +110,12 @@ plot_strata_by_outcome <- function(run_no = 4,
 		# 	`90` = "81 - 90",
 		# 	`100` = "91 - 100"
 		## manual bodge
-		if(strata_group == "age" & outcome_of_interest[run_no] == "copd"){
-			outcome_temp <- outcome_temp %>%
-				filter(category_cat != "30-50")
-		}
+		#if(strata_group == "age" & outcome_of_interest[run_no] == "copd"){
+		#	outcome_temp <- outcome_temp %>%
+		#		filter(category_cat != "30-50")
+		#}
 		plot_strata <- outcome_temp %>%
-			mutate(value = numOutcome/numEligible) %>%
+			mutate(value = (numOutcome/numEligible)*100) %>%
 			filter(stratifier == strata_group)
 		
 		Plot_fmt_strata <- plot_strata %>%
@@ -117,11 +144,15 @@ plot_strata_by_outcome <- function(run_no = 4,
 		
 		df_plot3_strata <- df_plot2_strata %>%
 			mutate(month = month(weekDate)) 
-		
-		name_to_title <- outcome_of_interest_namematch %>%
-			filter(outcome == outcome_of_interest[run_no]) %>%
-			select(outcome_name) 
-		
+		if(strata_group == "age"){
+			name_to_title <- outcome_of_interest_namematch_Age %>%
+				filter(outcome == outcome_of_interest[run_no]) %>%
+				select(outcome_name) 
+		}else{
+			name_to_title <- outcome_of_interest_namematch %>%
+				filter(outcome == outcome_of_interest[run_no]) %>%
+				select(outcome_name) 
+		}
 		df_plot3_strata <- df_plot3_strata %>%
 			mutate(plot_name = pull(name_to_title)) 
 		##
@@ -141,7 +172,7 @@ plot_strata_by_outcome <- function(run_no = 4,
 		return(df_plot3_strata)
 }
 
-pdf("~/Documents/COVID-Collateral/graphfiles/ageOutcomes_09-24.pdf", width = 14, height = 14)
+pdf("~/Documents/COVID-Collateral/graphfiles/ageOutcomes_09-24.pdf", width = 14.5, height = 14.5)
 	strat_plot_data <- NULL
 	for(ii in plot_order){
 		strat_plot_data <- strat_plot_data %>%
@@ -149,24 +180,28 @@ pdf("~/Documents/COVID-Collateral/graphfiles/ageOutcomes_09-24.pdf", width = 14,
 				plot_strata_by_outcome(ii, strata_group = "age")
 			)
 	}
-	strat_plot_data$plot_name <- factor(strat_plot_data$plot_name, levels = outcome_of_interest_namematch$outcome_name[plot_order])
+	strat_plot_data$plot_name <- factor(strat_plot_data$plot_name, levels = outcome_of_interest_namematch_Age$outcome_name[plot_order])
+	
 	bkg_colour <- "white"
+	
 	figure_1c_strata <- ggplot(strat_plot_data, aes(x = as.Date("1991-01-01"), y = value, group = factor(category_cat), col = factor(category_cat), fill = factor(category_cat))) +
 		geom_boxplot(width=20, outlier.size=0, position="identity", alpha=.5) +
 		geom_line(data = filter(strat_plot_data, !is.na(value_20)), aes(x = plotWeek, y = value_20), lwd = 1.2) + 
-		scale_x_date(date_labels = "%b") +
+		scale_x_date(date_labels = "%b", breaks = "1 month") +
 		facet_wrap(~plot_name, scales = "free", ncol = 4) +
 		geom_vline(xintercept = as.Date("1991-03-23"), linetype = "dashed", col = 2) +
-		labs(x = "Date", y = "Prop. of people consulting for outcome", title = "", colour = "Age", fill = "Age") +
+		labs(x = "Date (2020)", y = "% of people consulting for outcome", title = "", colour = "Age", fill = "Age") +
 		theme_classic()  +
-		theme(axis.text.x = element_text(angle = 60, hjust = 1),
+		theme(axis.title = element_text(size = 18),
+					axis.text = element_text(size = 12),
+					axis.text.x = element_text(angle = 60, hjust = 1),
+					legend.text = element_text(size = 12),
+					legend.title = element_text(size = 12),
+					legend.position = "top",
 					strip.background = element_rect(fill = bkg_colour, colour =  NA),
-					strip.text = element_text(hjust = 0)) 
+					strip.text = element_text(size = 12, hjust = 0)) 
 	figure_1c_strata
 dev.off()
-
-
-
 
 pdf("~/Documents/COVID-Collateral/graphfiles/ethnicityOutcomes.pdf", width = 14, height = 14)
 	strat_plot_data <- NULL
@@ -178,18 +213,25 @@ pdf("~/Documents/COVID-Collateral/graphfiles/ethnicityOutcomes.pdf", width = 14,
 	}
 	strat_plot_data$plot_name <- factor(strat_plot_data$plot_name, levels = outcome_of_interest_namematch$outcome_name[plot_order])
 	bkg_colour <- "white"
+	strat_plot_data <- strat_plot_data %>%
+		filter(category_cat != "Missing")
 	figure_1c_strata <- ggplot(strat_plot_data, aes(x = as.Date("1991-01-01"), y = value, group = factor(category_cat), col = factor(category_cat), fill = factor(category_cat))) +
 		geom_boxplot(width=20, outlier.size=0, position="identity", alpha=.5) +
 		geom_line(data = filter(strat_plot_data, !is.na(value_20)), aes(x = plotWeek, y = value_20), lwd = 1.2) + 
 		scale_x_date(date_labels = "%b") +
 		facet_wrap(~plot_name, scales = "free", ncol = 4) +
 		geom_vline(xintercept = as.Date("1991-03-23"), linetype = "dashed", col = 2) +
-		labs(x = "Date", y = "Prop. of people consulting for outcome", title = "", colour = "Ethnicity", fill = "Ethnicity") +
+		labs(x = "Date (2020)", y = "% of people consulting for outcome", title = "", colour = "Ethnicity", fill = "Ethnicity") +
 		theme_classic()  +
-		theme(axis.text.x = element_text(angle = 60, hjust = 1),
+		theme(axis.title = element_text(size = 18),
+					axis.text = element_text(size = 12),
+					axis.text.x = element_text(angle = 60, hjust = 1),
+					legend.text = element_text(size = 12),
+					legend.title = element_text(size = 12),
+					legend.position = "top",
 					strip.background = element_rect(fill = bkg_colour, colour =  NA),
-					strip.text = element_text(hjust = 0)) 
-	figure_1c_strata
+					strip.text = element_text(size = 12, hjust = 0)) 
+figure_1c_strata
 dev.off()
 
 pdf("~/Documents/COVID-Collateral/graphfiles/genderOutcomes.pdf", width = 14, height = 14)
@@ -208,11 +250,16 @@ pdf("~/Documents/COVID-Collateral/graphfiles/genderOutcomes.pdf", width = 14, he
 		scale_x_date(date_labels = "%b") +
 		facet_wrap(~plot_name, scales = "free", ncol = 4) +
 		geom_vline(xintercept = as.Date("1991-03-23"), linetype = "dashed", col = 2) +
-		labs(x = "Date", y = "Prop. of people consulting for outcome", title = "", colour = "Gender", fill = "Gender") +
+		labs(x = "Date (2020)", y = "% of people consulting for outcome", colour = "Gender", fill = "Gender") +
 		theme_classic()  +
-		theme(axis.text.x = element_text(angle = 60, hjust = 1),
+		theme(axis.title = element_text(size = 18),
+					axis.text = element_text(size = 12),
+					axis.text.x = element_text(angle = 60, hjust = 1),
+					legend.text = element_text(size = 12),
+					legend.title = element_text(size = 12),
+					legend.position = "top",
 					strip.background = element_rect(fill = bkg_colour, colour =  NA),
-					strip.text = element_text(hjust = 0)) 
+					strip.text = element_text(size = 12, hjust = 0)) 
 	figure_1c_strata
 dev.off()
 
@@ -227,17 +274,24 @@ for(ii in plot_order){
 }
 strat_plot_data$plot_name <- factor(strat_plot_data$plot_name, levels = outcome_of_interest_namematch$outcome_name[plot_order])
 bkg_colour <- "white"
+strat_plot_data <- strat_plot_data %>%
+	filter(!is.na(category_cat), category_cat != "Northern Ireland")
+
 figure_1c_strata <- ggplot(strat_plot_data, aes(x = as.Date("1991-01-01"), y = value, group = factor(category_cat), col = factor(category_cat), fill = factor(category_cat))) +
 	geom_boxplot(width=20, outlier.size=0, position="identity", alpha=.5) +
 	geom_line(data = filter(strat_plot_data, !is.na(value_20)), aes(x = plotWeek, y = value_20), lwd = 1.2) + 
 	scale_x_date(date_labels = "%b") +
 	facet_wrap(~plot_name, scales = "free", ncol = 4) +
 	geom_vline(xintercept = as.Date("1991-03-23"), linetype = "dashed", col = 2) +
-	labs(x = "Date", y = "Prop. of people consulting for outcome", title = "", colour = "Region", fill = "Region") +
+	labs(x = "Date (2020)", y = "% of people consulting for outcome", title = "", colour = "Region", fill = "Region") +
 	theme_classic()  +
-	theme(axis.text.x = element_text(angle = 60, hjust = 1),
-				axis.text = element_text(size = 10), 
+	theme(axis.title = element_text(size = 18),
+				axis.text = element_text(size = 12),
+				axis.text.x = element_text(angle = 60, hjust = 1),
+				legend.text = element_text(size = 12),
+				legend.title = element_text(size = 12),
+				legend.position = "top",
 				strip.background = element_rect(fill = bkg_colour, colour =  NA),
-				strip.text = element_text(hjust = 0, size = 10)) 
+				strip.text = element_text(size = 12, hjust = 0)) 
 figure_1c_strata
 dev.off()
