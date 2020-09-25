@@ -53,7 +53,18 @@ region_cats <- c("North East" ,
 								 "Northern Ireland",
 								 "Missing")
 
-age_cats <- c("(0-10]","(10-20]","(20-30]","(30-40]","(40-50]","(50-60]","(60-70]","(70-80]","(80-90]","90+")
+age_cats <- c(
+						#"1 - 10", 
+						"11 - 20",
+						"21 - 30",
+						"31 - 40",
+						"41 - 50",
+						"51 - 60",
+						"61 - 70",
+						"71 - 80",
+						"81 - 90",
+						"91-100")
+# c("(0-10]","(10-20]","(20-30]","(30-40]","(40-50]","(50-60]","(60-70]","(70-80]","(80-90]","90+")
 categories <- list( ## careful of the order  here -- has to match the order of "strats" i.e. alphabetical
 	ethnicity = ethnicity_cats,
 	gender = gender_cats,
@@ -78,4 +89,15 @@ refactored_shiny <- shiny_file %>%
 refactored_shiny <- refactored_shiny %>%
 	select(weekPlot, outcome, lockdown, stratifier, category, model_out)
 
+outcome_of_interest <- sort(c("alcohol","anxiety","asthma", "cba", "copd", "depression", "diabetes", "feedingdisorders", "hf", "mi", "ocd", "selfharm","smi", "tia", "ua", "vte"))
+outcome_of_interest_namematch <- bind_cols("outcome" = outcome_of_interest, 
+																					 "outcome_name" = (c("Acute Alcohol Abuse", "Anxiety", "Asthma exacerbations",  "Cerebrovascular Accident", "COPD",
+																					 										"Depression", "Diabetes emergencies", "Feeding Disorders", 
+																					 										"Heart Failure", "Myocardial Infarction", "OCD", "Self-harm", "Severe Mental Illness", "Transient Ischaemic Attacks", 
+																					 										"Unstable Angina", "Venous Thromboembolism"))
+)
+
+refactored_shiny <- refactored_shiny %>%
+	left_join(outcome_of_interest_namematch, by = "outcome") %>%
+	select(-outcome, outcome = outcome_name)
 save(refactored_shiny, file = here::here("data/refactored_shiny.RData"))
