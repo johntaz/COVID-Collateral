@@ -22,23 +22,21 @@ all_files <- list.files(here::here("data/"), pattern = "an_")
 outcomes <- stringr::str_remove_all(all_files, c("an_|.csv"))
 
 outcome_of_interest_namematch <- bind_cols("outcome" = outcomes, 
-																					 "outcome_name" = (c("Acute Alcohol Abuse", "Anxiety", "Asthma exacerbations",  "Cerebrovascular Accident", "COPD",
-																					 										"Depression", "Diabetes emergencies", "Feeding Disorders", 
+																					 "outcome_name" = (c("Acute Alcohol-Related Event", "Anxiety", "Asthma exacerbations",  "Cerebrovascular Accident", "COPD",
+																					 										"Depression", "Diabetes Emergencies", "Feeding Disorders", 
 																					 										"Heart Failure", "Myocardial Infarction", "OCD", "Self-harm", "Severe Mental Illness", "Transient Ischaemic Attacks", 
 																					 										"Unstable Angina", "Venous Thromboembolism"))
 )
-plot_order <- c(7,1,2,6,8,11,12,13,4,9,10,14,15,16,3,5)
+plot_order <- c(7,1,2,6,8,11,12,13,4,9,10,14,15,16,3,5) 
 
-files_to_import <- list.files(pattern = paste0("an_", outcome_of_interest, collapse = "|"))
-
-for(i in 1:length(files_to_import)){
-	load_file <- read_csv(paste0(files_to_import[i])) %>%
+for(i in 1:length(all_files)){
+	load_file <- read_csv(here::here("data", all_files[i])) %>%
 		mutate_at(vars(weekDate), dmy) %>%
 	  mutate(proportion = (numOutcome/numEligible)*100) 
 	  # convert to date
 	assign(paste0("outcome_", i), load_file)
 }
-length(files_to_import)
+length(all_files)
 
 ii <- 1
 plot_main <- function(ii){
