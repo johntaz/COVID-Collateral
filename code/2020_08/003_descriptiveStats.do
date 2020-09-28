@@ -1,6 +1,6 @@
 cd "$graphData\"
 
-foreach t in depression copd asthma diabetes {
+foreach t in mi alcohol depression copd asthma diabetes {
 clear
 import delimited using "$graphData\an_`t'.csv"
     
@@ -55,6 +55,7 @@ label define varLab 0 "White" ///
 					209	"London" ///
 					210	"South East Coast" ///
 					211	"Northern Ireland" ///
+					212 "Region Missing" ///
 					301 "Overall denominator"
 
 label values category varLab
@@ -66,7 +67,7 @@ restore
 }
 
 
-foreach t in depression copd asthma diabetes {
+foreach t in mi alcohol depression copd asthma diabetes {
 
     use "$graphData\table_`t'_2017", replace
 	
@@ -84,7 +85,7 @@ foreach t in depression copd asthma diabetes {
 
 use "$graphData\table1_depression_pop", clear
      
-  foreach t in copd asthma diabetes {
+  foreach t in mi alcohol copd asthma diabetes {
 	
 	merge 1:1 stratifier category using "$graphData\table1_`t'_pop" , nogen
   }
