@@ -23,7 +23,7 @@ outcomes <- stringr::str_remove_all(all_files, c("an_|.csv"))
 
 outcome_of_interest_namematch <- bind_cols("outcome" = outcomes, 
 																					 "outcome_name" = (c("Acute Alcohol-Related Event", "Anxiety", "Asthma exacerbations",  "Cerebrovascular Accident", "COPD",
-																					 										"Depression", "Diabetes Emergencies", "Feeding Disorders", 
+																					 										"Depression", "Diabetes Emergencies", "Eating Disorders", 
 																					 										"Heart Failure", "Myocardial Infarction", "OCD", "Self-harm", "Severe Mental Illness", "Transient Ischaemic Attacks", 
 																					 										"Unstable Angina", "Venous Thromboembolism"))
 )

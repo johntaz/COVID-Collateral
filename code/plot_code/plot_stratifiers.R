@@ -14,8 +14,6 @@ if(length(new.packages)) install.packages(new.packages)
 
 library(tidyverse)
 library(lubridate)
-library(cowplot)
-
 
 setwd("~/Documents/COVID-collateral/")
 
@@ -23,14 +21,14 @@ setwd("~/Documents/COVID-collateral/")
 outcome_of_interest <- sort(c("alcohol","anxiety","asthma","copd", "cba", "depression", "diabetes", "feedingdisorders", "hf", "mi", "ocd", "selfharm","smi", "tia", "ua", "vte"))
 
 outcome_of_interest_namematch <- bind_cols("outcome" = outcome_of_interest, 
-																					 "outcome_name" = (c("Acute Alcohol Abuse", "Anxiety", "Asthma exacerbations",  "Cerebrovascular Accident", "COPD",
-																					 										"Depression", "Diabetes emergencies", "Feeding Disorders", 
+																					 "outcome_name" = (c("Acute Alcohol-Related Event", "Anxiety", "Asthma exacerbations",  "Cerebrovascular Accident", "COPD",
+																					 										"Depression", "Diabetes Emergencies", "Eating Disorders", 
 																					 										"Heart Failure", "Myocardial Infarction", "Obsessive Compulsive Disorder", "Self-harm", "Severe Mental Illness", "Transient Ischaemic Attacks", 
 																					 										"Unstable Angina", "Venous Thromboembolism"))
 )
 outcome_of_interest_namematch_Age <- bind_cols("outcome" = outcome_of_interest, 
-																					 "outcome_name" = (c("Acute Alcohol Abuse (18+)", "Anxiety", "Asthma exacerbations",  "Cerebrovascular Accident (31+)", "COPD (41+)",
-																					 										"Depression", "Diabetes emergencies", "Feeding Disorders", 
+																					 "outcome_name" = (c("Acute Alcohol-Related Event (18+)", "Anxiety", "Asthma exacerbations",  "Cerebrovascular Accident (31+)", "COPD (41+)",
+																					 										"Depression", "Diabetes Emergencies", "Eating Disorders", 
 																					 										"Heart Failure (31+)", "Myocardial Infarction (31+)", "Obsessive Compulsive Disorder", "Self-harm", "Severe Mental Illness", "Transient Ischaemic Attacks (31+)", 
 																					 										"Unstable Angina (31+)", "Venous Thromboembolism (31+)"))
 )
@@ -97,6 +95,7 @@ plot_strata_by_outcome <- function(run_no = 4,strata_group = "age"){
 		)
 		## calc proportion consulting overall
 		plot_strata <- outcome_temp %>%
+			mutate_at("numOutcome", ~ifelse(. == 5, NA, .)) %>%
 			mutate(value = (numOutcome/numEligible)*100) %>%
 			filter(stratifier == strata_group)
 		
@@ -149,7 +148,7 @@ plot_strata_by_outcome <- function(run_no = 4,strata_group = "age"){
 
 
 # plot by age -------------------------------------------------------------
-pdf("~/Documents/COVID-Collateral/graphfiles/ageOutcomes.pdf", width = 14.5, height = 14.5)
+pdf("~/Documents/COVID-Collateral/graphfiles/strat_ageOutcomes.pdf", width = 14.5, height = 14.5)
 	strat_plot_data <- NULL
 	for(ii in plot_order){
 		strat_plot_data <- strat_plot_data %>%
@@ -182,7 +181,7 @@ dev.off()
 
 
 # plot by ethnicity -------------------------------------------------------
-pdf("~/Documents/COVID-Collateral/graphfiles/ethnicityOutcomes.pdf", width = 14, height = 14)
+pdf("~/Documents/COVID-Collateral/graphfiles/strat_ethnicityOutcomes.pdf", width = 14, height = 14)
 	strat_plot_data <- NULL
 	for(ii in plot_order){
 		strat_plot_data <- strat_plot_data %>%
@@ -197,7 +196,7 @@ pdf("~/Documents/COVID-Collateral/graphfiles/ethnicityOutcomes.pdf", width = 14,
 	figure_1c_strata <- ggplot(strat_plot_data, aes(x = as.Date("1991-01-01"), y = value, group = factor(category_cat), col = factor(category_cat), fill = factor(category_cat))) +
 		geom_boxplot(width=20, outlier.size=0, position="identity", alpha=.5) +
 		geom_line(data = filter(strat_plot_data, !is.na(value_20)), aes(x = plotWeek, y = value_20), lwd = 1.2) + 
-		scale_x_date(date_labels = "%b") +
+		scale_x_date(date_labels = "%b", breaks = "1 month") +
 		facet_wrap(~plot_name, scales = "free", ncol = 4) +
 		geom_vline(xintercept = as.Date("1991-03-23"), linetype = "dashed", col = 2) +
 		labs(x = "Date (2020)", y = "% of people consulting for outcome", title = "", colour = "Ethnicity", fill = "Ethnicity") +
@@ -215,7 +214,7 @@ dev.off()
 
 
 # plot by gender ----------------------------------------------------------
-pdf("~/Documents/COVID-Collateral/graphfiles/genderOutcomes.pdf", width = 14, height = 14)
+pdf("~/Documents/COVID-Collateral/graphfiles/strat_genderOutcomes.pdf", width = 14, height = 14)
 	strat_plot_data <- NULL
 	for(ii in plot_order){
 		strat_plot_data <- strat_plot_data %>%
@@ -228,7 +227,7 @@ pdf("~/Documents/COVID-Collateral/graphfiles/genderOutcomes.pdf", width = 14, he
 	figure_1c_strata <- ggplot(strat_plot_data, aes(x = as.Date("1991-01-01"), y = value, group = factor(category_cat), col = factor(category_cat), fill = factor(category_cat))) +
 		geom_boxplot(width=20, outlier.size=0, position="identity", alpha=.5) +
 		geom_line(data = filter(strat_plot_data, !is.na(value_20)), aes(x = plotWeek, y = value_20), lwd = 1.2) + 
-		scale_x_date(date_labels = "%b") +
+		scale_x_date(date_labels = "%b", breaks = "1 month") +
 		facet_wrap(~plot_name, scales = "free", ncol = 4) +
 		geom_vline(xintercept = as.Date("1991-03-23"), linetype = "dashed", col = 2) +
 		labs(x = "Date (2020)", y = "% of people consulting for outcome", colour = "Gender", fill = "Gender") +
@@ -245,7 +244,7 @@ pdf("~/Documents/COVID-Collateral/graphfiles/genderOutcomes.pdf", width = 14, he
 dev.off()
 
 # plot by region ----------------------------------------------------------
-pdf("~/Documents/COVID-Collateral/graphfiles/regionOutcomes.pdf", width = 14, height = 14)
+pdf("~/Documents/COVID-Collateral/graphfiles/strat_regionOutcomes.pdf", width = 14, height = 14)
 strat_plot_data <- NULL
 for(ii in plot_order){
 	strat_plot_data <- strat_plot_data %>%
@@ -256,12 +255,12 @@ for(ii in plot_order){
 strat_plot_data$plot_name <- factor(strat_plot_data$plot_name, levels = outcome_of_interest_namematch$outcome_name[plot_order])
 bkg_colour <- "white"
 strat_plot_data <- strat_plot_data %>%
-	filter(!is.na(category_cat), category_cat != "Northern Ireland")
+	filter(!is.na(category_cat))#, category_cat != "Northern Ireland")
 
 figure_1c_strata <- ggplot(strat_plot_data, aes(x = as.Date("1991-01-01"), y = value, group = factor(category_cat), col = factor(category_cat), fill = factor(category_cat))) +
 	geom_boxplot(width=20, outlier.size=0, position="identity", alpha=.5) +
 	geom_line(data = filter(strat_plot_data, !is.na(value_20)), aes(x = plotWeek, y = value_20), lwd = 1.2) + 
-	scale_x_date(date_labels = "%b") +
+	scale_x_date(date_labels = "%b", breaks = "1 month") +
 	facet_wrap(~plot_name, scales = "free", ncol = 4) +
 	geom_vline(xintercept = as.Date("1991-03-23"), linetype = "dashed", col = 2) +
 	labs(x = "Date (2020)", y = "% of people consulting for outcome", title = "", colour = "Region", fill = "Region") +
