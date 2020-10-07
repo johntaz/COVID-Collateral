@@ -38,7 +38,6 @@ for(i in 1:length(all_files)){
 }
 length(all_files)
 
-ii <- 1
 plot_main <- function(ii){
 	out_file <- get(paste0("outcome_",ii))
 	## recode all the factor variables
@@ -113,6 +112,7 @@ pdf("~/Documents/COVID-Collateral/graphfiles/overallOutcomes.pdf", width = 12, h
 
 plot_full <- NULL
 for(ii in plot_order){
+	print(ii)
 	plot_full <- plot_full %>%
 		bind_rows(
 			plot_main(ii)
@@ -121,16 +121,14 @@ for(ii in plot_order){
 plot_full$plot_name <- factor(plot_full$plot_name, levels = outcome_of_interest_namematch$outcome_name[plot_order])
 
 bkg_colour <- "white"
-colors <- c("2020_lo" = "red", "2020_hi" = "blue", "2017-2019 average" = "black")
+colors <- c("2020" = "red", "2017-2019 average" = "black")
 figure_1b <- ggplot(plot_full, aes(x = plotWeek, y = value, group = year)) +
 	geom_line(data = filter(plot_full, year == 2017), alpha = 0.2) +  #aes(col = "2017"), 
 	geom_line(data = filter(plot_full, year == 2018), alpha = 0.2) +  #aes(col = "2018"), 
 	geom_line(data = filter(plot_full, year == 2019), alpha = 0.2) +  #aes(col = "2019"), 
-	geom_line(aes(y = value_20_low, col = "2020_lo"), lwd = 1.2) +
-	geom_line(aes(y = value_20_hi, col = "2020_hi"), lwd = 1.2) +
 	geom_line(aes(y = value_hist, col = "2017-2019 average"), lwd = 1.2) +
-	geom_ribbon(aes(ymin = value_20_low, ymax = value_hist), fill = alpha(2, 0.2), lty = 0) +
-	geom_ribbon(aes(ymin = value_20_hi, ymax = value_hist), fill = alpha(4, 0.2), lty = 0) +
+	geom_line(aes(y = value_20, col = "2020"), lwd = 1.2) +
+	geom_ribbon(aes(ymin = value_20, ymax = value_hist), fill = alpha(2, 0.2), lty = 0) +
 	scale_x_date(date_labels = "%b", breaks = "2 months") +
 	facet_wrap(~plot_name, scales = "free", ncol = 4) +
 	geom_vline(xintercept = as.Date("1991-03-23"), linetype = "dashed", col = 2) +
@@ -152,8 +150,8 @@ figure_1b <- ggplot(plot_full, aes(x = plotWeek, y = value, group = year)) +
 				panel.grid.minor.y = element_line(size=.2, color=rgb(0,0,0,0.2)) ,
 				panel.grid.major.y = element_line(size=.2, color=rgb(0,0,0,0.3))) +
 	scale_color_manual(name = "",
-										 breaks = c("2017-2019 average", "2020_lo", "2020_hi"),
-										 labels = c("2017-2019 average", "/", "2020"),
+										 breaks = c("2017-2019 average", "2020"),
+										 labels = c("2017-2019 average", "2020"),
 										 values = colors)
 figure_1b
 dev.off()
