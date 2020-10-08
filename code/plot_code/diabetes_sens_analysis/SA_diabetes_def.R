@@ -19,9 +19,9 @@ library(cowplot)
 outcome_of_interest <- c("diabetes", "diabetes_sa", "diabetes_s2")
 
 outcome_of_interest_namematch <- bind_cols("outcome" = outcome_of_interest, 
-																					 "outcome_name" = (c("A - Diabetes Emergencies", 
-																					 										"B - Diabetes Emergencies (sensitivity analysis)",
-																					 										"C - All Diabetes (sensitivity analysis)")
+																					 "outcome_name" = (c("A - Diabetic Emergencies", 
+																					 										"B - Diabetic Emergencies (sensitivity analysis)",
+																					 										"C - All diabetic (sensitivity analysis)")
 																					 )
 )
 plot_order <- c(1,2,3) 
@@ -118,7 +118,7 @@ plot_main <- function(ii){
 	df_plot2
 }
 
-pdf("~/Documents/COVID-Collateral/graphfiles/SA_diabetes.pdf", width = 12, height = 5)
+pdf("~/Documents/COVID-Collateral/graphfiles/SA_diabetes.pdf", width = 13, height = 5)
 
 plot_full <- NULL
 for(ii in plot_order){
@@ -166,4 +166,5 @@ figure_1b <- ggplot(plot_full, aes(x = plotWeek, y = value, group = year)) +
 figure_1b
 dev.off()
 #ggsave(file = "~/Documents/COVID-Collateral/graphfiles/overallOutcomes.pdf", width = 12, height = 12)
+
 
