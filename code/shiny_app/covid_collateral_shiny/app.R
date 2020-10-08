@@ -157,13 +157,6 @@ ui <- shinyUI(
 						 		)
 						 )
 					),
-		tabPanel("Simple results",
-						 fluidRow(
-						 	column(8,
-						 				 includeMarkdown(here::here("simple_plot.md"))
-						 	)
-						 )
-		),
 		tabPanel("About",
 						 fluidRow(
 						 	column(8,
