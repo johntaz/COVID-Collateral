@@ -44,7 +44,7 @@ for(i in 1:length(files_to_import)){
 length(files_to_import)
 
 # do plot 1b by strata ----------------------------------------------------
-plot_strata_by_outcome <- function(run_no = 4,strata_group = "age"){
+plot_strata_by_outcome <- function(run_no = 7,strata_group = "age"){
 	
 		outcome_temp <- get(paste0("outcome_", run_no))
 		
@@ -68,25 +68,25 @@ plot_strata_by_outcome <- function(run_no = 4,strata_group = "age"){
 																				 			 			 ),
 																				 			 ifelse(stratifier == "region", 
 																				 			 			 recode(.,
-																				 			 			 			 `1` = "North East",
-																				 			 			 			 `2` = "North West",
-																				 			 			 			 `3` = "Yorkshire & the Humber",
-																				 			 			 			 `4` = "East Midlands",
-																				 			 			 			 `5` = "West Midlands",
-																				 			 			 			 `6` = "Eastern",
-																				 			 			 			 `7` = "South West",
-																				 			 			 			 `8` = "South Central",
-																				 			 			 			 `9` = "London",
-																				 			 			 			 `10` = "South East",
-																				 			 			 			 `11` = "Northern Ireland"
+																				 			 			 			 `1` = "North (NE, NW, Yorkshire, NI)",   #`1` = "North East",
+																				 			 			 			 `2` = "North (NE, NW, Yorkshire, NI)",   #`2` = "North West",
+																				 			 			 			 `3` = "North (NE, NW, Yorkshire, NI)",   #`3` = "Yorkshire & the Humber",
+																				 			 			 			 `4` = "Midlands",   #`4` = "East Midlands",
+																				 			 			 			 `5` = "Midlands",   #`5` = "West Midlands",
+																				 			 			 			 `6` = "Midlands",   #`6` = "Eastern",
+																				 			 			 			 `7` = "South (SW, SC, SE)",   #`7` = "South West",
+																				 			 			 			 `8` = "South (SW, SC, SE)",   #`8` = "South Central",
+																				 			 			 			 `9` = "London",   #`9` = "London",
+																				 			 			 			 `10` = "South (SW, SC, SE)",   #`10` = "South East",
+																				 			 			 			 `11` = "North (NE, NW, Yorkshire, NI)"   #`11` = "Northern Ireland"
 																				 			 			 			 ),
 																				 			 ifelse(stratifier == "ethnicity", 
 																				 			 			 recode(.,
 																				 			 			 			 `0` = "White",
 																				 			 			 			 `1` = "South Asian",
 																				 			 			 			 `2` = "Black",
-																				 			 			 			 `3` = "Other",
-																				 			 			 			 `4` = "Other",
+																				 			 			 			 `3` = "Other/Mixed",
+																				 			 			 			 `4` = "Other/Mixed",
 																				 			 			 			 `5` = "Missing"),
 																				 			 			 .)
 																				 			 )
@@ -95,29 +95,42 @@ plot_strata_by_outcome <- function(run_no = 4,strata_group = "age"){
 		)
 		## calc proportion consulting overall
 		plot_strata <- outcome_temp %>%
-			mutate_at("numOutcome", ~ifelse(. == 5, NA, .)) %>%
-			mutate(value = (numOutcome/numEligible)*100) %>%
+			#mutate_at("numOutcome", ~ifelse(. == 5, 0, .)) %>%
+			#mutate(value = (numOutcome/numEligible)*100) %>%
 			filter(stratifier == strata_group)
+		
+		## find categories that do not exceed at any point in 2020
+		group_low_cat <- plot_strata %>%
+			filter(weekDate >= as.Date("2020-01-01")) %>%
+			group_by(category) %>%
+			summarise(max_outcome= max(numOutcome, na.rm = T)) %>%
+			ungroup()
 		
 		# get year and week of data
 		Plot_fmt_strata <- plot_strata %>%
+			left_join(group_low_cat, by = "category") %>%
+			mutate_at("numOutcome", ~ifelse(max_outcome == 5 & weekDate >= as.Date("2020-01-01"), NA, .)) %>%
 			group_by(weekDate, category_cat) %>%
-			summarise(value = mean(value, na.rm = T)) %>%
+			summarise(max_outcome = max(numOutcome, na.rm = T),
+								sum_outcome = sum(numOutcome, na.rm = T),
+								sum_denom = sum(numEligible, na.rm = T)) %>%
 			ungroup() %>%
+			mutate_at("sum_outcome", ~ifelse(max_outcome == -Inf, NA, .)) %>%
+			mutate(value = (sum_outcome/sum_denom)*100) %>%
 			mutate(year = year(weekDate)) %>%
 			mutate(week = week(weekDate)) 
 		
 		# take data from 2020 and creat as a new variable
 		Plot_2020_strata <- Plot_fmt_strata %>%
 			filter(year == 2020) %>% 
-			mutate_at("value", ~ifelse(.==0, NA, .)) %>%
+			#mutate_at("value", ~ifelse(. %in% c(0), NA, .)) %>%
 			select(week, "value_20" = value, category_cat)
 		
 		# take historic data (<2020) and calculate weekly mean
 		Plot_historical_strata <- Plot_fmt_strata %>%
 			filter(year != 2020) %>%
 			group_by(week, category_cat) %>%
-			summarise(value = mean(value, na.rm = T)) %>% 
+			summarise(value = mean(value, na.rm = T)) %>%
 			rename("value_hist" = value)
 		
 		# merge historic data with historic average and 2020 data
@@ -148,7 +161,7 @@ plot_strata_by_outcome <- function(run_no = 4,strata_group = "age"){
 
 
 # plot by age -------------------------------------------------------------
-pdf("~/Documents/COVID-Collateral/graphfiles/strat_ageOutcomes.pdf", width = 14.5, height = 14.5)
+pdf("~/Documents/COVID-Collateral/graphfiles/strat_ageOutcomes_v3.pdf", width = 14.5, height = 14.5)
 	strat_plot_data <- NULL
 	for(ii in plot_order){
 		strat_plot_data <- strat_plot_data %>%
@@ -167,6 +180,7 @@ pdf("~/Documents/COVID-Collateral/graphfiles/strat_ageOutcomes.pdf", width = 14.
 		facet_wrap(~plot_name, scales = "free", ncol = 4) +
 		geom_vline(xintercept = as.Date("1991-03-23"), linetype = "dashed", col = 2) +
 		labs(x = "Date (2020)", y = "% of people consulting for outcome", title = "", colour = "Age", fill = "Age") +
+		#scale_x_date() + 
 		theme_classic()  +
 		theme(axis.title = element_text(size = 18),
 					axis.text = element_text(size = 12),
@@ -255,7 +269,7 @@ for(ii in plot_order){
 strat_plot_data$plot_name <- factor(strat_plot_data$plot_name, levels = outcome_of_interest_namematch$outcome_name[plot_order])
 bkg_colour <- "white"
 strat_plot_data <- strat_plot_data %>%
-	filter(!is.na(category_cat))#, category_cat != "Northern Ireland")
+	filter(!is.na(category_cat))
 
 figure_1c_strata <- ggplot(strat_plot_data, aes(x = as.Date("1991-01-01"), y = value, group = factor(category_cat), col = factor(category_cat), fill = factor(category_cat))) +
 	geom_boxplot(width=20, outlier.size=0, position="identity", alpha=.5) +
