@@ -24,7 +24,7 @@ shiny_file <- shiny_file %>%
 ## create proportion and a proper R object for date
 shiny_file <- shiny_file %>% 
 	mutate(model_out = (numOutcome/numEligible)*100) %>%
-	mutate_at("model_out", ~ifelse(numOutcome == 5, NA, .)) %>%
+	#mutate_at("model_out", ~ifelse(numOutcome == 5, NA, .)) %>%
 	mutate(weekPlot = (time*7) + as.Date("2017-01-01")) 
 
 # build main database to plot that groups everything ----------------------
@@ -91,8 +91,8 @@ refactored_shiny <- refactored_shiny %>%
 
 outcome_of_interest <- sort(c("alcohol","anxiety","asthma", "cba", "copd", "depression", "diabetes", "feedingdisorders", "hf", "mi", "ocd", "selfharm","smi", "tia", "ua", "vte"))
 outcome_of_interest_namematch <- bind_cols("outcome" = outcome_of_interest, 
-																					 "outcome_name" = (c("Acute Alcohol Abuse", "Anxiety", "Asthma exacerbations",  "Cerebrovascular Accident", "COPD",
-																					 										"Depression", "Diabetes emergencies", "Feeding Disorders", 
+																					 "outcome_name" = (c("Acute Alcohol-Related Event", "Anxiety", "Asthma exacerbations",  "Cerebrovascular Accident", "COPD exacerbations",
+																					 										"Depression", "Diabetic emergencies", "Feeding Disorders", 
 																					 										"Heart Failure", "Myocardial Infarction", "OCD", "Self-harm", "Severe Mental Illness", "Transient Ischaemic Attacks", 
 																					 										"Unstable Angina", "Venous Thromboembolism"))
 )
