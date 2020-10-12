@@ -41,6 +41,7 @@ theme_collateral <- function (base_size = 11, base_family = ""){
 																				size = 0.5, linetype = "solid"),
 				strip.text = element_text(size = rel(1.2), hjust = 0 , family = "Helvetica", face = "bold"),
 				legend.title = element_text(size = rel(1), family = "Helvetica", colour = alpha(1, 0.6)),
+				legend.position = "top",
 				rect = element_rect(fill = "white"),
 				legend.background = element_blank(), legend.key = element_blank()
 	)
@@ -52,10 +53,9 @@ ui <- shinyUI(
 		theme = "bootstrap.min.css",
 		 title = div(
 		 	a(img(src="collateral_logo.pdf", height = "35px", align = "top"), 
-		 				href="https://www.lshtm.ac.uk/research/centres-projects-groups/electronic-health-records"),
+		 				href="https://twitter.com/ehr_lshtm?lang=en"),
 		 	span(apptitle)
 		 ),
-			
 		tabPanel("Plot",
 						 sidebarLayout(
 						 	position = "right",
@@ -88,7 +88,8 @@ ui <- shinyUI(
 						 		tabPanel("Overall",
 					 								sidebarLayout(
 					 									position = "left",
-					 									sidebarPanel("Outcome totals"
+					 									sidebarPanel(
+					 										helpText("Welcome to the COVID colateral Shiny app")
 					 									),
 					 									mainPanel(
 					 										plotOutput("mainplot1")
@@ -254,9 +255,9 @@ server <- function(input, output, session){
 		v$plot <- ggplot(df_shiny(), aes(x=weekPlot, y=model_out, group = category, colour = category)) +
 			geom_line() +
 			xlab("Date") +
-			ylab("Proportion Overall") +
+			ylab("% of people consulting for condition") +
 			theme(axis.text.x = element_text(angle=60, hjust=1)) +
-			#labs(colour = "Region") +
+			labs(colour = input$stratifier) +
 			facet_wrap(~outcome, ncol = 2, scales = "free") +
 			theme_collateral()
 	})
@@ -270,7 +271,8 @@ server <- function(input, output, session){
 			v$plot +
 				theme(legend.position = "none")
 		}
-	})
+	},
+	height=800)
 	output$mainplot2 <- renderPlot({
 		if (is.null(v$plot)) return()
 		if(input$lockdownLine) {
@@ -278,7 +280,8 @@ server <- function(input, output, session){
 		}else{
 			v$plot
 		}
-	})
+	},
+	height=800)
 	output$mainplot3 <- renderPlot({
 		if (is.null(v$plot)) return()
 		if(input$lockdownLine) {
@@ -286,7 +289,8 @@ server <- function(input, output, session){
 		}else{
 			v$plot 
 		}
-	})
+	},
+	height=800)
 	output$mainplot4 <- renderPlot({
 		if (is.null(v$plot)) return()
 		if(input$lockdownLine) {
@@ -294,7 +298,8 @@ server <- function(input, output, session){
 		}else{
 			v$plot
 		}
-	})
+	},
+	height=800)
 	output$mainplot5 <- renderPlot({
 		if (is.null(v$plot)) return()
 		if(input$lockdownLine) {
@@ -302,7 +307,8 @@ server <- function(input, output, session){
 		}else{
 			v$plot
 		}
-	})
+	},
+	height=800)
 	
 	## plot a pdf image
 	observeEvent(input$runITS, {
