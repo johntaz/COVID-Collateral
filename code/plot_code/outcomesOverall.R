@@ -23,7 +23,7 @@ outcomes <- stringr::str_remove_all(all_files, c("an_|.csv"))
 
 outcome_of_interest_namematch <- bind_cols("outcome" = outcomes, 
 																					 "outcome_name" = (c("Acute Alcohol-Related Event", "Anxiety", "Asthma exacerbations",  "Cerebrovascular Accident", "COPD",
-																					 										"Depression", "Diabetes Emergencies", "Eating Disorders", 
+																					 										"Depression", "Diabetic Emergencies", "Eating Disorders", 
 																					 										"Heart Failure", "Myocardial Infarction", "OCD", "Self-harm", "Severe Mental Illness", "Transient Ischaemic Attacks", 
 																					 										"Unstable Angina", "Venous Thromboembolism"))
 )
@@ -37,7 +37,7 @@ for(i in 1:length(all_files)){
 	assign(paste0("outcome_", i), load_file)
 }
 length(all_files)
-
+ii <- 1
 plot_main <- function(ii){
 	out_file <- get(paste0("outcome_",ii))
 	## recode all the factor variables
@@ -108,8 +108,7 @@ plot_main <- function(ii){
 	df_plot2
 }
 
-pdf("~/Documents/COVID-Collateral/graphfiles/overallOutcomes.pdf", width = 12, height = 10)
-
+pdf("~/Documents/COVID-Collateral/graphfiles/overallOutcomes2.pdf", width = 12, height = 10)
 plot_full <- NULL
 for(ii in plot_order){
 	print(ii)
