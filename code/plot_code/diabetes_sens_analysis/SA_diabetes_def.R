@@ -1,49 +1,46 @@
 #---------------------------------------------------------------------------------------
 # Project: Covid-Collateral
 # Program Name: outcomesOverall
-# Author: Alasdair Henderson 
-# Date Created: 16/06/2020
-# Notes: Overall trends in recording over time
+# Author: Alasdair SA_diabetes_def 
+# Date Created: 07/10/2020
+# Notes: How sensitive are results to the definition of "diabetes"
 #---------------------------------------------------------------------------------------
 
 # Flag missing libraries and install those required
-list <-  c("tidyverse", "lubridate", "cowplot", "here")
+list <-  c("tidyverse", "lubridate", "cowplot")
 new.packages <- list[!(list %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
 
 library(tidyverse)
 library(lubridate)
 library(cowplot)
-library(here)
 
 # Import data -------------------------------------------------------------
-outcome_of_interest <- sort(c("alcohol","anxiety","asthma","copd", "cba", "depression", "diabetes", "feedingdisorders", "hf", "mi", "ocd", "selfharm","smi", "tia", "ua", "vte"))
+outcome_of_interest <- c("diabetes", "diabetes_sa", "diabetes_s2")
 
-all_files <- list.files(here::here("data/"), pattern = "an_")
-outcomes <- stringr::str_remove_all(all_files, c("an_|.csv"))
-
-outcome_of_interest_namematch <- bind_cols("outcome" = outcomes, 
-																					 "outcome_name" = (c("Acute Alcohol-Related Event", "Anxiety", "Asthma exacerbations",  "Cerebrovascular Accident", "COPD exacerbations",
-																					 										"Depression", "Diabetic Emergencies", "Eating Disorders", 
-																					 										"Heart Failure", "Myocardial Infarction", "OCD", "Self-harm", "Severe Mental Illness", "Transient Ischaemic Attacks", 
-																					 										"Unstable Angina", "Venous Thromboembolism"))
+outcome_of_interest_namematch <- bind_cols("outcome" = outcome_of_interest, 
+																					 "outcome_name" = (c("A - Diabetic Emergencies", 
+																					 										"B - Diabetic Emergencies (sensitivity analysis)",
+																					 										"C - All diabetic (sensitivity analysis)")
+																					 )
 )
-plot_order <- c(7,1,2,6,8,11,12,13,4,9,10,14,15,16,3,5) 
+plot_order <- c(1,2,3) 
 
-for(i in 1:length(all_files)){
-	load_file <- read_csv(here::here("data", all_files[i])) %>%
-		mutate_at(vars(weekDate), dmy) %>%
-	  mutate(proportion = (numOutcome/numEligible)*100) 
-	  # convert to date
-	assign(paste0("outcome_", i), load_file)
-}
-length(all_files)
-ii <- 1
+outcome_1 <- read_csv(here::here("data", "an_diabetes.csv")) %>%
+	mutate_at(vars(weekDate), dmy) %>%
+	mutate(proportion = (numOutcome/numEligible)*100) 
+outcome_2 <- read_csv(here::here("data/Sens_analysis/an_diab_hyperglyc.csv")) %>%
+	mutate_at(vars(weekDate), dmy) %>%
+	mutate(proportion = (numOutcome/numEligible)*100) 
+outcome_3 <- read_csv(here::here("data/Sens_analysis/an_diabetes_full.csv")) %>%
+	mutate_at(vars(weekDate), dmy) %>%
+	mutate(proportion = (numOutcome/numEligible)*100) 
+
 plot_main <- function(ii){
 	out_file <- get(paste0("outcome_",ii))
 	## recode all the factor variables
 	out_file <- out_file %>%
-	  mutate(category_cat = category) %>%
+		mutate(category_cat = category) %>%
 		mutate_at("category_cat" , ~ifelse(stratifier == "gender", 
 																			 recode(.,`1` = "Male", `2` = "Female"),
 																			 ifelse(stratifier == "age", 
@@ -94,7 +91,7 @@ plot_main <- function(ii){
 		left_join(Plot_historical, by = "week") %>%
 		left_join(Plot_2020, by = "week") %>%
 		mutate(plotWeek = as.Date("1991-01-01")+(week*7)) %>%
-		mutate(value_20_low = ifelse(value_20 <= value_hist, value_20, value_hist),
+		mutate(value_20_low = ifelse(value_20 < value_hist, value_20, value_hist),
 					 value_20_hi = ifelse(value_20 > value_hist, value_20, value_hist))
 	
 	
@@ -102,14 +99,27 @@ plot_main <- function(ii){
 		filter(outcome == outcome_of_interest[ii]) %>% 
 		select(outcome_name)
 	
-
 	df_plot2 <- df_plot2 %>%
-		mutate(plot_name = pull(name_to_plot_title))
+		mutate(plot_name = pull(name_to_plot_title),
+					 fill_group = "lo")
+
+	## bodging so that the lines sync up despite the colour switch
+	higher_pts <- which(df_plot2$value_20 > df_plot2$value_hist)
+	for(xx in higher_pts){
+		dup_row <- df_plot2 %>%
+			slice(xx) %>%
+			mutate(fill_group = "hi")
+		df_plot2 <- df_plot2 %>%
+			slice(-xx) %>%
+			add_row(dup_row) %>%
+			add_row(dup_row)
+	}
 	
 	df_plot2
 }
 
-pdf("~/Documents/COVID-Collateral/graphfiles/Figure1_overallOutcomes.pdf", width = 12, height = 10)
+pdf("~/Documents/COVID-Collateral/graphfiles/FigureS15_diabetes_SA.pdf", width = 13, height = 5)
+
 plot_full <- NULL
 for(ii in plot_order){
 	print(ii)
@@ -127,12 +137,12 @@ figure_1b <- ggplot(plot_full, aes(x = plotWeek, y = value, group = year)) +
 	geom_line(data = filter(plot_full, year == 2018), alpha = 0.2) +  #aes(col = "2018"), 
 	geom_line(data = filter(plot_full, year == 2019), alpha = 0.2) +  #aes(col = "2019"), 
 	geom_line(aes(y = value_hist, col = "2017-2019 average"), lwd = 1.2) +
-	geom_line(aes(y = value_20, col = "2020"), lty = 5, lwd = 0.8) +
+	geom_line(aes(y = value_20, col = "2020"), lty = 5, lwd = 1.2) +
 	geom_ribbon(aes(ymin = value_20, ymax = value_hist), fill = alpha(2, 0.2), lty = 0) +
 	scale_x_date(date_labels = "%b", breaks = "2 months") +
 	facet_wrap(~plot_name, scales = "free", ncol = 4) +
 	geom_vline(xintercept = as.Date("1991-03-23"), linetype = "dashed", col = 2) +
-	labs(x = "Date", y = "% of people consulting for condition", caption = "OCD: Obsessive Compulsive Disorder. COPD: Chronic Obstructive Pulmonary Disease") +
+	labs(x = "Date", y = "% of people consulting for condition") +
 	theme_classic() +
 	theme(axis.title = element_text(size = 16),
 				axis.text.y = element_text(size = 12),
@@ -155,5 +165,5 @@ figure_1b <- ggplot(plot_full, aes(x = plotWeek, y = value, group = year)) +
 										 values = colors)
 figure_1b
 dev.off()
-#ggsave(file = "~/Documents/COVID-Collateral/graphfiles/overallOutcomes.pdf", width = 12, height = 12)
+
 

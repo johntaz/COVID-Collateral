@@ -27,13 +27,12 @@ bkg_colour <- "gray99"
 all_files <- list.files(here::here("data/"), pattern = "an_")
 outcomes <- stringr::str_remove_all(all_files, c("an_|.csv"))
 outcome_of_interest_namematch <- bind_cols("outcome" = outcomes, 
-																					 "outcome_name" = (c("Acute Alcohol Abuse", "Anxiety", "Asthma exacerbations",  "Cerebrovascular Accident", "COPD",
-																					 										"Depression", "Diabetes emergencies", "Feeding Disorders", 
-																					 										"Heart Failure", "Myocardial Infarction", "Obsessive Compulsive Disorder", "Self-harm", "Severe Mental Illness", "Transient Ischaemic Attacks", 
+																					 "outcome_name" = (c("Acute Alcohol-Related Event", "Anxiety", "Asthma exacerbations",  "Cerebrovascular Accident", "COPD exacerbations",
+																					 										"Depression", "Diabetic Emergencies", "Eating Disorders", 
+																					 										"Heart Failure", "Myocardial Infarction", "OCD", "Self-harm", "Severe Mental Illness", "Transient Ischaemic Attacks", 
 																					 										"Unstable Angina", "Venous Thromboembolism"))
 )
-
-plot_order <- c(7,1,2,6,8,11,12,13,4,9,10,14,15,16,3,5) ## plots the outcomes by disease system as defined by ICD-10 chapter (diabetes, alcohol, mental health, circulatory system, respiratory system)
+plot_order <- c(7,1,2,6,8,11,12,13,4,14,9,10,15,16,3,5) ## plots the outcomes by disease system as defined by ICD-10 chapter (diabetes, alcohol, mental health, circulatory system, respiratory system)
 
 for(ii in 1:length(outcomes)){
 	load_file <- read.csv(here::here("data", paste0("an_", outcomes[ii], ".csv")))
@@ -44,9 +43,11 @@ for(ii in 1:length(outcomes)){
 tab3_function <- function(outcome){
 	df_outcome <- get(outcome)
 	
-	cutData = as.Date("2019-01-01")
-	start_lockdown =   as.Date("2020-03-09")
-	lockdown_adjustment_period_wks = 5
+	if(outcome == "selfharm"){cutData <- as.Date("2019-01-01")}else{cutData <- as.Date("2017-01-01")}
+	
+	#cutData = as.Date("2019-01-01")
+	start_lockdown = as.Date("2020-03-09")
+	lockdown_adjustment_period_wks = 3
 	end_post_lockdown_period = as.Date("2020-08-01")
 																		 
 	xmas_dates <- c(
@@ -96,7 +97,7 @@ tab3_function <- function(outcome){
 		pred1 <- predict(po_model2, newdata = outcome_pred, se.fit = TRUE, interval="confidence", dispersion = deviance_adjustment)
 		predicted_vals <- pred1$fit
 		stbp <- pred1$se.fit
-		
+
 		## predict values if no lockdown 
 		outcome_pred_nointervention <- outcome_pred %>%
 			mutate_at("lockdown", ~(.=0))
@@ -161,6 +162,31 @@ tab3_function <- function(outcome){
 						 ## cumulative sum of Lockdown vs No lockdown
 						 col6 = prettyNum(signif((cumsum_noLdn) - (cumsum_ldn),3), big.mark=",", digits = 0, scientific=FALSE)
 			)  %>%
+			## censor data if it is too small
+			mutate(diff_predicted = (probline_noLdn*1e6) - (predicted_vals*1e6),
+						 cumsum_diff_predicted = (cumsum_noLdn) - (cumsum_ldn)) %>%
+			mutate_at(.vars = c("col5"), ~ifelse(diff_predicted < 10 & diff_predicted > 0,
+																					 "<10", 
+																					 ifelse(diff_predicted < 100 & diff_predicted > 0,
+																					 			 "<100",
+																					 ifelse(diff_predicted > -10 & diff_predicted < 0,
+																					 			 ">-10",
+																					 ifelse(diff_predicted > -100 & diff_predicted < 0,
+																					 			 ">-100",
+																					 			 .)
+																					 )))
+			) %>%
+			mutate_at(.vars = c("col6"), ~ifelse(cumsum_diff_predicted < 10 & cumsum_diff_predicted > 0,
+																					 "<10", 
+																					 ifelse(cumsum_diff_predicted < 100 & cumsum_diff_predicted > 0,
+																					 			 "<100",
+																					 ifelse(cumsum_diff_predicted > -10 & cumsum_diff_predicted < 0,
+																					 			 ">-10",
+																					 ifelse(cumsum_diff_predicted > -100 & cumsum_diff_predicted < 0,
+																					 			 ">-100",
+																					 			 .)
+																					 )))
+			) %>%
 			## only keep the data for 1 month and 2 months post lockdown
 			filter(days2 == min(days2) | 
 						 	days3 == min(days3)) 
@@ -191,4 +217,4 @@ for(ii in plot_order){
 	tab3[nrow(tab3)+1,] <- ""
 }
 tab3
-write.csv(select(tab3), file = here::here("graphfiles/table3.csv"), row.names = F)
+write.csv(tab3, file = here::here("graphfiles/table3.csv"), row.names = F)

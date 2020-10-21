@@ -14,8 +14,6 @@ if(length(new.packages)) install.packages(new.packages)
 
 library(tidyverse)
 library(lubridate)
-library(cowplot)
-
 
 setwd("~/Documents/COVID-collateral/")
 
@@ -23,14 +21,14 @@ setwd("~/Documents/COVID-collateral/")
 outcome_of_interest <- sort(c("alcohol","anxiety","asthma","copd", "cba", "depression", "diabetes", "feedingdisorders", "hf", "mi", "ocd", "selfharm","smi", "tia", "ua", "vte"))
 
 outcome_of_interest_namematch <- bind_cols("outcome" = outcome_of_interest, 
-																					 "outcome_name" = (c("Acute Alcohol Abuse", "Anxiety", "Asthma exacerbations",  "Cerebrovascular Accident", "COPD",
-																					 										"Depression", "Diabetes emergencies", "Feeding Disorders", 
+																					 "outcome_name" = (c("Acute Alcohol-Related Event", "Anxiety", "Asthma exacerbations",  "Cerebrovascular Accident", "COPD exacerbations",
+																					 										"Depression", "Diabetic Emergencies", "Eating Disorders", 
 																					 										"Heart Failure", "Myocardial Infarction", "Obsessive Compulsive Disorder", "Self-harm", "Severe Mental Illness", "Transient Ischaemic Attacks", 
 																					 										"Unstable Angina", "Venous Thromboembolism"))
 )
 outcome_of_interest_namematch_Age <- bind_cols("outcome" = outcome_of_interest, 
-																					 "outcome_name" = (c("Acute Alcohol Abuse (18+)", "Anxiety", "Asthma exacerbations",  "Cerebrovascular Accident (31+)", "COPD (41+)",
-																					 										"Depression", "Diabetes emergencies", "Feeding Disorders", 
+																					 "outcome_name" = (c("Acute Alcohol-Related Event (18+)", "Anxiety", "Asthma exacerbations",  "Cerebrovascular Accident (31+)", "COPD exacerbations (41+)",
+																					 										"Depression", "Diabetes Emergencies", "Eating Disorders", 
 																					 										"Heart Failure (31+)", "Myocardial Infarction (31+)", "Obsessive Compulsive Disorder", "Self-harm", "Severe Mental Illness", "Transient Ischaemic Attacks (31+)", 
 																					 										"Unstable Angina (31+)", "Venous Thromboembolism (31+)"))
 )
@@ -46,7 +44,7 @@ for(i in 1:length(files_to_import)){
 length(files_to_import)
 
 # do plot 1b by strata ----------------------------------------------------
-plot_strata_by_outcome <- function(run_no = 4,strata_group = "age"){
+plot_strata_by_outcome <- function(run_no = 7,strata_group = "age"){
 	
 		outcome_temp <- get(paste0("outcome_", run_no))
 		
@@ -70,25 +68,25 @@ plot_strata_by_outcome <- function(run_no = 4,strata_group = "age"){
 																				 			 			 ),
 																				 			 ifelse(stratifier == "region", 
 																				 			 			 recode(.,
-																				 			 			 			 `1` = "North East",
-																				 			 			 			 `2` = "North West",
-																				 			 			 			 `3` = "Yorkshire & the Humber",
-																				 			 			 			 `4` = "East Midlands",
-																				 			 			 			 `5` = "West Midlands",
-																				 			 			 			 `6` = "Eastern",
-																				 			 			 			 `7` = "South West",
-																				 			 			 			 `8` = "South Central",
-																				 			 			 			 `9` = "London",
-																				 			 			 			 `10` = "South East",
-																				 			 			 			 `11` = "Northern Ireland"
+																				 			 			 			 `1` = "North (NE, NW, Yorkshire, NI)",   #`1` = "North East",
+																				 			 			 			 `2` = "North (NE, NW, Yorkshire, NI)",   #`2` = "North West",
+																				 			 			 			 `3` = "North (NE, NW, Yorkshire, NI)",   #`3` = "Yorkshire & the Humber",
+																				 			 			 			 `4` = "Midlands",   #`4` = "East Midlands",
+																				 			 			 			 `5` = "Midlands",   #`5` = "West Midlands",
+																				 			 			 			 `6` = "Midlands",   #`6` = "Eastern",
+																				 			 			 			 `7` = "South (SW, SC, SE)",   #`7` = "South West",
+																				 			 			 			 `8` = "South (SW, SC, SE)",   #`8` = "South Central",
+																				 			 			 			 `9` = "London",   #`9` = "London",
+																				 			 			 			 `10` = "South (SW, SC, SE)",   #`10` = "South East",
+																				 			 			 			 `11` = "North (NE, NW, Yorkshire, NI)"   #`11` = "Northern Ireland"
 																				 			 			 			 ),
 																				 			 ifelse(stratifier == "ethnicity", 
 																				 			 			 recode(.,
 																				 			 			 			 `0` = "White",
 																				 			 			 			 `1` = "South Asian",
 																				 			 			 			 `2` = "Black",
-																				 			 			 			 `3` = "Other",
-																				 			 			 			 `4` = "Other",
+																				 			 			 			 `3` = "Other/Mixed",
+																				 			 			 			 `4` = "Other/Mixed",
 																				 			 			 			 `5` = "Missing"),
 																				 			 			 .)
 																				 			 )
@@ -97,28 +95,40 @@ plot_strata_by_outcome <- function(run_no = 4,strata_group = "age"){
 		)
 		## calc proportion consulting overall
 		plot_strata <- outcome_temp %>%
-			mutate(value = (numOutcome/numEligible)*100) %>%
 			filter(stratifier == strata_group)
+		
+		## find categories that do not exceed at any point in 2020
+		group_low_cat <- plot_strata %>%
+			filter(weekDate >= as.Date("2020-01-01")) %>%
+			group_by(category) %>%
+			summarise(max_outcome= max(numOutcome, na.rm = T)) %>%
+			ungroup()
 		
 		# get year and week of data
 		Plot_fmt_strata <- plot_strata %>%
+			left_join(group_low_cat, by = "category") %>%
+			mutate_at("numOutcome", ~ifelse(max_outcome == 5 & weekDate >= as.Date("2020-01-01"), NA, .)) %>% ## if the group never exceeded 5 in 2020 then NA their data
 			group_by(weekDate, category_cat) %>%
-			summarise(value = mean(value, na.rm = T)) %>%
+			summarise(max_outcome = max(numOutcome, na.rm = T),
+								sum_outcome = sum(numOutcome, na.rm = T),
+								sum_denom = sum(numEligible, na.rm = T)) %>%
 			ungroup() %>%
+			mutate_at("sum_outcome", ~ifelse(max_outcome == -Inf, NA, .)) %>%
+			mutate(value = (sum_outcome/sum_denom)*100) %>%
 			mutate(year = year(weekDate)) %>%
 			mutate(week = week(weekDate)) 
 		
 		# take data from 2020 and creat as a new variable
 		Plot_2020_strata <- Plot_fmt_strata %>%
 			filter(year == 2020) %>% 
-			mutate_at("value", ~ifelse(.==0, NA, .)) %>%
+			#mutate_at("value", ~ifelse(. %in% c(0), NA, .)) %>%
 			select(week, "value_20" = value, category_cat)
 		
 		# take historic data (<2020) and calculate weekly mean
 		Plot_historical_strata <- Plot_fmt_strata %>%
 			filter(year != 2020) %>%
 			group_by(week, category_cat) %>%
-			summarise(value = mean(value, na.rm = T)) %>% 
+			summarise(value = mean(value, na.rm = T)) %>%
 			rename("value_hist" = value)
 		
 		# merge historic data with historic average and 2020 data
@@ -149,7 +159,7 @@ plot_strata_by_outcome <- function(run_no = 4,strata_group = "age"){
 
 
 # plot by age -------------------------------------------------------------
-pdf("~/Documents/COVID-Collateral/graphfiles/ageOutcomes.pdf", width = 14.5, height = 14.5)
+pdf("~/Documents/COVID-Collateral/graphfiles/Figure2_ageOutcomes.pdf", width = 14.5, height = 14.5)
 	strat_plot_data <- NULL
 	for(ii in plot_order){
 		strat_plot_data <- strat_plot_data %>%
@@ -167,7 +177,8 @@ pdf("~/Documents/COVID-Collateral/graphfiles/ageOutcomes.pdf", width = 14.5, hei
 		scale_x_date(date_labels = "%b", breaks = "1 month") +
 		facet_wrap(~plot_name, scales = "free", ncol = 4) +
 		geom_vline(xintercept = as.Date("1991-03-23"), linetype = "dashed", col = 2) +
-		labs(x = "Date (2020)", y = "% of people consulting for outcome", title = "", colour = "Age", fill = "Age") +
+		labs(x = "Date (2020)", y = "% of people consulting for condition", title = "", colour = "Age", fill = "Age", caption = "OCD: Obsessive Compulsive Disorder. COPD: Chronic Obstructive Pulmonary Disease") +
+		#scale_x_date() + 
 		theme_classic()  +
 		theme(axis.title = element_text(size = 18),
 					axis.text = element_text(size = 12),
@@ -182,7 +193,7 @@ dev.off()
 
 
 # plot by ethnicity -------------------------------------------------------
-pdf("~/Documents/COVID-Collateral/graphfiles/ethnicityOutcomes.pdf", width = 14, height = 14)
+pdf("~/Documents/COVID-Collateral/graphfiles/FigureS2_ethnicityOutcomes.pdf", width = 14, height = 14)
 	strat_plot_data <- NULL
 	for(ii in plot_order){
 		strat_plot_data <- strat_plot_data %>%
@@ -197,10 +208,10 @@ pdf("~/Documents/COVID-Collateral/graphfiles/ethnicityOutcomes.pdf", width = 14,
 	figure_1c_strata <- ggplot(strat_plot_data, aes(x = as.Date("1991-01-01"), y = value, group = factor(category_cat), col = factor(category_cat), fill = factor(category_cat))) +
 		geom_boxplot(width=20, outlier.size=0, position="identity", alpha=.5) +
 		geom_line(data = filter(strat_plot_data, !is.na(value_20)), aes(x = plotWeek, y = value_20), lwd = 1.2) + 
-		scale_x_date(date_labels = "%b") +
+		scale_x_date(date_labels = "%b", breaks = "1 month") +
 		facet_wrap(~plot_name, scales = "free", ncol = 4) +
 		geom_vline(xintercept = as.Date("1991-03-23"), linetype = "dashed", col = 2) +
-		labs(x = "Date (2020)", y = "% of people consulting for outcome", title = "", colour = "Ethnicity", fill = "Ethnicity") +
+		labs(x = "Date (2020)", y = "% of people consulting for condition", title = "", colour = "Ethnicity", fill = "Ethnicity", caption = "OCD: Obsessive Compulsive Disorder. COPD: Chronic Obstructive Pulmonary Disease") +
 		theme_classic()  +
 		theme(axis.title = element_text(size = 18),
 					axis.text = element_text(size = 12),
@@ -215,7 +226,7 @@ dev.off()
 
 
 # plot by gender ----------------------------------------------------------
-pdf("~/Documents/COVID-Collateral/graphfiles/genderOutcomes.pdf", width = 14, height = 14)
+pdf("~/Documents/COVID-Collateral/graphfiles/FigureS3_sexOutcomes.pdf", width = 14, height = 14)
 	strat_plot_data <- NULL
 	for(ii in plot_order){
 		strat_plot_data <- strat_plot_data %>%
@@ -228,10 +239,10 @@ pdf("~/Documents/COVID-Collateral/graphfiles/genderOutcomes.pdf", width = 14, he
 	figure_1c_strata <- ggplot(strat_plot_data, aes(x = as.Date("1991-01-01"), y = value, group = factor(category_cat), col = factor(category_cat), fill = factor(category_cat))) +
 		geom_boxplot(width=20, outlier.size=0, position="identity", alpha=.5) +
 		geom_line(data = filter(strat_plot_data, !is.na(value_20)), aes(x = plotWeek, y = value_20), lwd = 1.2) + 
-		scale_x_date(date_labels = "%b") +
+		scale_x_date(date_labels = "%b", breaks = "1 month") +
 		facet_wrap(~plot_name, scales = "free", ncol = 4) +
 		geom_vline(xintercept = as.Date("1991-03-23"), linetype = "dashed", col = 2) +
-		labs(x = "Date (2020)", y = "% of people consulting for outcome", colour = "Gender", fill = "Gender") +
+		labs(x = "Date (2020)", y = "% of people consulting for condition", colour = "Gender", fill = "Gender", caption = "OCD: Obsessive Compulsive Disorder. COPD: Chronic Obstructive Pulmonary Disease") +
 		theme_classic()  +
 		theme(axis.title = element_text(size = 18),
 					axis.text = element_text(size = 12),
@@ -245,7 +256,7 @@ pdf("~/Documents/COVID-Collateral/graphfiles/genderOutcomes.pdf", width = 14, he
 dev.off()
 
 # plot by region ----------------------------------------------------------
-pdf("~/Documents/COVID-Collateral/graphfiles/regionOutcomes.pdf", width = 14, height = 14)
+pdf("~/Documents/COVID-Collateral/graphfiles/FigureS4_regionOutcomes.pdf", width = 14, height = 14)
 strat_plot_data <- NULL
 for(ii in plot_order){
 	strat_plot_data <- strat_plot_data %>%
@@ -256,15 +267,15 @@ for(ii in plot_order){
 strat_plot_data$plot_name <- factor(strat_plot_data$plot_name, levels = outcome_of_interest_namematch$outcome_name[plot_order])
 bkg_colour <- "white"
 strat_plot_data <- strat_plot_data %>%
-	filter(!is.na(category_cat), category_cat != "Northern Ireland")
+	filter(!is.na(category_cat))
 
 figure_1c_strata <- ggplot(strat_plot_data, aes(x = as.Date("1991-01-01"), y = value, group = factor(category_cat), col = factor(category_cat), fill = factor(category_cat))) +
 	geom_boxplot(width=20, outlier.size=0, position="identity", alpha=.5) +
 	geom_line(data = filter(strat_plot_data, !is.na(value_20)), aes(x = plotWeek, y = value_20), lwd = 1.2) + 
-	scale_x_date(date_labels = "%b") +
+	scale_x_date(date_labels = "%b", breaks = "1 month") +
 	facet_wrap(~plot_name, scales = "free", ncol = 4) +
 	geom_vline(xintercept = as.Date("1991-03-23"), linetype = "dashed", col = 2) +
-	labs(x = "Date (2020)", y = "% of people consulting for outcome", title = "", colour = "Region", fill = "Region") +
+	labs(x = "Date (2020)", y = "% of people consulting for condition", title = "", colour = "Region", fill = "Region", caption = "OCD: Obsessive Compulsive Disorder. COPD: Chronic Obstructive Pulmonary Disease") +
 	theme_classic()  +
 	theme(axis.title = element_text(size = 18),
 				axis.text = element_text(size = 12),

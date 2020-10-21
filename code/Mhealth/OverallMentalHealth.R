@@ -1,49 +1,46 @@
 #---------------------------------------------------------------------------------------
 # Project: Covid-Collateral
-# Program Name: outcomesOverall
+# Program Name: MentalHealthOverall
 # Author: Alasdair Henderson 
-# Date Created: 16/06/2020
-# Notes: Overall trends in recording over time
+# Date Created: 08/10/2020
+# Notes: Overall trends in recording over time for mental health outcomes
 #---------------------------------------------------------------------------------------
 
 # Flag missing libraries and install those required
-list <-  c("tidyverse", "lubridate", "cowplot", "here")
+list <-  c("tidyverse", "lubridate", "cowplot")
 new.packages <- list[!(list %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
 
 library(tidyverse)
 library(lubridate)
 library(cowplot)
-library(here)
 
 # Import data -------------------------------------------------------------
-outcome_of_interest <- sort(c("alcohol","anxiety","asthma","copd", "cba", "depression", "diabetes", "feedingdisorders", "hf", "mi", "ocd", "selfharm","smi", "tia", "ua", "vte"))
+outcome_of_interest <- sort(c("anxiety","depression","feedingdisorders", "ocd","selfharm","smi"))
 
-all_files <- list.files(here::here("data/"), pattern = "an_")
+all_files <- list.files(here::here("data/"), pattern = paste0("an_", outcome_of_interest, collapse = "|"))
 outcomes <- stringr::str_remove_all(all_files, c("an_|.csv"))
 
 outcome_of_interest_namematch <- bind_cols("outcome" = outcomes, 
-																					 "outcome_name" = (c("Acute Alcohol-Related Event", "Anxiety", "Asthma exacerbations",  "Cerebrovascular Accident", "COPD exacerbations",
-																					 										"Depression", "Diabetic Emergencies", "Eating Disorders", 
-																					 										"Heart Failure", "Myocardial Infarction", "OCD", "Self-harm", "Severe Mental Illness", "Transient Ischaemic Attacks", 
-																					 										"Unstable Angina", "Venous Thromboembolism"))
+																					 "outcome_name" = (c("Anxiety", "Depression", "Eating Disorders", 
+																					 										"OCD", "Self-harm", "Severe Mental Illness"))
 )
-plot_order <- c(7,1,2,6,8,11,12,13,4,9,10,14,15,16,3,5) 
+plot_order <- c(1:6) 
 
 for(i in 1:length(all_files)){
 	load_file <- read_csv(here::here("data", all_files[i])) %>%
 		mutate_at(vars(weekDate), dmy) %>%
-	  mutate(proportion = (numOutcome/numEligible)*100) 
-	  # convert to date
+		mutate(proportion = (numOutcome/numEligible)*100) 
+	# convert to date
 	assign(paste0("outcome_", i), load_file)
 }
 length(all_files)
-ii <- 1
+
 plot_main <- function(ii){
 	out_file <- get(paste0("outcome_",ii))
 	## recode all the factor variables
 	out_file <- out_file %>%
-	  mutate(category_cat = category) %>%
+		mutate(category_cat = category) %>%
 		mutate_at("category_cat" , ~ifelse(stratifier == "gender", 
 																			 recode(.,`1` = "Male", `2` = "Female"),
 																			 ifelse(stratifier == "age", 
@@ -102,14 +99,15 @@ plot_main <- function(ii){
 		filter(outcome == outcome_of_interest[ii]) %>% 
 		select(outcome_name)
 	
-
+	
 	df_plot2 <- df_plot2 %>%
 		mutate(plot_name = pull(name_to_plot_title))
 	
 	df_plot2
 }
 
-pdf("~/Documents/COVID-Collateral/graphfiles/Figure1_overallOutcomes.pdf", width = 12, height = 10)
+pdf("~/Documents/COVID-Collateral/graphfiles/OverallMentalHealth.pdf")
+
 plot_full <- NULL
 for(ii in plot_order){
 	print(ii)
@@ -127,12 +125,12 @@ figure_1b <- ggplot(plot_full, aes(x = plotWeek, y = value, group = year)) +
 	geom_line(data = filter(plot_full, year == 2018), alpha = 0.2) +  #aes(col = "2018"), 
 	geom_line(data = filter(plot_full, year == 2019), alpha = 0.2) +  #aes(col = "2019"), 
 	geom_line(aes(y = value_hist, col = "2017-2019 average"), lwd = 1.2) +
-	geom_line(aes(y = value_20, col = "2020"), lty = 5, lwd = 0.8) +
+	geom_line(aes(y = value_20, col = "2020"), lwd = 1.2) +
 	geom_ribbon(aes(ymin = value_20, ymax = value_hist), fill = alpha(2, 0.2), lty = 0) +
 	scale_x_date(date_labels = "%b", breaks = "2 months") +
-	facet_wrap(~plot_name, scales = "free", ncol = 4) +
+	facet_wrap(~plot_name, scales = "free", ncol = 3) +
 	geom_vline(xintercept = as.Date("1991-03-23"), linetype = "dashed", col = 2) +
-	labs(x = "Date", y = "% of people consulting for condition", caption = "OCD: Obsessive Compulsive Disorder. COPD: Chronic Obstructive Pulmonary Disease") +
+	labs(x = "Date", y = "% of people consulting for outcome") +
 	theme_classic() +
 	theme(axis.title = element_text(size = 16),
 				axis.text.y = element_text(size = 12),

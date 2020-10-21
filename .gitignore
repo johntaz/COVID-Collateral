@@ -69,7 +69,8 @@ output/
 !/data/an_diabetesOverall.csv
 
 ## Ignore word files
-*.docx 
+*.docx
 
 ## Ignore data for the shiny app
 code/shiny_app/covid_collateral_shiny/data/
+*.DOC
