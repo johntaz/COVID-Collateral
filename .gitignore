@@ -19,7 +19,6 @@
 .Rproj.user/
 
 # produced vignettes
-
 vignettes/*.html
 vignettes/*.pdf
 
@@ -41,19 +40,6 @@ vignettes/*.pdf
 rsconnect/
 .Rproj.user
 
-# Data folder
-data/*
-/data/*
-datafiles/
-/datafiles
-/datafiles/
-
-# Output folder
-graphfiles/
-/graphfiles
-output/
-/output/
-
 # powerpoint
 *.pptx
 *.ppt
@@ -61,10 +47,3 @@ output/
 # DS_store
 *.DS_Store
 .DS_Store
-
-# Include aggregated analysis dataset for diabetes
-!/data/an_diabetesOverall.csv
-
-## Ignore data for the shiny app
-code/shiny_app/covid_collateral_shiny/data/
-*.DOC
