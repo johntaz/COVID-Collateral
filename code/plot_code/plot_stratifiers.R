@@ -1,5 +1,5 @@
 #---------------------------------------------------------------------------------------
-# Project: Covid-Collateral stratifiers plots (one outcome at a time)
+# Project: Covid-Collateral stratifiers plots 
 # Program Name: 101_an_overallPopulation
 # Author: Alasdair Henderson 
 # Date Created: 16/06/2020
@@ -15,7 +15,7 @@ if(length(new.packages)) install.packages(new.packages)
 library(tidyverse)
 library(lubridate)
 
-setwd("~/Documents/COVID-collateral/")
+#setwd("~/Documents/COVID-collateral/")
 
 # import data -------------------------------------------------------------
 outcome_of_interest <- sort(c("alcohol","anxiety","asthma","copd", "cba", "depression", "diabetes", "feedingdisorders", "hf", "mi", "ocd", "selfharm","smi", "tia", "ua", "vte"))
@@ -37,7 +37,7 @@ plot_order <- c(7,1,2,6,8,11,12,13,4,9,10,14,15,16,3,5)
 files_to_import <- list.files("data/", pattern = paste0(outcome_of_interest, collapse = "|"))
 
 for(i in 1:length(files_to_import)){
-	load_file <- read_csv(paste0("data/", files_to_import[i])) %>%
+	load_file <- read_csv(here::here("data", files_to_import[i])) %>%
 		mutate_at(vars(weekDate), dmy) # convert to date
 	assign(paste0("outcome_", i), load_file)
 }
@@ -159,7 +159,7 @@ plot_strata_by_outcome <- function(run_no = 7,strata_group = "age"){
 
 
 # plot by age -------------------------------------------------------------
-pdf("~/Documents/COVID-Collateral/graphfiles/Figure2_ageOutcomes.pdf", width = 14.5, height = 14.5)
+pdf(here::here("graphfiles", "Figure2_ageOutcomes.pdf"), width = 14.5, height = 14.5)
 	strat_plot_data <- NULL
 	for(ii in plot_order){
 		strat_plot_data <- strat_plot_data %>%
@@ -193,7 +193,7 @@ dev.off()
 
 
 # plot by ethnicity -------------------------------------------------------
-pdf("~/Documents/COVID-Collateral/graphfiles/FigureS2_ethnicityOutcomes.pdf", width = 14, height = 14)
+pdf(here::here("graphfiles", "FigureS2_ethnicityOutcomes.pdf"), width = 14, height = 14)
 	strat_plot_data <- NULL
 	for(ii in plot_order){
 		strat_plot_data <- strat_plot_data %>%
@@ -226,7 +226,7 @@ dev.off()
 
 
 # plot by gender ----------------------------------------------------------
-pdf("~/Documents/COVID-Collateral/graphfiles/FigureS3_sexOutcomes.pdf", width = 14, height = 14)
+pdf(here::here("graphfiles", "FigureS3_sexOutcomes.pdf"), width = 14, height = 14)
 	strat_plot_data <- NULL
 	for(ii in plot_order){
 		strat_plot_data <- strat_plot_data %>%
@@ -256,7 +256,7 @@ pdf("~/Documents/COVID-Collateral/graphfiles/FigureS3_sexOutcomes.pdf", width = 
 dev.off()
 
 # plot by region ----------------------------------------------------------
-pdf("~/Documents/COVID-Collateral/graphfiles/FigureS4_regionOutcomes.pdf", width = 14, height = 14)
+pdf(here::here("graphfiles", "FigureS4_regionOutcomes.pdf"), width = 14, height = 14)
 strat_plot_data <- NULL
 for(ii in plot_order){
 	strat_plot_data <- strat_plot_data %>%
