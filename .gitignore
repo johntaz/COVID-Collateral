@@ -1,6 +1,3 @@
-# Documents (for now)
-
-
 # History files
 .Rhistory
 .Rapp.history
@@ -67,9 +64,6 @@ output/
 
 # Include aggregated analysis dataset for diabetes
 !/data/an_diabetesOverall.csv
-
-## Ignore word files
-*.docx
 
 ## Ignore data for the shiny app
 code/shiny_app/covid_collateral_shiny/data/
