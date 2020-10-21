@@ -7,13 +7,14 @@
 #---------------------------------------------------------------------------------------
 
 # Flag missing libraries and install those required
-list <-  c("tidyverse", "lubridate", "cowplot")
+list <-  c("tidyverse", "lubridate", "cowplot", "here")
 new.packages <- list[!(list %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
 
 library(tidyverse)
 library(lubridate)
 library(cowplot)
+library(here)
 
 # Import data -------------------------------------------------------------
 outcome_of_interest <- sort(c("alcohol","anxiety","asthma","copd", "cba", "depression", "diabetes", "feedingdisorders", "hf", "mi", "ocd", "selfharm","smi", "tia", "ua", "vte"))
@@ -22,7 +23,7 @@ all_files <- list.files(here::here("data/"), pattern = "an_")
 outcomes <- stringr::str_remove_all(all_files, c("an_|.csv"))
 
 outcome_of_interest_namematch <- bind_cols("outcome" = outcomes, 
-																					 "outcome_name" = (c("Acute Alcohol-Related Event", "Anxiety", "Asthma exacerbations",  "Cerebrovascular Accident", "COPD",
+																					 "outcome_name" = (c("Acute Alcohol-Related Event", "Anxiety", "Asthma exacerbations",  "Cerebrovascular Accident", "COPD exacerbations",
 																					 										"Depression", "Diabetic Emergencies", "Eating Disorders", 
 																					 										"Heart Failure", "Myocardial Infarction", "OCD", "Self-harm", "Severe Mental Illness", "Transient Ischaemic Attacks", 
 																					 										"Unstable Angina", "Venous Thromboembolism"))
@@ -108,7 +109,7 @@ plot_main <- function(ii){
 	df_plot2
 }
 
-pdf("~/Documents/COVID-Collateral/graphfiles/overallOutcomes2.pdf", width = 12, height = 10)
+pdf("~/Documents/COVID-Collateral/graphfiles/Figure1_overallOutcomes.pdf", width = 12, height = 10)
 plot_full <- NULL
 for(ii in plot_order){
 	print(ii)
@@ -126,12 +127,12 @@ figure_1b <- ggplot(plot_full, aes(x = plotWeek, y = value, group = year)) +
 	geom_line(data = filter(plot_full, year == 2018), alpha = 0.2) +  #aes(col = "2018"), 
 	geom_line(data = filter(plot_full, year == 2019), alpha = 0.2) +  #aes(col = "2019"), 
 	geom_line(aes(y = value_hist, col = "2017-2019 average"), lwd = 1.2) +
-	geom_line(aes(y = value_20, col = "2020"), lwd = 1.2) +
+	geom_line(aes(y = value_20, col = "2020"), lty = 5, lwd = 0.8) +
 	geom_ribbon(aes(ymin = value_20, ymax = value_hist), fill = alpha(2, 0.2), lty = 0) +
 	scale_x_date(date_labels = "%b", breaks = "2 months") +
 	facet_wrap(~plot_name, scales = "free", ncol = 4) +
 	geom_vline(xintercept = as.Date("1991-03-23"), linetype = "dashed", col = 2) +
-	labs(x = "Date", y = "% of people consulting for outcome") +
+	labs(x = "Date", y = "% of people consulting for condition", caption = "OCD: Obsessive Compulsive Disorder. COPD: Chronic Obstructive Pulmonary Disease") +
 	theme_classic() +
 	theme(axis.title = element_text(size = 16),
 				axis.text.y = element_text(size = 12),

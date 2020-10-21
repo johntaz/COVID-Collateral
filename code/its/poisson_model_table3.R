@@ -27,8 +27,8 @@ bkg_colour <- "gray99"
 all_files <- list.files(here::here("data/"), pattern = "an_")
 outcomes <- stringr::str_remove_all(all_files, c("an_|.csv"))
 outcome_of_interest_namematch <- bind_cols("outcome" = outcomes, 
-																					 "outcome_name" = (c("Acute Alcohol-Related Event", "Anxiety", "Asthma exacerbations",  "Cerebrovascular Accident", "COPD",
-																					 										"Depression", "Diabetes Emergencies", "Eating Disorders", 
+																					 "outcome_name" = (c("Acute Alcohol-Related Event", "Anxiety", "Asthma exacerbations",  "Cerebrovascular Accident", "COPD exacerbations",
+																					 										"Depression", "Diabetic Emergencies", "Eating Disorders", 
 																					 										"Heart Failure", "Myocardial Infarction", "OCD", "Self-harm", "Severe Mental Illness", "Transient Ischaemic Attacks", 
 																					 										"Unstable Angina", "Venous Thromboembolism"))
 )
@@ -97,7 +97,7 @@ tab3_function <- function(outcome){
 		pred1 <- predict(po_model2, newdata = outcome_pred, se.fit = TRUE, interval="confidence", dispersion = deviance_adjustment)
 		predicted_vals <- pred1$fit
 		stbp <- pred1$se.fit
-		
+
 		## predict values if no lockdown 
 		outcome_pred_nointervention <- outcome_pred %>%
 			mutate_at("lockdown", ~(.=0))
@@ -163,17 +163,29 @@ tab3_function <- function(outcome){
 						 col6 = prettyNum(signif((cumsum_noLdn) - (cumsum_ldn),3), big.mark=",", digits = 0, scientific=FALSE)
 			)  %>%
 			## censor data if it is too small
-			mutate_at(.vars = c("col5"), ~ifelse((probline_noLdn*1e6) - (predicted_vals*1e6) < 10,
+			mutate(diff_predicted = (probline_noLdn*1e6) - (predicted_vals*1e6),
+						 cumsum_diff_predicted = (cumsum_noLdn) - (cumsum_ldn)) %>%
+			mutate_at(.vars = c("col5"), ~ifelse(diff_predicted < 10 & diff_predicted > 0,
 																					 "<10", 
-																					 ifelse((probline_noLdn*1e6) - (predicted_vals*1e6) < 100,
+																					 ifelse(diff_predicted < 100 & diff_predicted > 0,
 																					 			 "<100",
-																					 			 .))
+																					 ifelse(diff_predicted > -10 & diff_predicted < 0,
+																					 			 ">-10",
+																					 ifelse(diff_predicted > -100 & diff_predicted < 0,
+																					 			 ">-100",
+																					 			 .)
+																					 )))
 			) %>%
-			mutate_at(.vars = c("col6"), ~ifelse((cumsum_noLdn) - (cumsum_ldn) < 10,
+			mutate_at(.vars = c("col6"), ~ifelse(cumsum_diff_predicted < 10 & cumsum_diff_predicted > 0,
 																					 "<10", 
-																					 ifelse((cumsum_noLdn) - (cumsum_ldn) < 100,
+																					 ifelse(cumsum_diff_predicted < 100 & cumsum_diff_predicted > 0,
 																					 			 "<100",
-																					 			 .))
+																					 ifelse(cumsum_diff_predicted > -10 & cumsum_diff_predicted < 0,
+																					 			 ">-10",
+																					 ifelse(cumsum_diff_predicted > -100 & cumsum_diff_predicted < 0,
+																					 			 ">-100",
+																					 			 .)
+																					 )))
 			) %>%
 			## only keep the data for 1 month and 2 months post lockdown
 			filter(days2 == min(days2) | 
