@@ -164,27 +164,6 @@ ui <- shinyUI(
 						 		)
 						 )
 					),
-		tabPanel("ITS",
-	 				 sidebarLayout(
-	 				 	position = "right",
-	 				 	## make the sidebar
-	 				 	sidebarPanel(
-	 				 		helpText("Testing 1,2,3..."),
-	 				 		checkboxGroupInput("Lockdown start", 
-	 				 											 label = "Choose outcome variables to display", 
-	 				 											 choices = as.list(unique(refactored_shiny$lockdown)),
-	 				 											 selected = as.list(unique(refactored_shiny$lockdown))
-	 				 		),
-	 				 		actionButton(inputId = "runITS", 
-	 				 								 label = "Testing"
-	 				 		)
-	 				 	),
-	 				 	## make the main panel
-						 	mainPanel(
-						 		uiOutput("pdfview")
-						 	)
-						)
-		),
 		tabPanel("About",
 						 fluidRow(
 						 	column(8,
