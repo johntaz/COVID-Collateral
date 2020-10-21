@@ -1,38 +1,41 @@
 # COVID-Collateral
-Study investigating the indirect effects of COVID-19
+Study investigating the indirect effects of COVID-19.
+
+While a reduction in hospital activity during the COVID-19 pandemic has been well documented, there has been only limited small scale research on impacts on primary care. We explored the effects of the COVID-19 pandemic and its control on general practice consultations for adverse acute physical and mental health outcomes in England to inform public health planning and policy. 
+
+Available at: [Link]
+Shiny app at: [Link]
+
+## Authors
+Kathryn E Mansfield, PhD\*, Rohini Mathur, PhD\*, John Tazare, MSc\*, Alasdair D Henderson, PhD\*, Amy Mulick, MSc\*, Helena Carreira, PhD, Anthony A Matthews, PhD, Patrick Bidulka, MSc, Alicia Gayle, MSc, Harriet Forbes, PhD1, Sarah Cook, PhD, Angel YS Wong, PhD1, Helen Strongman, PhD, Kevin Wing, PhD, Charlotte Warren-Gash, PhD, Sharon L Cadogan, PhD, Liam Smeeth, PhD, Joseph Hayes, PhD, Jennifer K Quint, PhD, Martin McKee, PhD, Sinéad M Langan, PhD
 
 ### Table of contents
 - [Project folder structure](#project-folder-structure)
   + [Code](#code)
   + [Codelists](#codelists)
   + [Data](#data)
-  + [Docs](#docs)
+  + [Doc](#doc)
   + [Graphfiles](#graphfiles)
-
   
 ### Project folder structure
 
 ##### Code
-- Storage for code:
-  - Data management 
-  - Analysis
-- Conventions to be added...
+- _Run all R code from `COVID-Collateral.Rproj`_
+- `data_prep` takes raw CPRD data and aggregates into weekly number of outcomes and weekly denominators by strata. Note - data are held on separate secure server. 
+- `its` Interrupted time series analysis code for Figure 3 and Table 3 and sensitivity analysis for diabetes consultations
+- `Plot_code` Functions to plot weekly percentage of consultations by outcome (Figures 1 and 2, S2-S4)
+- `Shiny_app` All code and data for the accompanying Shiny app 
 
 ##### Codelists
-- Storage for finalised codelists 
-- Please use the following naming convention: TBC 
-  - e.g. `Diabetes_ICD10.csv` 
-- Files should only contain two fields - `code` and `description` 
+- Storage for finalised codelists used in the study for all conditions 
 
 ##### Data
-- Folder and its contents masked from git via .gitignore
-- Local data storage for working copies of data (this will need to be created locally)
+- Summary analysis datasets for all conditions. Note data censored if weekly outcomes < 5. 
 
-##### Docs
+##### Doc
 - Storage for any relevant documentation 
 - [Getting Started](/doc/gettingStarted.md)
+- Approved Independent Scientific Advisory Committee (ISAC) application (Word document)
 
 ##### Graphfiles
-- Storage for aggregate analysis output (masked from git via .gitignore for now)
-- This should not contain any patient-level data (CPRD or otherwise)
-
+- Outputs from analysis code
