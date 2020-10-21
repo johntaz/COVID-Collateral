@@ -30,8 +30,8 @@ all_files <- list.files(here::here("data/"), pattern = "an_")
 outcomes <- stringr::str_remove_all(all_files, c("an_|.csv"))
 
 outcome_of_interest_namematch <- bind_cols("outcome" = outcomes, 
-																					 "outcome_name" = (c("Acute Alcohol-Related Event", "Anxiety", "Asthma exacerbations",  "Cerebrovascular Accident", "COPD",
-																					 										"Depression", "Diabetes Emergencies", "Eating Disorders", 
+																					 "outcome_name" = (c("Acute Alcohol-Related Event", "Anxiety", "Asthma exacerbations",  "Cerebrovascular Accident", "COPD exacerbations",
+																					 										"Depression", "Diabetic Emergencies", "Eating Disorders", 
 																					 										"Heart Failure", "Myocardial Infarction", "OCD", "Self-harm", "Severe Mental Illness", "Transient Ischaemic Attacks", 
 																					 										"Unstable Angina", "Venous Thromboembolism"))
 )
@@ -252,7 +252,7 @@ its_function <- function(outcomes_vec = outcomes,
 			facet_wrap(~outcome_name, scales = "free", ncol = 4) +
 			geom_vline(xintercept = c(abline_min, 
 																abline_max), col = 1, lwd = 1) + # 2020-04-05 is first week/data After lockdown gap
-			labs(y = "% of people consulting for outcome", title = "A") +
+			labs(y = "% of people consulting for condition", title = "A", caption = "OCD: Obsessive Compulsive Disorder. COPD: Chronic Obstructive Pulmonary Disease") +
 			theme_classic() +
 			theme(axis.title = element_text(size =16), 
 						axis.text.x = element_text(angle = 60, hjust = 1, size = 12),
@@ -298,7 +298,7 @@ its_function <- function(outcomes_vec = outcomes,
 			geom_linerange(lwd = 1.5, colour = "orange") +
 			geom_hline(yintercept=1, lty=2) +  # add a dotted line at x=1 after flip
 			coord_flip() +  # flip coordinates (puts labels on y axis)
-			labs(x = "", y = 'OR (95% CI)', title = "C: Recovery") + 
+			labs(x = "", y = '95% CI', title = "C: Recovery") +
 			theme_classic() +
 			theme(axis.title = element_text(size = 16),
 						#axis.text.x = element_text(angle = 45),
@@ -336,7 +336,7 @@ its_function <- function(outcomes_vec = outcomes,
 			geom_linerange(lwd = 1.5, colour = "darkred") +
 			geom_hline(yintercept=1, lty=2) +  # add a dotted line at x=1 after flip
 			coord_flip() +  # flip coordinates (puts labels on y axis)
-			labs(x = "", y = "OR (95% CI)", title = "B: Reduction") + 
+			labs(x = "", y = "95% CI", title = "B: Reduction") +
 			facet_wrap(~outcome_name, ncol = 1, dir = "h", strip.position = "right") +
 			theme_classic() +
 			theme(axis.title = element_text(size = 16),
@@ -385,7 +385,7 @@ dev.off()
 
 # SA1 compare cutting data at 2017 or 2019 --------------------------------
 ## Run as in paper
-pdf(file = here::here("graphfiles", paste0("SA1_its_backdata_2017", ".pdf")), width = 13, height = 14)
+pdf(file = here::here("graphfiles", paste0("SA_its_backdata_2017", ".pdf")), width = 13, height = 14)
 its_function(outcomes_vec = outcomes,
 						 cutData = as.Date("2017-01-01"),
 						 start_lockdown = as.Date("2020-03-08"),
@@ -396,7 +396,7 @@ its_function(outcomes_vec = outcomes,
 )
 dev.off()
 ## run once with all data (including self-harm) back to 2017 for the appendix
-pdf(file = here::here("graphfiles", paste0("SA1_its_backdata_2017_inclSelfHarm", ".pdf")), width = 13, height = 14)
+pdf(file = here::here("graphfiles", paste0("FigureS5_its_backdata_2017_inclSelfHarm", ".pdf")), width = 13, height = 14)
 its_function(outcomes_vec = outcomes,
 						 cutData = as.Date("2017-01-01"),
 						 start_lockdown = as.Date("2020-03-08"),
@@ -407,7 +407,7 @@ its_function(outcomes_vec = outcomes,
 )
 dev.off()
 ## 2019 data
-pdf(file = here::here("graphfiles", paste0("SA1_its_backdata_2019", ".pdf")), width = 13, height = 14)
+pdf(file = here::here("graphfiles", paste0("FigureS6_its_backdata_2019", ".pdf")), width = 13, height = 14)
 its_function(outcomes_vec = outcomes,
 						 cutData = as.Date("2019-01-01"),
 						 start_lockdown = as.Date("2020-03-08"),
@@ -440,8 +440,6 @@ dev.off()
 				theme_classic() +
 				theme(axis.title = element_text(size = 16),
 							axis.text.x = element_text(angle = 45),
-							#axis.text.y = element_text(angle = 45, hjust = 1),
-							#strip.text = element_text(angle = 45, hjust = 1),
 							axis.text.y = element_blank(),
 							axis.ticks.y = element_blank(),
 							axis.line.y =  element_blank(),
@@ -467,7 +465,6 @@ dev.off()
 			
 			# changes the names of outcomes to full names
 			fp_int_ors$outcome_name <- factor(fp_int_ors$outcome_name, levels = outcome_of_interest_namematch$outcome_name[plot_order])
-			#levels(fp_int_ors$outcome_name)[7] <- "Self-harm*"
 			
 			fp_compare2 <- ggplot(data=fp_int_ors, aes(x=chopdata, y=Est, ymin=lci, ymax=uci, group = chopdata , colour = chopdata)) +
 				geom_point(size = 0.2, pch = 1) +
@@ -497,7 +494,7 @@ dev.off()
 				coord_flip() 
 			
 			## output the two forest plots side by side
-			pdf(file = here::here("graphfiles", paste0("FP_compare_data_exclusion.pdf")), width = 12, height = 8)
+			pdf(file = here::here("graphfiles", paste0("FigureS7_compare_data_exclusion.pdf")), width = 12, height = 8)
 				fp_compare1 +
 					fp_compare2
 			dev.off()	
@@ -532,11 +529,11 @@ dev.off()
 		dplyr::select(-outcome, -rowN, -rowSort)
 	
 	##
-	write.csv(fp_ors_full, here::here("graphfiles", "FP_compare_data_exclusion.csv"))
+	write.csv(fp_ors_full, here::here("graphfiles", "SA_compare_data_exclusion.csv"))
 
 # same lockdown start date - change adjustment period ---------------------
 #### 0 weeks
-pdf(file = here::here("graphfiles", paste0("SA_its_SA_march23_0wks", ".pdf")), width = 13, height = 14)
+pdf(file = here::here("graphfiles", paste0("FigureS8_its_SA_march23_0wks", ".pdf")), width = 13, height = 14)
 its_function(outcomes_vec = outcomes,
 						 cutData = as.Date("2017-01-01"),
 						 start_lockdown = as.Date("2020-03-23"),
@@ -545,7 +542,7 @@ its_function(outcomes_vec = outcomes,
 )
 dev.off()
 #### 3 weeks (as in paper)
-pdf(file = here::here("graphfiles", paste0("SA_its_SA_march1_3wks", ".pdf")), width = 13, height = 14)
+pdf(file = here::here("graphfiles", paste0("FigureS9_its_SA_march1_3wks", ".pdf")), width = 13, height = 14)
 its_function(outcomes_vec = outcomes,
 						 cutData = as.Date("2017-01-01"),
 						 start_lockdown = as.Date("2020-03-08"),
@@ -554,7 +551,7 @@ its_function(outcomes_vec = outcomes,
 )
 dev.off()
 #### 5 weeks
-pdf(file = here::here("graphfiles", paste0("SA_its_SA_march1_5wks", ".pdf")), width = 13, height = 14)
+pdf(file = here::here("graphfiles", paste0("FigureS10_its_SA_march1_5wks", ".pdf")), width = 13, height = 14)
 its_function(outcomes_vec = outcomes,
 						 cutData = as.Date("2017-01-01"),
 						 start_lockdown = as.Date("2020-03-08"),
@@ -563,7 +560,7 @@ its_function(outcomes_vec = outcomes,
 )
 dev.off()
 #### 7 weeks 
-pdf(file = here::here("graphfiles", paste0("SA_its_SA_march1_7wks", ".pdf")), width = 13, height = 14)
+pdf(file = here::here("graphfiles", paste0("FigureS11_its_SA_march1_7wks", ".pdf")), width = 13, height = 14)
 its_function(outcomes_vec = outcomes,
 						 cutData = as.Date("2017-01-01"),
 						 start_lockdown = as.Date("2020-03-08"),
@@ -575,7 +572,7 @@ dev.off()
 
 # lockdown on March 23rd & change adjustment period ---------------------
 #### 3 weeks
-pdf(file = here::here("graphfiles", paste0("SA_its_SA_march23_3wks", ".pdf")), width = 13, height = 14)
+pdf(file = here::here("graphfiles", paste0("FigureS12_its_SA_march23_3wks", ".pdf")), width = 13, height = 14)
 its_function(outcomes_vec = outcomes,
 						 cutData = as.Date("2017-01-01"),
 						 start_lockdown = as.Date("2020-03-22"),
@@ -584,7 +581,7 @@ its_function(outcomes_vec = outcomes,
 )
 dev.off()
 #### 5 weeks (as in paper)
-pdf(file = here::here("graphfiles", paste0("SA_its_SA_march23_5wks", ".pdf")), width = 13, height = 14)
+pdf(file = here::here("graphfiles", paste0("FigureS13_its_SA_march23_5wks", ".pdf")), width = 13, height = 14)
 its_function(outcomes_vec = outcomes,
 						 cutData = as.Date("2017-01-01"),
 						 start_lockdown = as.Date("2020-03-22"),
@@ -593,7 +590,7 @@ its_function(outcomes_vec = outcomes,
 )
 dev.off()
 #### 7 weeks 
-pdf(file = here::here("graphfiles", paste0("SA_its_SA_march23_7wks", ".pdf")), width = 13, height = 14)
+pdf(file = here::here("graphfiles", paste0("FigureS14_its_SA_march23_7wks", ".pdf")), width = 13, height = 14)
 its_function(outcomes_vec = outcomes,
 						 cutData = as.Date("2017-01-01"),
 						 start_lockdown = as.Date("2020-03-22"),
@@ -621,7 +618,7 @@ for(ii in all_files){
 	}
 	load_file <- load_file %>%
 		dplyr::select(-var, -X) %>%
-		mutate_if(is.numeric, ~signif(., 3)) %>% 
+		mutate_if(is.numeric, ~round(., 2)) %>% 
 		mutate(summ = paste0(Est, " (", lci, "-", uci,")")) %>%
 		dplyr::select(-Est, -lci, -uci)
 	names(load_file)[names(load_file)=="summ"] <- var_name
@@ -640,7 +637,7 @@ SA_tab <- SA_tab %>%
 	left_join(sort_table, by = "outcome_name") %>%
 	arrange(rowSort)  %>%
 	dplyr::select(-outcome, -rowN, -rowSort)
-write.csv(SA_tab, file =  here::here("graphfiles/its_main_summ_INT_ORs.csv"))
+write.csv(SA_tab, file =  here::here("graphfiles/SAtab_its_main_summ_INT_ORs.csv"))
 
 # Make Sensitivity analysis table about change in ORs ---------------------
 all_files <- list.files(here::here("graphfiles"), pattern = "its_main_ORs_")
@@ -680,4 +677,4 @@ SA_tab <- SA_tab %>%
 	left_join(sort_table, by = "outcome_name") %>%
 	arrange(rowSort)  %>%
 	dplyr::select(-outcome, -rowN, -rowSort)
-write.csv(SA_tab, file =  here::here("graphfiles/its_main_summ_ORs.csv"))
+write.csv(SA_tab, file =  here::here("graphfiles/SAtab_its_main_summ_ORs.csv"))

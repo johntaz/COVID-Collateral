@@ -21,13 +21,13 @@ setwd("~/Documents/COVID-collateral/")
 outcome_of_interest <- sort(c("alcohol","anxiety","asthma","copd", "cba", "depression", "diabetes", "feedingdisorders", "hf", "mi", "ocd", "selfharm","smi", "tia", "ua", "vte"))
 
 outcome_of_interest_namematch <- bind_cols("outcome" = outcome_of_interest, 
-																					 "outcome_name" = (c("Acute Alcohol-Related Event", "Anxiety", "Asthma exacerbations",  "Cerebrovascular Accident", "COPD",
-																					 										"Depression", "Diabetes Emergencies", "Eating Disorders", 
+																					 "outcome_name" = (c("Acute Alcohol-Related Event", "Anxiety", "Asthma exacerbations",  "Cerebrovascular Accident", "COPD exacerbations",
+																					 										"Depression", "Diabetic Emergencies", "Eating Disorders", 
 																					 										"Heart Failure", "Myocardial Infarction", "Obsessive Compulsive Disorder", "Self-harm", "Severe Mental Illness", "Transient Ischaemic Attacks", 
 																					 										"Unstable Angina", "Venous Thromboembolism"))
 )
 outcome_of_interest_namematch_Age <- bind_cols("outcome" = outcome_of_interest, 
-																					 "outcome_name" = (c("Acute Alcohol-Related Event (18+)", "Anxiety", "Asthma exacerbations",  "Cerebrovascular Accident (31+)", "COPD (41+)",
+																					 "outcome_name" = (c("Acute Alcohol-Related Event (18+)", "Anxiety", "Asthma exacerbations",  "Cerebrovascular Accident (31+)", "COPD exacerbations (41+)",
 																					 										"Depression", "Diabetes Emergencies", "Eating Disorders", 
 																					 										"Heart Failure (31+)", "Myocardial Infarction (31+)", "Obsessive Compulsive Disorder", "Self-harm", "Severe Mental Illness", "Transient Ischaemic Attacks (31+)", 
 																					 										"Unstable Angina (31+)", "Venous Thromboembolism (31+)"))
@@ -95,8 +95,6 @@ plot_strata_by_outcome <- function(run_no = 7,strata_group = "age"){
 		)
 		## calc proportion consulting overall
 		plot_strata <- outcome_temp %>%
-			#mutate_at("numOutcome", ~ifelse(. == 5, 0, .)) %>%
-			#mutate(value = (numOutcome/numEligible)*100) %>%
 			filter(stratifier == strata_group)
 		
 		## find categories that do not exceed at any point in 2020
@@ -109,7 +107,7 @@ plot_strata_by_outcome <- function(run_no = 7,strata_group = "age"){
 		# get year and week of data
 		Plot_fmt_strata <- plot_strata %>%
 			left_join(group_low_cat, by = "category") %>%
-			mutate_at("numOutcome", ~ifelse(max_outcome == 5 & weekDate >= as.Date("2020-01-01"), NA, .)) %>%
+			mutate_at("numOutcome", ~ifelse(max_outcome == 5 & weekDate >= as.Date("2020-01-01"), NA, .)) %>% ## if the group never exceeded 5 in 2020 then NA their data
 			group_by(weekDate, category_cat) %>%
 			summarise(max_outcome = max(numOutcome, na.rm = T),
 								sum_outcome = sum(numOutcome, na.rm = T),
@@ -161,7 +159,7 @@ plot_strata_by_outcome <- function(run_no = 7,strata_group = "age"){
 
 
 # plot by age -------------------------------------------------------------
-pdf("~/Documents/COVID-Collateral/graphfiles/strat_ageOutcomes_v3.pdf", width = 14.5, height = 14.5)
+pdf("~/Documents/COVID-Collateral/graphfiles/Figure2_ageOutcomes.pdf", width = 14.5, height = 14.5)
 	strat_plot_data <- NULL
 	for(ii in plot_order){
 		strat_plot_data <- strat_plot_data %>%
@@ -179,7 +177,7 @@ pdf("~/Documents/COVID-Collateral/graphfiles/strat_ageOutcomes_v3.pdf", width = 
 		scale_x_date(date_labels = "%b", breaks = "1 month") +
 		facet_wrap(~plot_name, scales = "free", ncol = 4) +
 		geom_vline(xintercept = as.Date("1991-03-23"), linetype = "dashed", col = 2) +
-		labs(x = "Date (2020)", y = "% of people consulting for outcome", title = "", colour = "Age", fill = "Age") +
+		labs(x = "Date (2020)", y = "% of people consulting for condition", title = "", colour = "Age", fill = "Age", caption = "OCD: Obsessive Compulsive Disorder. COPD: Chronic Obstructive Pulmonary Disease") +
 		#scale_x_date() + 
 		theme_classic()  +
 		theme(axis.title = element_text(size = 18),
@@ -195,7 +193,7 @@ dev.off()
 
 
 # plot by ethnicity -------------------------------------------------------
-pdf("~/Documents/COVID-Collateral/graphfiles/strat_ethnicityOutcomes.pdf", width = 14, height = 14)
+pdf("~/Documents/COVID-Collateral/graphfiles/FigureS2_ethnicityOutcomes.pdf", width = 14, height = 14)
 	strat_plot_data <- NULL
 	for(ii in plot_order){
 		strat_plot_data <- strat_plot_data %>%
@@ -213,7 +211,7 @@ pdf("~/Documents/COVID-Collateral/graphfiles/strat_ethnicityOutcomes.pdf", width
 		scale_x_date(date_labels = "%b", breaks = "1 month") +
 		facet_wrap(~plot_name, scales = "free", ncol = 4) +
 		geom_vline(xintercept = as.Date("1991-03-23"), linetype = "dashed", col = 2) +
-		labs(x = "Date (2020)", y = "% of people consulting for outcome", title = "", colour = "Ethnicity", fill = "Ethnicity") +
+		labs(x = "Date (2020)", y = "% of people consulting for condition", title = "", colour = "Ethnicity", fill = "Ethnicity", caption = "OCD: Obsessive Compulsive Disorder. COPD: Chronic Obstructive Pulmonary Disease") +
 		theme_classic()  +
 		theme(axis.title = element_text(size = 18),
 					axis.text = element_text(size = 12),
@@ -228,7 +226,7 @@ dev.off()
 
 
 # plot by gender ----------------------------------------------------------
-pdf("~/Documents/COVID-Collateral/graphfiles/strat_genderOutcomes.pdf", width = 14, height = 14)
+pdf("~/Documents/COVID-Collateral/graphfiles/FigureS3_sexOutcomes.pdf", width = 14, height = 14)
 	strat_plot_data <- NULL
 	for(ii in plot_order){
 		strat_plot_data <- strat_plot_data %>%
@@ -244,7 +242,7 @@ pdf("~/Documents/COVID-Collateral/graphfiles/strat_genderOutcomes.pdf", width = 
 		scale_x_date(date_labels = "%b", breaks = "1 month") +
 		facet_wrap(~plot_name, scales = "free", ncol = 4) +
 		geom_vline(xintercept = as.Date("1991-03-23"), linetype = "dashed", col = 2) +
-		labs(x = "Date (2020)", y = "% of people consulting for outcome", colour = "Gender", fill = "Gender") +
+		labs(x = "Date (2020)", y = "% of people consulting for condition", colour = "Gender", fill = "Gender", caption = "OCD: Obsessive Compulsive Disorder. COPD: Chronic Obstructive Pulmonary Disease") +
 		theme_classic()  +
 		theme(axis.title = element_text(size = 18),
 					axis.text = element_text(size = 12),
@@ -258,7 +256,7 @@ pdf("~/Documents/COVID-Collateral/graphfiles/strat_genderOutcomes.pdf", width = 
 dev.off()
 
 # plot by region ----------------------------------------------------------
-pdf("~/Documents/COVID-Collateral/graphfiles/strat_regionOutcomes.pdf", width = 14, height = 14)
+pdf("~/Documents/COVID-Collateral/graphfiles/FigureS4_regionOutcomes.pdf", width = 14, height = 14)
 strat_plot_data <- NULL
 for(ii in plot_order){
 	strat_plot_data <- strat_plot_data %>%
@@ -277,7 +275,7 @@ figure_1c_strata <- ggplot(strat_plot_data, aes(x = as.Date("1991-01-01"), y = v
 	scale_x_date(date_labels = "%b", breaks = "1 month") +
 	facet_wrap(~plot_name, scales = "free", ncol = 4) +
 	geom_vline(xintercept = as.Date("1991-03-23"), linetype = "dashed", col = 2) +
-	labs(x = "Date (2020)", y = "% of people consulting for outcome", title = "", colour = "Region", fill = "Region") +
+	labs(x = "Date (2020)", y = "% of people consulting for condition", title = "", colour = "Region", fill = "Region", caption = "OCD: Obsessive Compulsive Disorder. COPD: Chronic Obstructive Pulmonary Disease") +
 	theme_classic()  +
 	theme(axis.title = element_text(size = 18),
 				axis.text = element_text(size = 12),

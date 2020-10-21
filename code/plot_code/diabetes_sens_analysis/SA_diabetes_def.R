@@ -118,7 +118,7 @@ plot_main <- function(ii){
 	df_plot2
 }
 
-pdf("~/Documents/COVID-Collateral/graphfiles/SA_diabetes.pdf", width = 13, height = 5)
+pdf("~/Documents/COVID-Collateral/graphfiles/FigureS15_diabetes_SA.pdf", width = 13, height = 5)
 
 plot_full <- NULL
 for(ii in plot_order){
@@ -137,12 +137,12 @@ figure_1b <- ggplot(plot_full, aes(x = plotWeek, y = value, group = year)) +
 	geom_line(data = filter(plot_full, year == 2018), alpha = 0.2) +  #aes(col = "2018"), 
 	geom_line(data = filter(plot_full, year == 2019), alpha = 0.2) +  #aes(col = "2019"), 
 	geom_line(aes(y = value_hist, col = "2017-2019 average"), lwd = 1.2) +
-	geom_line(aes(y = value_20, col = "2020"), lwd = 1.2) +
+	geom_line(aes(y = value_20, col = "2020"), lty = 5, lwd = 1.2) +
 	geom_ribbon(aes(ymin = value_20, ymax = value_hist), fill = alpha(2, 0.2), lty = 0) +
 	scale_x_date(date_labels = "%b", breaks = "2 months") +
 	facet_wrap(~plot_name, scales = "free", ncol = 4) +
 	geom_vline(xintercept = as.Date("1991-03-23"), linetype = "dashed", col = 2) +
-	labs(x = "Date", y = "% of people consulting for outcome") +
+	labs(x = "Date", y = "% of people consulting for condition") +
 	theme_classic() +
 	theme(axis.title = element_text(size = 16),
 				axis.text.y = element_text(size = 12),
@@ -165,6 +165,5 @@ figure_1b <- ggplot(plot_full, aes(x = plotWeek, y = value, group = year)) +
 										 values = colors)
 figure_1b
 dev.off()
-#ggsave(file = "~/Documents/COVID-Collateral/graphfiles/overallOutcomes.pdf", width = 12, height = 12)
 
 
