@@ -10,7 +10,7 @@ Shiny app at: [Link]
 ## Authors
 Kathryn E Mansfield, PhD\*, Rohini Mathur, PhD\*, John Tazare, MSc\*, Alasdair D Henderson, PhD\*, Amy Mulick, MSc\*, Helena Carreira, PhD, Anthony A Matthews, PhD, Patrick Bidulka, MSc, Alicia Gayle, MSc, Harriet Forbes, PhD, Sarah Cook, PhD, Angel YS Wong, PhD, Helen Strongman, PhD, Kevin Wing, PhD, Charlotte Warren-Gash, PhD, Sharon L Cadogan, PhD, Liam Smeeth, PhD, Joseph Hayes, PhD, Jennifer K Quint, PhD, Martin McKee, PhD, Sinéad M Langan, PhD
 
-* First authors
+\* First authors
 
 ### Table of contents
 - [Project folder structure](#project-folder-structure)
