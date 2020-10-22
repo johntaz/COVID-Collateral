@@ -20,13 +20,16 @@ sex_choice <- unique(filter(refactored_shiny, stratifier == "sex")$category) %>%
 ethnicity_choice <- unique(filter(refactored_shiny, stratifier == "ethnicity")$category) %>% as.list()
 region_choice <- unique(filter(refactored_shiny, stratifier == "region")$category) %>% as.list()
 age_choice <- unique(filter(refactored_shiny, stratifier == "age")$category) %>% as.list()
-outcome_choices_reordered <- unique(refactored_shiny$outcome)[c(7,1,2,6,8,11,12,13,4,9,10,14,15,16,3,5)]
+outcome_choices_reordered <- levels(refactored_shiny$outcome)
 apptitle <- "COVID-Collateral"
 
 # user defined ggplot theme -----------------------------------------------
 theme_collateral <- function (base_size = 11, base_family = ""){
 	theme(plot.title = element_text(size = 12, hjust = 0),
-				axis.title = element_text(size = rel(1), colour = alpha(1, 0.6), hjust=0.5, family = "Helvetica"), 
+				axis.title = element_text(size = rel(1.5), colour = alpha(1, 0.6), hjust=0.5, family = "Helvetica"), 
+				axis.text = element_text(size=rel(1.1)),
+				axis.text.x = element_text(angle=20, hjust=1),
+				legend.text = element_text(size = rel(1.3)),
 				panel.background = element_rect(fill = "white",
 																				colour = "white",
 																				size = 0.5, linetype = "solid"),
@@ -49,14 +52,14 @@ theme_collateral <- function (base_size = 11, base_family = ""){
 
 # user interface ----------------------------------------------------------
 ui <- shinyUI(
-	navbarPage(
+	navbarPage(div(span(apptitle)),
 		theme = "bootstrap.min.css",
-		 title = div(
-		 	a(img(src="collateral_logo.pdf", height = "35px", align = "top"), 
-		 				href="https://twitter.com/ehr_lshtm?lang=en"),
-		 	span(apptitle)
-		 ),
-		tabPanel("Plot",
+		tabPanel("Primary care contacts",
+						 div(
+						 	a(img(src="collateral_logo.pdf", height = "35px", align = "top"), 
+						 		href="https://twitter.com/ehr_lshtm?lang=en"),
+						 	a(apptitle, href = "https://twitter.com/ehr_lshtm?lang=en")
+						 ),
 						 sidebarLayout(
 						 	position = "right",
 						 	## make the sidebar
@@ -77,9 +80,9 @@ ui <- shinyUI(
 						 		dateRangeInput("dates", 
 						 									 label = "Date range:", 
 						 									 start = "2020-01-01", 
-						 									 end = "2020-07-01"),
+						 									 end = "2020-07-31"),
 						 		checkboxInput("lockdownLine",
-						 									label = "Display lockdown timing", 
+						 									label = "Display lockdown date (23 March 2020)", 
 						 									value = FALSE)
 						 	),
 						 	## make the main panel
@@ -89,7 +92,14 @@ ui <- shinyUI(
 					 								sidebarLayout(
 					 									position = "left",
 					 									sidebarPanel(
-					 										helpText("Welcome to the COVID colateral Shiny app")
+					 										helpText('Welcome to the COVID colateral Shiny app.'),
+					 										helpText('Use the "Plot" button to display data from 
+					 														 our analysis.'),
+					 										helpText('The "Using the app" tab at the top has information on how to make the 
+					 														 most of this app.'),
+					 										helpText('The "About the app" has information about the data and the accompanying analysis.'),
+					 										helpText('You can use this app to examine the data used in this analysis from 2017 to 2020. 
+															We analysed primary care records from approximately 10 million people across England and Northern Ireland.')
 					 									),
 					 									mainPanel(
 					 										plotOutput("mainplot1")
@@ -164,8 +174,25 @@ ui <- shinyUI(
 						 		)
 						 )
 					),
-		tabPanel("About",
+		tabPanel("Using the App",
 						 fluidRow(
+						 	div(
+						 		a(img(src="collateral_logo.pdf", height = "35px", align = "top"), 
+						 			href="https://twitter.com/ehr_lshtm?lang=en"),
+						 		a(apptitle, href = "https://twitter.com/ehr_lshtm?lang=en")
+						 	),
+						 	column(8,
+						 				 includeMarkdown(here::here("UsingNotes.md"))
+						 	)
+						 )
+		),
+		tabPanel("About the App",
+						 fluidRow(
+						 	div(
+						 		a(img(src="collateral_logo.pdf", height = "35px", align = "top"), 
+						 			href="https://twitter.com/ehr_lshtm?lang=en"),
+						 		a(apptitle, href = "https://twitter.com/ehr_lshtm?lang=en")
+						 	),
 						 	column(8,
 						 				 includeMarkdown(here::here("notes.md"))
 						 	)
@@ -231,14 +258,15 @@ server <- function(input, output, session){
 	
 	## if runPlot button is pressed then build the plot
 	observeEvent(input$runPlot, {
-		v$plot <- ggplot(df_shiny(), aes(x=weekPlot, y=model_out, group = category, colour = category)) +
-			geom_line() +
+		v$plot <- ggplot(df_shiny(), aes(x=weekPlot, y=model_out, group = category, colour = category, shape = category)) +
+			geom_point(size = 1.5) +
+			geom_line(size = 0.5) +
 			xlab("Date") +
 			ylab("% of people consulting for condition") +
-			theme(axis.text.x = element_text(angle=60, hjust=1)) +
-			labs(colour = input$stratifier) +
+			labs(caption = "OCD: Obsessive Compulsive Disorder. COPD: Chronic Obstructive Pulmonary Disease") +
+			labs(colour = input$stratifier, shape = input$stratifier) +
 			facet_wrap(~outcome, ncol = 2, scales = "free") +
-			theme_collateral()
+			theme_collateral() 
 	})
 	
 	output$mainplot1 <- renderPlot({
@@ -288,14 +316,6 @@ server <- function(input, output, session){
 		}
 	},
 	height=800)
-	
-	## plot a pdf image
-	observeEvent(input$runITS, {
-		output$pdfview <- renderUI({
-			tags$iframe(style="height:600px; width:100%", src="Figure3_its_backdata_full.pdf")
-		})
-	})
-	
 }
 
-shinyApp(ui, server, options = list(height = 1300))
+shinyApp(ui, server)
