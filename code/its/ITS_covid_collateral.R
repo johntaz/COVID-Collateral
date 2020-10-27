@@ -357,6 +357,32 @@ its_function <- function(outcomes_vec = outcomes,
 						panel.grid.major.y = element_line(size=.2, color=rgb(0,0,0,0.3)))
 		#fp
 		
+
+		# Save data frames for shiny app ------------------------------------------
+		export_main_plot_data <- main_plot_data %>% 
+			select(weekPlot, pc_consult, predicted_vals, lci, uci, outcome_name) %>% 
+			mutate(start_lockdown = start_lockdown, 
+						 ldn_start = abline_min, 
+						 ldn_end = abline_max,
+						 adj_remove = lockdown_adjustment_period_wks)
+		export_forest_plot_df1 <- forest_plot_df %>%
+			mutate(start_lockdown = start_lockdown, 
+						 ldn_start = abline_min, 
+						 ldn_end = abline_max,
+						 adj_remove = lockdown_adjustment_period_wks)
+		export_forest_plot_df2 <- interaction_tbl_data %>%
+			mutate(start_lockdown = start_lockdown, 
+						 ldn_start = abline_min, 
+						 ldn_end = abline_max,
+						 adj_remove = lockdown_adjustment_period_wks)
+		
+		file_suffix <- paste0(start_lockdown,"_",lockdown_adjustment_period_wks,  "_", pastename_year_cutdata)
+		
+		save(export_main_plot_data, file = paste0(here::here("data/shinyDataITS/ITS_plot1_"), file_suffix, ".RData"))
+		save(export_forest_plot_df1, file = paste0(here::here("data/shinyDataITS/ITS_forest1_"), file_suffix, ".RData"))
+		save(export_forest_plot_df2, file = paste0(here::here("data/shinyDataITS/ITS_forest2_"), file_suffix, ".RData"))
+
+		
 		# Export plot -------------------------------------------------------------
 		## uses patchwork package to combine plots
 		layout = "
@@ -536,7 +562,7 @@ dev.off()
 pdf(file = here::here("graphfiles", paste0("FigureS8_its_SA_march23_0wks", ".pdf")), width = 13, height = 14)
 its_function(outcomes_vec = outcomes,
 						 cutData = as.Date("2017-01-01"),
-						 start_lockdown = as.Date("2020-03-23"),
+						 start_lockdown = as.Date("2020-03-22"),
 						 lockdown_adjustment_period_wks = 0,
 						 end_post_lockdown_period = as.Date("2020-07-31")
 )
