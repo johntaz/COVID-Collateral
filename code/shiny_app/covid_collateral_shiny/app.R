@@ -1,9 +1,9 @@
 #pacman::p_load(shiny, shinythemes, dplyr, rmarkdown, ggplot2, here)
 library(shiny)
-#library(shinythemes)
 library(dplyr)
 library(rmarkdown)
 library(ggplot2)
+library(patchwork)
 library(here)
 here()
 
@@ -22,6 +22,7 @@ region_choice <- unique(filter(refactored_shiny, stratifier == "region")$categor
 age_choice <- unique(filter(refactored_shiny, stratifier == "age")$category) %>% as.list()
 outcome_choices_reordered <- levels(refactored_shiny$outcome)
 apptitle <- "COVID-Collateral"
+bkg_colour <- "gray99"
 
 # user defined ggplot theme -----------------------------------------------
 theme_collateral <- function (base_size = 11, base_family = ""){
@@ -174,6 +175,46 @@ ui <- shinyUI(
 						 		)
 						 )
 					),
+		tabPanel("Interrupted Time Series",
+						 sidebarLayout(
+						 	position = "left",
+						 	## make the sidebar
+						 	sidebarPanel(
+						 		helpText('This page shows results from an interrupted time series (ITS) analysis. This ITS separates the time series of
+						 						 primary care contacts into two period: "pre-restrictions" and "with-restrictions" (A). We then formally compare
+						 						 whether the "with-restrictions" level of primary care contacts is lower than the "pre-restrictions" level and
+						 						 by how much (B: Reduction)". We also show how quickly primary care contacts are "recovering" since the "with-
+						 						 restrictions" period started (C: Recovery).'),
+						 		helpText('Here you can change two factors that affect this analysis: when to end the "pre-restrictions" period, and 
+						 						 when to start the "with-restrictions" period.'),
+						 		radioButtons("restrictions_start",
+						 									label = "Choose when the pre-restrictions period ends", 
+						 								 	choices = c(
+						 								 		"1st March" = as.Date("2020-03-08"),
+						 										"23rd March" = as.Date("2020-03-22"))),
+						 		radioButtons("adj_gap",
+						 								 label = "Choose how many weeks to exclude (adjustment to restrictions period)", 
+						 								 choices = c(
+						 								 	"0" = 0,
+						 								 	"3" = 3,
+						 								 	"5" = 5,
+						 								 	"7" = 7),
+						 								 selected = "3"),
+						 	
+						 	actionButton("selectAll2", label = "Select All"),
+						 	actionButton("deselectAll2", label = "Deselect All"),
+						 	checkboxGroupInput("var2", 
+						 										 label = "Choose outcome variables to display", 
+						 										 choices = as.list(outcome_choices_reordered),
+						 										 selected = as.list(outcome_choices_reordered)
+						 	),
+						 	width = 3),
+						 	## make the main panel
+						 	mainPanel(
+						 		plotOutput("its_plot")
+						 		)
+						 )
+		),
 		tabPanel("Using the App",
 						 fluidRow(
 						 	div(
@@ -203,7 +244,6 @@ ui <- shinyUI(
 
 server <- function(input, output, session){
 	## is "select all" ticked? 
-	#* This observer will update checkboxes 1 - 4 to TRUE whenever selectAll is clicked
 	observeEvent(
 		eventExpr = input$selectAll,
 		handlerExpr = 
@@ -213,14 +253,32 @@ server <- function(input, output, session){
 		 											value = outcome_choices_reordered)
 		}
 	)
-	
-	#* This observer will update checkboxes 1 - 4 to FALSE whenever deselectAll is clicked
 	observeEvent(
 		eventExpr = input$deselectAll,
 		handlerExpr = 
 		{
 			updateCheckboxInput(session = session, 
 													inputId = "var", 
+													value = NA)
+		}
+	)
+	
+	## Repeat for page 2
+	observeEvent(
+		eventExpr = input$selectAll2,
+		handlerExpr = 
+		{
+		 	updateCheckboxInput(session = session, 
+		 											inputId = "var2", 
+		 											value = outcome_choices_reordered)
+		}
+	)
+	observeEvent(
+		eventExpr = input$deselectAll2,
+		handlerExpr = 
+		{
+			updateCheckboxInput(session = session, 
+													inputId = "var2", 
 													value = NA)
 		}
 	)
@@ -316,6 +374,123 @@ server <- function(input, output, session){
 		}
 	},
 	height=800)
+	
+
+	# ITS plot ----------------------------------------------------------------
+	output$its_plot <- renderPlot({
+		its_data <- mainplot_results %>%
+			filter(start_lockdown == input$restrictions_start,
+						 adj_remove == input$adj_gap,
+						 weekPlot >= as.Date("2020-01-01"),
+						 outcome_name %in% input$var2) 
+		
+		its_fp1_data <- fp1_results %>%
+			filter(start_lockdown == input$restrictions_start,
+						 adj_remove == input$adj_gap,
+						 outcome_name %in% input$var2) %>%
+			mutate(dummy_facet = "A")
+		
+		its_fp2_data <- fp2_results %>%
+			filter(start_lockdown == input$restrictions_start,
+						 adj_remove == input$adj_gap,
+						 outcome_name %in% input$var2) %>%
+			mutate(dummy_facet = "A")
+		
+		abline_min <- its_data %>% summarise(x = min(ldn_start)) %>% pull()
+		abline_max <- its_data %>% summarise(x = min(ldn_end)) %>% pull()
+		plot1 <- ggplot(data = its_data, aes(x = weekPlot, y = pc_consult, group = outcome_name)) +
+			# the data
+			geom_line(col = "gray60") +
+			geom_line(aes(y = predicted_vals), col = 4, lty = 2) +
+			geom_ribbon(aes(ymin = lci, ymax=uci), fill = alpha(4,0.4), lty = 0) +
+			### format the plot
+			facet_wrap(~outcome_name, scales = "free", ncol = 4) +
+			geom_vline(xintercept = c(abline_min, 
+																abline_max), col = 1, lwd = 1) + # 2020-04-05 is first week/data After lockdown gap
+			labs(y = "% of people consulting for condition", title = "A", caption = "OCD: Obsessive Compulsive Disorder. COPD: Chronic Obstructive Pulmonary Disease") +
+			theme_classic() +
+			theme(axis.title = element_text(size =16), 
+						axis.text.x = element_text(angle = 60, hjust = 1, size = 12),
+						legend.position = "top",
+						plot.background = element_rect(fill = bkg_colour, colour =  NA),
+						panel.background = element_rect(fill = bkg_colour, colour =  NA),
+						legend.background = element_rect(fill = bkg_colour, colour = NA),
+						legend.text = element_text(size = 12),
+						legend.title = element_text(size = 12),
+						strip.text = element_text(size = 12, hjust = 0),
+						strip.background = element_rect(fill = bkg_colour, colour =  NA),
+						panel.grid.major = element_blank(),
+						panel.grid.minor.x = element_blank(),
+						panel.grid.minor.y = element_line(size=.2, color=rgb(0,0,0,0.2)) ,
+						panel.grid.major.y = element_line(size=.2, color=rgb(0,0,0,0.3)))  +
+				scale_x_date(breaks = "1 month", date_labels = "%b") +
+				labs(x = "Date (2020)")
+		
+		# Forest plot of interaction terms ------------------------------------------------------
+		# forest plot of estiamtes
+		fp2 <- ggplot(data = its_fp2_data, aes(x=dummy_facet, y=Est, ymin=lci, ymax=uci)) +
+			geom_linerange(lwd = 1.5, colour = "orange") +
+			geom_hline(yintercept=1, lty=2) +  # add a dotted line at x=1 after flip
+			coord_flip() +  # flip coordinates (puts labels on y axis)
+			labs(x = "", y = '95% CI', title = "C: Recovery") +
+			facet_wrap(~outcome_name, ncol = 1, dir = "h", strip.position = "right") +
+			theme_classic() +
+			theme(axis.title = element_text(size = 16),
+						axis.text.y = element_blank(),
+						axis.line.y.left = element_blank(),
+						axis.line.y.right = element_line(),
+						axis.ticks.y = element_blank(),
+						axis.text.x = element_text(angle = 0),
+						legend.position = "top",
+						plot.background = element_rect(fill = bkg_colour, colour =  NA),
+						panel.background = element_rect(fill = bkg_colour, colour =  NA),
+						legend.background = element_rect(fill = bkg_colour, colour = NA),
+						strip.background = element_rect(fill = bkg_colour, colour =  NA),
+						strip.text.y = element_blank(),
+						panel.grid.major = element_blank(),
+						panel.grid.minor.x = element_blank(),
+						panel.grid.minor.y = element_line(size=.2, color=rgb(0,0,0,0.2)) ,
+						panel.grid.major.y = element_line(size=.2, color=rgb(0,0,0,0.3)))
+		
+		# Forest plot of ORs ------------------------------------------------------
+		## Forest plot
+		fp <- ggplot(data = its_fp1_data, aes(x = dummy_facet, y=Est, ymin=lci, ymax=uci)) +
+			geom_linerange(lwd = 1.5, colour = "darkred") +
+			geom_hline(yintercept=1, lty=2) +  # add a dotted line at x=1 after flip
+			coord_flip() +  # flip coordinates (puts labels on y axis)
+			labs(x = "", y = "95% CI", title = "B: Reduction") +
+			facet_wrap(~outcome_name, ncol = 1, dir = "h", strip.position = "right") +
+			theme_classic() +
+			theme(axis.title = element_text(size = 16),
+						axis.text.y = element_blank(),
+						axis.line.y.left = element_blank(),
+						axis.line.y.right = element_line(),
+						axis.ticks.y = element_blank(),
+						axis.text.x = element_text(angle = 0),
+						legend.position = "top",
+						plot.background = element_rect(fill = bkg_colour, colour =  NA),
+						panel.background = element_rect(fill = bkg_colour, colour =  NA),
+						legend.background = element_rect(fill = bkg_colour, colour = NA),
+						strip.background = element_rect(fill = bkg_colour, colour =  NA),
+						strip.text.y = element_text(hjust=0.5, vjust = 0, angle=0, size = 10),
+						panel.grid.major = element_blank(),
+						panel.grid.minor.x = element_blank(),
+						panel.grid.minor.y = element_line(size=.2, color=rgb(0,0,0,0.2)) ,
+						panel.grid.major.y = element_line(size=.2, color=rgb(0,0,0,0.3)))
+		
+		# Export plot -------------------------------------------------------------
+		## uses patchwork package to combine plots
+		layout = "
+			AAAAAA
+			AAAAAA
+			BBBCCC
+			BBBCCC
+		"
+		plot1 + fp + fp2 + 
+			plot_layout(design = layout) 
+	},
+	height = 1000)
+	
 }
 
 shinyApp(ui, server)

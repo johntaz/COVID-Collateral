@@ -20,6 +20,7 @@ All analysis code and data are available at [GitHub](https://github.com/johntaz/
 
 ## Contact
 Corresponding author: Kathryn Mansfield [email](mailto:kathryn.mansfield@lshtm.ac.uk)
+
 About the app: Alasdair Henderson, [email](mailto:alasdair.henderson1@lshtm.ac.uk)
 
 ## Data source
