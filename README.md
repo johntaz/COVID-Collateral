@@ -5,7 +5,7 @@ While a reduction in hospital activity during the COVID-19 pandemic has been wel
 
 Available at: [Link]
 
-Shiny app at: [Link]
+Shiny app at: [Link](https://a-henderson91.shinyapps.io/covid_collateral_shiny/)
 
 ## Authors
 Kathryn E Mansfield, PhD\*, Rohini Mathur, PhD\*, John Tazare, MSc\*, Alasdair D Henderson, PhD\*, Amy Mulick, MSc\*, Helena Carreira, PhD, Anthony A Matthews, PhD, Patrick Bidulka, MSc, Alicia Gayle, MSc, Harriet Forbes, PhD, Sarah Cook, PhD, Angel YS Wong, PhD, Helen Strongman, PhD, Kevin Wing, PhD, Charlotte Warren-Gash, PhD, Sharon L Cadogan, PhD, Liam Smeeth, PhD, Joseph Hayes, PhD, Jennifer K Quint, PhD, Martin McKee, PhD, Sinéad M Langan, PhD
