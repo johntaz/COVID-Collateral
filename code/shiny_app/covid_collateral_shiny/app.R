@@ -14,11 +14,15 @@ lapply(here::here("data",data_file), load,.GlobalEnv)
 
 ## change gender to sex 
 refactored_shiny <- refactored_shiny %>%
-	mutate_at("stratifier", ~ifelse(. == "gender", "sex", .))
+	mutate_at("stratifier", ~ifelse(. == "gender", "sex", .)) %>%
+	mutate_at("stratifier", ~ifelse(. == "region_sum", "region (summary)", .)) %>%
+	mutate_at("stratifier", ~ifelse(. == "region", "region (detail)", .)) 
+
 ## get unique levels to label choice boxes in app
 sex_choice <- unique(filter(refactored_shiny, stratifier == "sex")$category) %>% as.list()
 ethnicity_choice <- unique(filter(refactored_shiny, stratifier == "ethnicity")$category) %>% as.list()
-region_choice <- unique(filter(refactored_shiny, stratifier == "region")$category) %>% as.list()
+region_choice <- unique(filter(refactored_shiny, stratifier == "region (detail)")$category) %>% as.list()
+region_sum_choice <- unique(filter(refactored_shiny, stratifier == "region (summary)")$category) %>% as.list()
 age_choice <- unique(filter(refactored_shiny, stratifier == "age")$category) %>% as.list()
 outcome_choices_reordered <- levels(refactored_shiny$outcome)
 apptitle <- "COVID-Collateral"
@@ -51,16 +55,18 @@ theme_collateral <- function (base_size = 11, base_family = ""){
 	)
 }
 
+#div(
+#	a(img(src="collateral_logo1.png", height = "35px", align = "top"), 
+#		href="https://twitter.com/ehr_lshtm?lang=en"),
+#	a(apptitle, href = "https://twitter.com/ehr_lshtm?lang=en")
+#),
+
 # user interface ----------------------------------------------------------
 ui <- shinyUI(
-	navbarPage(div(span(apptitle)),
+	navbarPage(
+		title = "COVID-Collateral",
 		theme = "bootstrap.min.css",
 		tabPanel("Primary care contacts",
-						 div(
-						 	a(img(src="collateral_logo.pdf", height = "35px", align = "top"), 
-						 		href="https://twitter.com/ehr_lshtm?lang=en"),
-						 	a(apptitle, href = "https://twitter.com/ehr_lshtm?lang=en")
-						 ),
 						 sidebarLayout(
 						 	position = "right",
 						 	## make the sidebar
@@ -69,7 +75,7 @@ ui <- shinyUI(
 						 								 style = "color: white; background-color:#4682b4", 
 						 								 label = "Plot"
 						 		),
-						 		helpText("Data can be shown for several outcomes simultaneously or one at a time by checking the boxes below"),
+						 		helpText("Data can be shown for several conditions simultaneously or one at a time by checking the boxes below"),
 						 		actionButton("selectAll", label = "Select All"),
 						 		actionButton("deselectAll", label = "Deselect All"),
 						 		checkboxGroupInput("var", 
@@ -94,13 +100,20 @@ ui <- shinyUI(
 					 									position = "left",
 					 									sidebarPanel(
 					 										helpText('Welcome to the COVID colateral Shiny app.'),
+					 										helpText('You can use this app to examine the data used in an analysis of primary care records 
+					 														 from approximately 10 million people across England and Northern Ireland between 2017 to 2020.'),
 					 										helpText('Use the "Plot" button to display data from 
 					 														 our analysis.'),
-					 										helpText('The "Using the app" tab at the top has information on how to make the 
+					 										helpText('The "Interrupted Time Series" tab shows results from our statistical analysis of 
+					 														 these data. On this page you can vary the parameters in our analysis to assess the 
+					 														 impact on our findings.'),
+					 										helpText('The "Using the app" tab has information on how to make the 
 					 														 most of this app.'),
-					 										helpText('The "About the app" has information about the data and the accompanying analysis.'),
-					 										helpText('You can use this app to examine the data used in this analysis from 2017 to 2020. 
-															We analysed primary care records from approximately 10 million people across England and Northern Ireland.')
+					 										helpText('The "About the app" has information about the data and a link to the accompanying analysis.'),
+					 										helpText('An important note: each of the conditions used a specific denominator population when the percentage
+					 														 contacting primary care was calculated. For example, "anxiety" contacts were in anyone over 10 years old. 
+					 														 However, "asthma exacerbations" were only in those aged over 10 years old with a diagnosis of asthma. 
+					 														 Please see the "About the app" tab or our paper for more information.')
 					 									),
 					 									mainPanel(
 					 										plotOutput("mainplot1")
@@ -123,7 +136,39 @@ ui <- shinyUI(
 						 						 )
 						 					)
 						 				),
-						 		tabPanel("Region",
+						 		tabPanel("Ethnicity",
+						 						 sidebarLayout(
+						 						 	position = "left",
+						 						 	sidebarPanel(
+						 						 		selectInput("labEthnicity", 
+						 						 								multiple = TRUE,
+						 						 								label = "Ethnicity", 
+						 						 								choices = ethnicity_choice,
+						 						 								selected = ethnicity_choice
+						 						 		)
+						 						 	),
+						 						 	mainPanel(
+						 						 		plotOutput("mainplot5")
+						 						 	)
+						 						 )
+					),
+						 		tabPanel("Region (summary)",
+						 						 sidebarLayout(
+						 						 	position = "left",
+						 						 	sidebarPanel(
+						 						 		selectInput("labRegionSum", 
+						 						 								multiple = TRUE,
+						 						 								label = "Region", 
+						 						 								choices = region_sum_choice,
+						 						 								selected = region_sum_choice[region_sum_choice != "Missing"]
+						 						 								)
+						 						 	),
+						 						 	mainPanel(
+						 								plotOutput("mainplot3A")
+						 						 )
+						 					)
+						 				),
+						 		tabPanel("Region (detail)",
 						 						 sidebarLayout(
 						 						 	position = "left",
 						 						 	sidebarPanel(
@@ -131,7 +176,7 @@ ui <- shinyUI(
 						 						 								multiple = TRUE,
 						 						 								label = "Region", 
 						 						 								choices = region_choice,
-						 						 								selected = region_choice
+						 						 								selected = region_choice[region_choice != "Missing"]
 						 						 								)
 						 						 	),
 						 						 	mainPanel(
@@ -154,25 +199,9 @@ ui <- shinyUI(
 						 								plotOutput("mainplot4")
 						 						 )
 						 					)
-						 				),
-						 		tabPanel("Ethnicity",
-						 						 sidebarLayout(
-						 						 	position = "left",
-						 						 	sidebarPanel(
-						 						 		selectInput("labEthnicity", 
-						 						 								multiple = TRUE,
-						 						 								label = "Ethnicity", 
-						 						 								choices = ethnicity_choice,
-						 						 								selected = ethnicity_choice
-						 						 		)
-						 						 	),
-						 						 	mainPanel(
-						 						 		plotOutput("mainplot5")
-						 						 	)
-						 						 )
 						 		)
 						 		)
-						 		)
+						 	)
 						 )
 					),
 		tabPanel("Interrupted Time Series",
@@ -217,30 +246,32 @@ ui <- shinyUI(
 		),
 		tabPanel("Using the App",
 						 fluidRow(
-						 	div(
-						 		a(img(src="collateral_logo.pdf", height = "35px", align = "top"), 
-						 			href="https://twitter.com/ehr_lshtm?lang=en"),
-						 		a(apptitle, href = "https://twitter.com/ehr_lshtm?lang=en")
-						 	),
 						 	column(8,
-						 				 includeMarkdown(here::here("UsingNotes.md"))
+						 				 includeMarkdown(here::here("usingnotes.md"))
 						 	)
 						 )
 		),
 		tabPanel("About the App",
 						 fluidRow(
-						 	div(
-						 		a(img(src="collateral_logo.pdf", height = "35px", align = "top"), 
-						 			href="https://twitter.com/ehr_lshtm?lang=en"),
-						 		a(apptitle, href = "https://twitter.com/ehr_lshtm?lang=en")
-						 	),
 						 	column(8,
 						 				 includeMarkdown(here::here("notes.md"))
 						 	)
 						 )
-		)
+		),
+		tags$style(HTML(".navbar {height: 55px;
+										min-height:25px !important;}
+										.navbar-header {
+										padding-top:20px !important; 
+										padding-bottom:35px !important;}
+										.navbar-nav > li > a, 
+										.navbar-brand {
+										padding-top:20px !important; 
+										padding-bottom:35px !important;
+										height: 25px;
+										}"))
 	)
 )
+
 
 server <- function(input, output, session){
 	## is "select all" ticked? 
@@ -293,10 +324,12 @@ server <- function(input, output, session){
 	df_shiny <- reactive({
 		data <- refactored_shiny %>%
 			filter(stratifier == stringr::str_to_lower(input$stratifier))
-
+		
 		labs_to_find <- if (input$stratifier == "Age") {
 			input$labAge
-		} else if (input$stratifier == "Region"){
+		} else if (input$stratifier == "Region (summary)"){
+			input$labRegionSum
+		} else if (input$stratifier == "Region (detail)"){
 			input$labRegion
 		} else if (input$stratifier == "Sex"){
 			input$labSex
@@ -320,11 +353,12 @@ server <- function(input, output, session){
 			geom_point(size = 1.5) +
 			geom_line(size = 0.5) +
 			xlab("Date") +
-			ylab("% of people consulting for condition") +
-			labs(caption = "OCD: Obsessive Compulsive Disorder. COPD: Chronic Obstructive Pulmonary Disease") +
+			ylab("% of people at-risk* consulting for condition") +
+			labs(caption = c('*see "About this app" tab for detail', "OCD: Obsessive Compulsive Disorder. COPD: Chronic Obstructive Pulmonary Disease")) +
 			labs(colour = input$stratifier, shape = input$stratifier) +
 			facet_wrap(~outcome, ncol = 2, scales = "free") +
-			theme_collateral() 
+			theme_collateral() +
+			theme(plot.caption = element_text(hjust=c(0, 1)))
 	})
 	
 	output$mainplot1 <- renderPlot({
@@ -344,6 +378,15 @@ server <- function(input, output, session){
 			v$plot + geom_vline(xintercept = as.Date("2020-03-23"), linetype = "dashed", col = 2)
 		}else{
 			v$plot
+		}
+	},
+	height=800)
+	output$mainplot3A <- renderPlot({
+		if (is.null(v$plot)) return()
+		if(input$lockdownLine) {
+			v$plot + geom_vline(xintercept = as.Date("2020-03-23"), linetype = "dashed", col = 2)
+		}else{
+			v$plot 
 		}
 	},
 	height=800)
@@ -407,7 +450,7 @@ server <- function(input, output, session){
 			facet_wrap(~outcome_name, scales = "free", ncol = 4) +
 			geom_vline(xintercept = c(abline_min, 
 																abline_max), col = 1, lwd = 1) + # 2020-04-05 is first week/data After lockdown gap
-			labs(y = "% of people consulting for condition", title = "A", caption = "OCD: Obsessive Compulsive Disorder. COPD: Chronic Obstructive Pulmonary Disease") +
+			labs(y = "% of people at-risk consulting for condition", title = "A", caption = "OCD: Obsessive Compulsive Disorder. COPD: Chronic Obstructive Pulmonary Disease") +
 			theme_classic() +
 			theme(axis.title = element_text(size =16), 
 						axis.text.x = element_text(angle = 60, hjust = 1, size = 12),
@@ -425,32 +468,6 @@ server <- function(input, output, session){
 						panel.grid.major.y = element_line(size=.2, color=rgb(0,0,0,0.3)))  +
 				scale_x_date(breaks = "1 month", date_labels = "%b") +
 				labs(x = "Date (2020)")
-		
-		# Forest plot of interaction terms ------------------------------------------------------
-		# forest plot of estiamtes
-		fp2 <- ggplot(data = its_fp2_data, aes(x=dummy_facet, y=Est, ymin=lci, ymax=uci)) +
-			geom_linerange(lwd = 1.5, colour = "orange") +
-			geom_hline(yintercept=1, lty=2) +  # add a dotted line at x=1 after flip
-			coord_flip() +  # flip coordinates (puts labels on y axis)
-			labs(x = "", y = '95% CI', title = "C: Recovery") +
-			facet_wrap(~outcome_name, ncol = 1, dir = "h", strip.position = "right") +
-			theme_classic() +
-			theme(axis.title = element_text(size = 16),
-						axis.text.y = element_blank(),
-						axis.line.y.left = element_blank(),
-						axis.line.y.right = element_line(),
-						axis.ticks.y = element_blank(),
-						axis.text.x = element_text(angle = 0),
-						legend.position = "top",
-						plot.background = element_rect(fill = bkg_colour, colour =  NA),
-						panel.background = element_rect(fill = bkg_colour, colour =  NA),
-						legend.background = element_rect(fill = bkg_colour, colour = NA),
-						strip.background = element_rect(fill = bkg_colour, colour =  NA),
-						strip.text.y = element_blank(),
-						panel.grid.major = element_blank(),
-						panel.grid.minor.x = element_blank(),
-						panel.grid.minor.y = element_line(size=.2, color=rgb(0,0,0,0.2)) ,
-						panel.grid.major.y = element_line(size=.2, color=rgb(0,0,0,0.3)))
 		
 		# Forest plot of ORs ------------------------------------------------------
 		## Forest plot
@@ -472,7 +489,34 @@ server <- function(input, output, session){
 						panel.background = element_rect(fill = bkg_colour, colour =  NA),
 						legend.background = element_rect(fill = bkg_colour, colour = NA),
 						strip.background = element_rect(fill = bkg_colour, colour =  NA),
-						strip.text.y = element_text(hjust=0.5, vjust = 0, angle=0, size = 10),
+						strip.text.y = element_text(hjust = 0.5, vjust = 0.5, angle=0, size = 10),
+						strip.placement = "outside",
+						panel.grid.major = element_blank(),
+						panel.grid.minor.x = element_blank(),
+						panel.grid.minor.y = element_line(size=.2, color=rgb(0,0,0,0.2)) ,
+						panel.grid.major.y = element_line(size=.2, color=rgb(0,0,0,0.3)))
+		
+		# Forest plot of interaction terms ------------------------------------------------------
+		# forest plot of estiamtes
+		fp2 <- ggplot(data = its_fp2_data, aes(x=dummy_facet, y=Est, ymin=lci, ymax=uci)) +
+			geom_linerange(lwd = 1.5, colour = "orange") +
+			geom_hline(yintercept=1, lty=2) +  # add a dotted line at x=1 after flip
+			coord_flip() +  # flip coordinates (puts labels on y axis)
+			labs(x = "", y = '95% CI', title = "C: Recovery") +
+			facet_wrap(~outcome_name, ncol = 1, dir = "h", strip.position = "left") +
+			theme_classic() +
+			theme(axis.title = element_text(size = 16),
+						axis.text.y = element_blank(),
+						axis.line.y.left = element_blank(),
+						axis.line.y.right = element_line(),
+						axis.ticks.y = element_blank(),
+						axis.text.x = element_text(angle = 0),
+						legend.position = "top",
+						plot.background = element_rect(fill = bkg_colour, colour =  NA),
+						panel.background = element_rect(fill = bkg_colour, colour =  NA),
+						legend.background = element_rect(fill = bkg_colour, colour = NA),
+						strip.background = element_rect(fill = bkg_colour, colour =  NA),
+						strip.text = element_text(hjust=0.5, vjust = 0.5, angle=0, size = 0),
 						panel.grid.major = element_blank(),
 						panel.grid.minor.x = element_blank(),
 						panel.grid.minor.y = element_line(size=.2, color=rgb(0,0,0,0.2)) ,

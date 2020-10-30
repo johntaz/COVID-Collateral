@@ -31,8 +31,3 @@ Why is this an option? In our study we found that primary contacts for most of t
 There are two main choices that determine the estimates of the effect of COVID-19 restrictions on primary care contact rates: (1) when to end to pre-restrictions period, (2) when to start the with-restrictions period. In our paper we chose to end the pre-restriction period on *1^{st} March 2020* because people had already changed their behaviour before lockdown was announced. We then excluded *3 weeks* of data as people adjusted to the imminent UK-wide lockdown and the new restrictions to control COVID-19. 
 
 In this app you can vary both of these parameters to see what effect this has on our estimate of the size of the _reduction_ in primary care contacts and the subsequent _recovery_ in contact rates since the lockdown announcement. 
-
-### Choose the end of the pre-restrictions period
-
-### Choose how many weeks of data to as the "adjusmtent period"
-

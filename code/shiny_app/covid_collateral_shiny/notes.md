@@ -1,11 +1,11 @@
 # About the app 
 This app accompanies a paper entitled _COVID-19 collateral: Indirect acute effects of the pandemic on physical and mental health in the UK_.
 
-The paper can be accessed here: [link](http://www.twitter.com)
+The paper can be accessed here: [actual link to be added](https://twitter.com/ehr_lshtm?lang=en)
 
 You can use this app to examine the data used in this analysis from 2017 to 2020. We analysed primary care records from approximately 10 million people across England and Northern Ireland. We wanted to analyse whether people contacted primary care less because of the indirect effects of the COVID-19 pandemic.
 
-_Last updated 22/10/2020_
+_Last updated 28/10/2020_
 
 ## Authors
 Kathryn E Mansfield, PhD\*, Rohini Mathur, PhD\*, John Tazare, MSc\*, Alasdair D Henderson, PhD\*, Amy Mulick, MSc\*, Helena Carreira, PhD, Anthony A Matthews, PhD, Patrick Bidulka, MSc, Alicia Gayle, MSc, Harriet Forbes, PhD, Sarah Cook, PhD, Angel YS Wong, PhD, Helen Strongman, PhD, Kevin Wing, PhD, Charlotte Warren-Gash, PhD, Sharon L Cadogan, PhD, Liam Smeeth, PhD, Joseph Hayes, PhD, Jennifer K Quint, PhD, Martin McKee, PhD, Sinéad M Langan, PhD
@@ -19,9 +19,7 @@ This study is based in part on data from the Clinical Practice Research Datalink
 All analysis code and data are available at [GitHub](https://github.com/johntaz/COVID-Collateral)
 
 ## Contact
-Corresponding author: Kathryn Mansfield [email](mailto:kathryn.mansfield@lshtm.ac.uk)
-
-About the app: Alasdair Henderson, [email](mailto:alasdair.henderson1@lshtm.ac.uk)
+Alasdair Henderson: [email](mailto:alasdair.henderson1@lshtm.ac.uk) or [Twitter](https://www.twitter.com/AD_Henderson1)
 
 ## Data source
 **Important note**: if there were 5 or fewer contacts in a particular group in one week then we censored the data and assumed 5 contacts. This can make some time series appear volatile as they bounce between 0 and 5 contacts between weeks, however this was an essential step to protect anonymity in our data. 
@@ -43,11 +41,11 @@ The table below lays out details of the study populations and how a "contact" wa
 
 **Condition** | **Denominator population** | **Condition definition**
 ------------- | ------------------- | ------------------------------
-**Diabetes**  |  | 
+*Diabetes*  |  | 
 Diabetic emergencies | All individuals (aged ≥11 years) with prevalent diagnoses of diabetes mellitus at the start of each week of followup. Individuals contributed to the study population from the latest of the start of followup in the overall population and the date of their first record indicating a diagnosis of diabetes. | Any record of diabetesrelated hyperglycaemia, hypoglycaemia, ketoacidosis, or diabetic coma. Multiple records occurring within **seven days** of each other were considered as representing the same event.
-**Alcohol** | | 
+*Alcohol* | | 
 Acute alcohol-related event | All adults (aged ≥18 years) | Any record for acute physical or psychological alcoholrelated event, including acute alcoholic pancreatitis, Multiple records occurring within **14 days** of each other were considered as representing the same event. 
-**Mental health** | |
+*Mental health* | |
 Anxiety | All individuals (aged ≥11 years) from the overall study population. | Any record of symptoms or diagnoses of: social phobia, agoraphobia, panic, generalized anxiety disorder, and mixed anxiety and depression. Multiple records occurring within **seven days** of each other were considered as representing the same event.
  |  | 
 Depression | All children (aged ≥11 years) and adults (aged ≥18) from the overall study population. | Any record of major depressive disorder, dysthymia, mixed anxiety and depression, and adjustment disorders with depressed mood. We also included codes for depressive symptoms. Multiple records occurring within **seven days** of each other were considered as representing the same event.
@@ -59,7 +57,7 @@ Serious mental illness | All children (aged ≥11 years) and adults (aged ≥18 
 Eating disorders | All children (aged ≥11 years) and adults (aged ≥18 years) from the overall study population. | Eating disorders included anorexia nervosa, bulimia nervosa, and other specified feeding and eating disorders. Multiple records occurring within **seven days** of each other were considered as representing the same event.
  |  | 
 Obsessive compulsive disorder | All children (aged 517 years) and adults (aged ≥18 years) from the overall study population. | Obsessive compulsive disorder was defined by codes for body dysmorphic disorders, hypochondriasis, hoarding disorder, and body focused repetitive behaviour disorders. Multiple records occurring within **seven days** of each other were considered as representing the same event.
-**Cardiovascular** | |
+*Cardiovascular* | |
 Myocardial infarction | All adults (aged ≥31 years) | Any record for myocardial infarction allowing for a **1year** window between successive records. Multiple records occurring within one year of each other were considered as representing the same event.
  |  | 
 Unstable angina | All adults (aged ≥31years) | Any record for unstable angina, allowing for a **6month** window between successive records. Multiple records occurring within six months of each other were considered as representing the same event.
@@ -71,7 +69,7 @@ Cerebrovascular accident | All adults (aged ≥31 years) | Any record for cerebr
 Cardiac failure | All adults (aged ≥31 years) | Given the complexity with capturing acute events for a chronic condition, we only counted an individual&#39;s **first ever diagnosis** with cardiac failure.
  |  | 
 Venous thromboembolism (pulmonary embolism and deep venous thrombosis) | All adults (aged ≥31 years) | Any record for venous thromboembolism, allowing for a **1year** window between successive records. Multiple records occurring within one year of each other were considered as representing the same event.
-| **Respiratory** | |
+| *Respiratory* | |
 Asthma exacerbations | All individuals (aged ≥11 years) with a current asthma diagnosis (i.e. asthma code in the last two or three years if aged ≤18 years or 18+ years, respectively). Individuals joined the study population from the start of followup in the overall population if there was a current asthma diagnosis (i.e. within last 23 years) at this time or from the date of their first record indicating an asthma diagnosis within overall followup. Participants remained in the study until there was no current asthma diagnosis or the end of overall followup. They were able to reenter the study if there was a later diagnostic code for asthma before the end of overall followup. Following an existing definition, individuals 41 years and over with asthma were considered as likely to have COPD (and therefore not included in the asthma study population denominator) if they had a subsequent COPD diagnosis recorded within the two years following the current asthma record.^[1] | Asthma exacerbations were defined as records for morbidity codes for asthma exacerbations and status asthmaticus, and a primary care prescription for an oral corticoseroid.^[2] Multiple records occurring within **14 days** of each other were considered as representing the same event.
  |  | 
 COPD exacerbations | Adults (aged ≥41 years) with an established diagnosis of COPD and evidence of a smoking history.^[3] Individuals joined the study population from the latest of the start of followup in the overall population and the date of their first record indicating diagnosis of COPD. | Exacerbations of COPD were defined using morbidity codes in individuals with existing COPD for COPD exacerbations, lower respiratory tract infections, breathlessness or sputum production, and a new prescription for an oral corticosteroid or antibiotic.^[4] Multiple records occurring within **14 days** of each other were considered as representing the same event.

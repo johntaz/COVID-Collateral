@@ -31,15 +31,28 @@ shiny_file <- shiny_file %>%
 # build main database to plot that groups everything ----------------------
 stratifiers <- stringr::str_to_title(c("gender", "age", "region", "ethnicity"))
 strats <- unique(shiny_file$stratifier)
-strats <- strats[strats!="overall"]
+strats <- c(strats[strats!="overall"], "region_sum")
 
 ethnicity_cats <- c("White", 
 										"South Asian", 
 										"Black", 
-										"Other/Mixed", 
-										"Other/Mixed", 
+										"Mixed", 
+										"Other",
 										"Missing")
 gender_cats <- c("Female", "Male")
+region_sum_cats <- c(
+								 "North (NE, NW, Yorkshire, NI)",   #`1` = "North East",
+								 "North (NE, NW, Yorkshire, NI)",   #`2` = "North West",
+								 "North (NE, NW, Yorkshire, NI)",   #`3` = "Yorkshire & the Humber",
+								 "Midlands",   #`4` = "East Midlands",
+								 "Midlands",   #`5` = "West Midlands",
+								 "Midlands",   #`6` = "Eastern",
+								 "South (SW, SC, SE)",   #`7` = "South West",
+								 "South (SW, SC, SE)",   #`8` = "South Central",
+								 "London",   #`9` = "London",
+								 "South (SW, SC, SE)",   #`10` = "South East",
+								 "North (NE, NW, Yorkshire, NI)",   #`11` = "Northern Ireland"
+								 "Missing")
 region_cats <- c("North East" ,
 								 "North West" ,
 								 "Yorkshire & the Humber" ,
@@ -67,15 +80,21 @@ age_cats <- c(
 categories <- list( ## careful of the order  here -- has to match the order of "strats"
 	ethnicity = ethnicity_cats,
 	gender = gender_cats,
+	region_sum = region_sum_cats,
 	region = region_cats,
 	age = age_cats
 )
 
 ## take out that stratifier, make factor, relabel levels
 refactored_shiny <- NULL
-for(xx in 1:length(strats)){
+for(xx in strats){
+	if(xx == "region_sum"){
+		strat_filter <- "region"
+	}else{
+			strat_filter <- stringr::str_to_lower(xx)
+	}
 	temp_file <- shiny_file %>%
-		filter(stratifier == stringr::str_to_lower(strats[xx])) %>%
+		filter(stratifier == strat_filter) %>%
 		mutate_at("category", ~as.factor(.))
 	levels(temp_file$category) <- categories[[xx]]
 	temp_file <- temp_file %>%
@@ -83,7 +102,9 @@ for(xx in 1:length(strats)){
 		summarise(numEligible = sum(numEligible), numOutcome = sum(numOutcome)) %>%
 		ungroup() %>%
 		mutate(model_out = (numOutcome/numEligible)*100)
-	refactored_shiny <- bind_rows(refactored_shiny, temp_file)
+	if(xx == "region_sum"){temp_file$stratifier <- "region_sum"}
+	refactored_shiny <- bind_rows(refactored_shiny, 
+																temp_file)
 }
 refactored_shiny <- shiny_file %>%
 	filter(stratifier == "overall") %>%
