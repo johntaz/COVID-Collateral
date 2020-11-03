@@ -1,0 +1,339 @@
+medcodeid,term,outcome_main,outcome_sens,chronic,originalreadcode,cleansedreadcode,snomedctconceptid,snomedctdescriptionid
+1675391000006112,referral by community alcohol team,0,1,1,EMISNQRE93,,1675391000006108,1675391000006112
+831091000006115,referral to alcohol abuse team,0,1,1,EMISQRE1,,831091000006104,831091000006115
+831101000006114,referral to alcohol counsellor,0,1,1,EMISQRE2,,831101000006105,831101000006114
+851931000006116,referral to alcohol recovery project,0,1,1,EMISQRE24,,851931000006100,851931000006116
+2658601000006116,acute alcoholic liver disease,1,1,1,^ESCTAC265860,,9953008,17389017
+5981291000006110,alcohol withdrawal-induced convulsion,1,1,1,^ESCTAL598129,,308742005,452062011
+940781000006116,evidence of alcohol withdrawal,1,1,1,HMPNQEV1,,940781000006100,940781000006116
+1974521000006117,"mental & behav dis due to use alcohol: withdrawl state with delirium, with convulsions",1,1,1,EMISICD10|F1041,,1974521000006101,1974521000006117
+1974301000006117,"mental & behav dis due to use alcohol: withdrawl state with delirium, without convulsions",1,1,1,EMISICD10|F1040,,1974301000006101,1974301000006117
+1974191000006110,"mental and behav dis due to use alcohol: withdrawal state, uncomplicated",1,1,1,EMISICD10|F1030,,1974191000006106,1974191000006110
+1974231000006117,"mental and behav dis due to use alcohol: withdrawal state, with convulsions",1,1,1,EMISICD10|F1031,,1974231000006101,1974231000006117
+3890681000006118,uncomplicated alcohol withdrawal,1,1,1,^ESCTUN389068,,85561006,141818010
+12456651000006117,[v]alcohol rehabilitation,0,1,1,^ESCT1245665,,471691000000107,895711000000114
+5086741000006114,ah - alcoholic hepatitis,0,1,1,^ESCTAH508674,,235875008,353588011
+2612481000006116,alcohol hallucinosis,0,1,1,^ESCTAL261248,,7052005,12634015
+4768901000006117,alcohol induced encephalopathy,0,1,1,^ESCTAL476890,,192811002,2951733018
+2612511000006112,alcohol induced hallucinosis,0,1,1,^ESCTAL261251,,7052005,2951803016
+3182591000006114,alcohol induced psychosis,0,1,1,^ESCTAL318259,,42344001,2951763010
+2796011000006111,alcohol intoxication delirium,0,1,1,^ESCTAL279601,,18653004,31451012
+3688931000006118,alcohol-induced persisting amnestic disorder,0,1,1,^ESCTAL368893,,73097000,121406019
+2502981000006117,alcohol-induced persisting dementia,0,1,1,^ESCTAL250298,,281004,1558011
+5111821000006113,alcohol-induced pseudo-cushing syndrome,0,1,1,^ESCTAL511182,,237738005,2839691016
+2612491000006118,alcohol-induced psychotic disorder with hallucinations,0,1,1,^ESCTAL261249,,7052005,12635019
+6947461000006115,alcoholic cirrhosis,0,1,1,^ESCTAL694746,,420054005,2576981019
+3315061000006110,alcoholic fatty liver disease,0,1,1,^ESCTAL331506,,50325005,3027285017
+6947471000006110,alcoholic liver cirrhosis,0,1,1,^ESCTAL694747,,420054005,2912539019
+12721711000006110,alcoholic liver damage unspecified,0,1,1,^ESCT1272171,,589511000000102,1307221000000116
+3165681000006118,alcoholic liver disease,0,1,1,^ESCTAL316568,,41309000,68909012
+2806371000006116,alcoholic myopathic syndrome,0,1,1,^ESCTAL280637,,19303008,32552017
+2806381000006118,alcoholic myositis,0,1,1,^ESCTAL280638,,19303008,32553010
+2626161000006111,alcoholic peripheral neuropathy,0,1,1,^ESCTAL262616,,7916009,1234320010
+2626141000006112,alcoholic polyneuropathy,0,1,1,^ESCTAL262614,,7916009,14103017
+11922951000006112,alcoholic psychoses,0,1,1,^ESCT1192295,,42344001,476741000006111
+3182581000006111,alcoholic psychosis,0,1,1,^ESCTAL318258,,42344001,70658014
+3315041000006111,alcoholic steatosis,0,1,1,^ESCTAL331504,,50325005,2306821000000116
+2614651000006115,alcoholism,0,1,1,^ESCTAL261465,,7200002,12878014
+2885451000006111,alcoholism counseling,0,1,1,^ESCTAL288545,,24165007,40570014
+3165691000006115,ald - alcoholic liver disease,0,1,1,^ESCTAL316569,,41309000,492959019
+5087751000006113,chronic pancreatitis due to acute alcohol intoxication,0,1,1,^ESCTCH508775,,235952002,3078939011
+2502971000006115,dementia associated with alcoholism,0,1,1,^ESCTDE250297,,281004,1557018
+3545831000006115,detoxication psychiatric therapy for alcoholism,0,1,1,^ESCTDE354583,,64297001,2160425017
+3545841000006113,detoxication therapy for alcoholism,0,1,1,^ESCTDE354584,,64297001,106877013
+3859111000006117,dilated cardiomyopathy caused by alcohol,0,1,1,^ESCTDI385911,,83521008,3290572011
+3859091000006114,dilated cardiomyopathy secondary to alcohol,0,1,1,^ESCTDI385909,,83521008,138526017
+5992721000006114,esophageal varices in alcoholic cirrhosis of the liver,0,1,1,^ESCTES599272,,309783001,453266011
+4763141000006111,korsakov alcoholic psychosis with peripheral neuritis,0,1,1,^ESCTKO476314,,191471000,2839024016
+3630141000006115,korsakov syndrome - alcoholic,0,1,1,^ESCTKO363014,,69482004,501297017
+1975461000006114,"mental & behav dis due to use alcohol: psychotic disorder, mixed",0,1,1,EMISICD10|F1056,,1975461000006105,1975461000006114
+1975181000006111,"mental & behav dis due to use alcohol: psychotic disorder, predominantly delusional",0,1,1,EMISICD10|F1051,,1975181000006107,1975181000006111
+1975371000006110,"mental & behav dis due to use alcohol: psychotic disorder, predominantly depressive symptoms",0,1,1,EMISICD10|F1054,,1975371000006106,1975371000006110
+1975291000006117,"mental & behav dis due to use alcohol: psychotic disorder, predominantly hallucinatory",0,1,1,EMISICD10|F1052,,1975291000006101,1975291000006117
+1975411000006111,"mental & behav dis due to use alcohol: psychotic disorder, predominantly manic symptoms",0,1,1,EMISICD10|F1055,,1975411000006107,1975411000006111
+1975341000006119,"mental & behav dis due to use alcohol: psychotic disorder, predominantly polymorphic",0,1,1,EMISICD10|F1053,,1975341000006103,1975341000006119
+1975141000006117,"mental & behav dis due to use alcohol: psychotic disorder, schizophrenia-like",0,1,1,EMISICD10|F1050,,1975141000006101,1975141000006117
+1975591000006119,"mental & behav dis due to use alcohol: resid & late-onset psychot dis, dementia",0,1,1,EMISICD10|F1073,,1975591000006103,1975591000006119
+1975511000006112,"mental & behav dis due to use alcohol: resid & late-onset psychot dis, flashbacks",0,1,1,EMISICD10|F1070,,1975511000006108,1975511000006112
+1976111000006110,"mental & behav dis due to use alcohol: resid & late-onset psychot dis, late-onset psychotic disorder",0,1,1,EMISICD10|F1075,,1976111000006106,1976111000006110
+1976071000006119,"mental & behav dis due to use alcohol: resid & late-onset psychot dis, other persisting cognitive impairment",0,1,1,EMISICD10|F1074,,1976071000006103,1976071000006119
+1975541000006111,"mental & behav dis due to use alcohol: resid & late-onset psychot dis, personality or behaviour disorder",0,1,1,EMISICD10|F1071,,1975541000006107,1975541000006111
+1975661000006111,"mental & behav dis due to use alcohol: resid & late-onset psychot dis, residual affective disorder",0,1,1,EMISICD10|F1072,,1975661000006107,1975661000006111
+1974111000006117,"mental and behav dis due to use alcohol: dependence syndr, continuous use",0,1,1,EMISICD10|F1025,,1974111000006101,1974111000006117
+1973701000006119,"mental and behav dis due to use alcohol: dependence syndr, currently abstinent",0,1,1,EMISICD10|F1020,,1973701000006103,1973701000006119
+1973811000006113,"mental and behav dis due to use alcohol: dependence syndr, currently abstinent, but in a protected environment",0,1,1,EMISICD10|F1021,,1973811000006109,1973811000006113
+1974021000006112,"mental and behav dis due to use alcohol: dependence syndr, currently abstinent, but receiving treatment with aversive or blocking drugs",0,1,1,EMISICD10|F1023,,1974021000006108,1974021000006112
+1973871000006116,"mental and behav dis due to use alcohol: dependence syndr, currently on a clinically supervised maintenance or replacement regime [controlled dependence]",0,1,1,EMISICD10|F1022,,1973871000006100,1973871000006116
+1974071000006113,"mental and behav dis due to use alcohol: dependence syndr, currently using the substance [active dependence]",0,1,1,EMISICD10|F1024,,1974071000006109,1974071000006113
+1974141000006118,"mental and behav dis due to use alcohol: dependence syndr, episodic use [dipsomania]",0,1,1,EMISICD10|F1026,,1974141000006102,1974141000006118
+12730491000006117,other alcoholic psychosis,0,1,1,^ESCT1273049,,623961000000108,1377231000000110
+2934661000006111,poisoning by alcohol deterrent,0,1,1,^ESCTPO293466,,27134008,45382016
+2934681000006118,poisoning caused by alcohol deterrent,0,1,1,^ESCTPO293468,,27134008,3292162014
+5111831000006111,pseudo-cushing syndrome due to alcohol,0,1,1,^ESCTPS511183,,237738005,3037101014
+1894171000006111,alcohol dependence resolved,0,0,1,EMISNQAL18,,1894171000006107,1894171000006111
+4539891000006115,history of alcoholism,0,0,1,^ESCTHI453989,,161466001,2923447012
+12726971000006110,accidental poisoning by alcohol nos,1,1,0,^ESCT1272697,,643461000000102,1416421000000110
+12726711000006116,"accidental poisoning by alcohol, nec",1,1,0,^ESCT1272671,,640861000000108,1411191000000114
+4895571000006112,accidental poisoning by alcoholic beverage,1,1,0,^ESCTAC489557,,216633005,3300762012
+5513321000006114,accidental poisoning caused by alcohol,1,1,0,^ESCTAC551332,,269765000,3296925013
+4895591000006113,accidental poisoning caused by alcoholic beverage,1,1,0,^ESCTAC489559,,216633005,3300761017
+2911291000006114,acute alcohol intoxication,1,1,0,^ESCTAC291129,,25702006,483024013
+12721931000006119,alcohol causing toxic effect nos,1,1,0,^ESCT1272193,,592581000000100,1313721000000116
+8364771000006117,injury following alcohol use,1,1,0,^ESCTIN836477,,984801000000105,2504461000000116
+2911271000006113,acute alcoholism,1,1,0,^ESCTAC291127,,25702006,43082013
+854651000006117,alcohol overdose,1,1,0,EGTON59,,854651000006101,854651000006117
+3846821000006114,alcohol poisoning,1,1,0,^ESCTAL384682,,82782008,1234741018
+1973481000006115,"mental & behav dis due to use alcohol: acute intoxication, pathological intoxication",1,1,0,EMISICD10|F1007,,1973481000006104,1973481000006115
+1972151000006110,"mental & behav dis due to use alcohol: acute intoxication, uncomplicated",1,1,0,EMISICD10|F1000,,1972151000006106,1972151000006110
+1973411000006110,"mental & behav dis due to use alcohol: acute intoxication, with coma",1,1,0,EMISICD10|F1005,,1973411000006106,1973411000006110
+1973441000006114,"mental & behav dis due to use alcohol: acute intoxication, with convulsions",1,1,0,EMISICD10|F1006,,1973441000006105,1973441000006114
+1973241000006113,"mental & behav dis due to use alcohol: acute intoxication, with delirium",1,1,0,EMISICD10|F1003,,1973241000006109,1973241000006113
+1972271000006112,"mental & behav dis due to use alcohol: acute intoxication, with other medical complications",1,1,0,EMISICD10|F1002,,1972271000006108,1972271000006112
+1973321000006113,"mental & behav dis due to use alcohol: acute intoxication, with perceptual distortions",1,1,0,EMISICD10|F1004,,1973321000006109,1973321000006113
+1972161000006112,"mental & behav dis due to use alcohol: acute intoxication, with trauma or other bodily injury",1,1,0,EMISICD10|F1001,,1972161000006108,1972161000006112
+2740361000006119,aa - alcohol abuse,0,1,0,^ESCTAA274036,,15167005,477199015
+1136131000006116,adverse reaction to *alcohol,0,1,0,ALLERGY22084NEMIS,,1136131000006100,1136131000006116
+1129161000006118,adverse reaction to alcohol,0,1,0,ALLERGY83,,1129161000006102,1129161000006118
+1132101000006111,adverse reaction to alcohol (90 %),0,1,0,ALLERGY11070NEMIS,,1132101000006107,1132101000006111
+6841781000006117,alcohol consumption counseling,0,1,0,^ESCTAL684178,,413473000,2532938013
+1779661000006118,alcohol detoxification declined,0,1,0,EMISNQAL12,,1779661000006102,1779661000006118
+7798471000006110,alcohol harm reduction program,0,1,0,^ESCTAL779847,,720175009,3319642014
+852381000006110,alcohol reduction-maintain abstinence,0,1,0,EMISQAL2,,852381000006106,852381000006110
+3073921000006112,alcohol rehabilitation,0,1,0,^ESCTAL307392,,35637008,59452011
+7798531000006111,alcohol twelve step program,0,1,0,^ESCTAL779853,,720178006,3319658012
+2969641000006116,alcohol-related disorder,0,1,0,^ESCTAL296964,,29212009,48889015
+1808491000006113,alcohol-related legal or disciplinary problem,0,1,0,JHCAL2,,1808491000006109,1808491000006113
+3630171000006111,alcoholic amnestic syndrome,0,1,0,^ESCTAL363017,,69482004,501300010
+3630161000006116,amnesic syndrome due to alcohol,0,1,0,^ESCTAM363016,,69482004,501299019
+1808611000006118,arep - alcohol rehabilitation education program,0,1,0,JHCAR24,,1808611000006102,1808611000006118
+852151000006117,audit score >5 alcohol dependence syndrome,0,1,0,EMISQAU2,,852151000006101,852151000006117
+852161000006115,audit score >5 alcohol problem drinker,0,1,0,EMISQAU3,,852161000006104,852161000006115
+6841791000006119,counseling about alcohol consumption,0,1,0,^ESCTCO684179,,413473000,2692124018
+8197801000006118,counselling about alcohol by other agencies,0,1,0,^ESCTCO819780,,527961000000108,1179631000000113
+6841801000006118,counselling about alcohol consumption,0,1,0,^ESCTCO684180,,413473000,2692125017
+1662551000006113,dental recall - excessive alcohol use,0,1,0,EMISD_DE198,,1662551000006109,1662551000006113
+4533451000006113,excessive alcohol consumption,0,1,0,^ESCTEX453345,,160592001,250339012
+4533461000006110,excessive alcohol use,0,1,0,^ESCTEX453346,,160592001,2923459011
+961571000006111,excessive use of alcohol,0,1,0,EMISCAB16,,961571000006107,961571000006111
+1745961000006111,extended intervention for excessive alcohol consumption declined,0,1,0,EMISNQEX11,,1745961000006107,1745961000006111
+3024491000006118,hangover,0,1,0,^ESCTHA302449,,32553006,54361013
+3024501000006114,hangover effect,0,1,0,^ESCTHA302450,,32553006,54362018
+1878791000006112,in-house alcohol detoxification,0,1,0,EMISNQIN186,,1878791000006108,1878791000006112
+970411000006118,misuse of alcohol unspecified,0,1,0,EMISNQMI150,,970411000006102,970411000006118
+970401000006116,misuse of mixture of alcohol,0,1,0,EMISNQMI149,,970401000006100,970401000006116
+1808601000006116,oatp - outpatient alcohol treatment program,0,1,0,JHCOA1,,1808601000006100,1808601000006116
+3122331000006110,patient referral for alcoholism rehabilitation,0,1,0,^ESCTPA312233,,38670004,64351016
+2716771000000111,signposting to alcohol misuse service,0,1,0,ESCTSI66,,1084171000000100,2716771000000111
+2007461000006118,srh care activity - alcohol brief intervention,0,1,0,EMISNQSR25,,2007461000006102,2007461000006118
+1538911000006119,structured alcohol intervention,0,1,0,PCSQI96,,1538911000006103,1538911000006119
+970391000006118,substance misuse of alcohol,0,1,0,EMISNQND25,,970391000006102,970391000006118
+6881361000006118,suspected alcohol abuse,0,1,0,^ESCTSU688136,,415685003,2534340014
+1806211000006115,unsuccessful attempts to reduce alcohol consumption,0,1,0,EMISNQUN23,,1806211000006104,1806211000006115
+7785371000006113,withdrawn from alcohol detoxification program,0,1,0,^ESCTWI778537,,719340007,3316031015
+4533441000006111,xs - excessive alcohol consumption,0,1,0,^ESCTXS453344,,160592001,250338016
+12726111000006115,accidental poisoning by other ethyl alcohol and its products,1,1,0,^ESCT1272611,,672521000000104,1475011000000113
+250314015,heavy drinker - 7-9u/day,0,1,0,1365,1365.00,160577002,250314015
+250316018,very heavy drinker - >9u/day,0,1,0,1366,1366.00,160578007,250316018
+117761000006116,suspect alcohol abuse - denied,0,1,0,1369,1369.00,413968004,2534341013
+1738341000000110,increasing risk drinking,0,1,0,136a,136a.00,777631000000108,1738341000000110
+342421016,feels should cut down drinking,0,1,0,136b,136b.00,228362008,342421016
+1738381000000119,higher risk drinking,0,1,0,136c,136c.00,777651000000101,1738381000000119
+250335018,alcohol intake above recommended sensible limits,0,1,0,136K,136K.00,160592001,250335018
+144179014,heavy drinker,0,1,0,136P,136P.00,86933000,144179014
+342322012,very heavy drinker,0,1,0,136Q,136Q.00,228279004,342322012
+342366014,binge drinker,0,1,0,136R,136R.00,228315001,342366014
+299061000000117,hazardous alcohol use,0,1,1,136S,136S.00,198421000000108,299061000000117
+299081000000114,harmful alcohol use,0,1,1,136T,136T.00,198431000000105,299081000000114
+606991000000117,alcohol misuse,0,1,0,136W,136W.00,15167005,606991000000117
+342361016,drinks in morning to get rid of hangover,0,1,0,136Y,136Y.00,228310006,342361016
+251195015,alcoholics anonymous,0,1,1,13Y8,13Y8.00,1099951000000107,2753901000000119
+480271000000113,disqualified from driving due to excess alcohol,0,1,0,13ZY,13ZY.00,279651000000104,480271000000113
+251626014,h/o: alcoholism,0,0,1,1462,1462.00,161466001,251626014
+2549849017,alcohol induced hallucinations,0,1,1,1B1c,1B1c.00,417633001,2549849017
+2358251000000115,alcohol dependence resolved,0,0,1,2126C,2126C00,918321000000104,2358251000000115
+2474678017,alcohol disorder monitoring,0,1,1,66e,66e..00,413130000,2474678017
+405461000000114,alcohol abuse monitoring,0,1,1,66e0,66e0.00,247721000000109,405461000000114
+1792751000000118,"cycle of change stage, alcohol",0,1,0,67K6,67K6.00,801811000000100,1792751000000118
+371501000000110,delivery of rehabilitation for alcohol addiction,0,1,1,7P221,7P22100,231161000000109,371501000000110
+106878015,alcohol detoxification,0,1,1,8BA8,8BA8.00,64297001,106878015
+2467301000000111,alcohol relapse prevention,0,1,1,8BAs,8BAs.00,968891000000109,2467301000000111
+2475831000000114,alcohol harm reduction programme,0,1,1,8BAu,8BAu.00,720175009,3319643016
+2485391000000114,alcohol twelve step programme,0,1,1,8BAw,8BAw.00,720178006,3319659016
+739501000000112,advised to contact primary care alcohol worker,0,1,0,8CAv,8CAv.00,375941000000101,739501000000112
+2419601000000110,specialist alcohol treatment service signposted,0,1,0,8CdK,8CdK.00,946101000000100,2419601000000110
+283451018,aversion therapy - alcoholism,0,1,1,8G32,8G32.00,183388004,283451018
+283559019,admitted to alcohol detoxification centre,0,1,1,8H35,8H35.00,183486001,283559019
+1484890014,referral to community alcohol team,0,1,1,8H7p,8H7p.00,390857005,1484890014
+2549646014,referral to community drug and alcohol team,0,1,1,8HHe,8HHe.00,417096006,2549646014
+622961000000116,referral to specialist alcohol treatment service,0,1,1,8HkG,8HkG.00,431260004,2768649019
+740641000000115,referral to alcohol brief intervention service,0,1,1,8HkJ,8HkJ.00,376401000000103,740641000000115
+1704281000006117,brief intervention for excessive alcohol consumptn declined,0,1,0,8IAF,8IAF.00,379411000000105,747421000000114
+750531000000113,declined referral to specialist alcohol treatment service,0,1,0,8IAJ,8IAJ.00,380861000000109,750531000000113
+1754191000006119,extended interven for excessive alcohol consumption declined,0,1,0,8IAt,8IAt.00,754831000000102,1660641000000118
+1746481000000112,referral to community alcohol team declined,0,1,0,8IEA,8IEA.00,781191000000101,1746481000000112
+1926131000006117,refer to mh services deferred until alcohol misuse resolved,0,1,0,8W2,8W2..00,933641000000103,2391941000000114
+236441000000113,alcohol misuse - enhanced services administration,0,1,1,9k1,9k1..00,166251000000100,1153251000000119
+2532939017,alcohol consumption counselling,0,1,0,9k11,9k11.00,413473000,2532939017
+226571000000116,alcohol misuse - enhanced service completed,0,1,1,9k12,9k12.00,166471000000105,1154571000000110
+681741000000116,alcohol assessment declined,0,1,0,9k19-1,9k19.11,361731000000101,681741000000116
+1680121000006110,brief intervention for excessive alcohol consumptn completed,0,1,0,9k1A,9k1A.00,366371000000105,691601000000110
+1680131000006113,extended intervention for excessive alcohol consumptn complt,0,1,0,9k1B,9k1B.00,366421000000103,691701000000115
+2462911000000112,withdrawn from alcohol detoxification programme,0,1,1,9NgzH,9NgzH00,719340007,3316032010
+2298341000000114,in-house alcohol detoxification,0,1,1,9NJz,9NJz.00,892631000000102,2298341000000114
+216585018,under care of community alcohol team,0,1,1,9NN2,9NN2.00,135827004,216585018
+356292013,alcohol-induced pseudo-cushing's syndrome,0,1,1,C1505,C150500,237738005,356292013
+476741000006111,alcoholic psychoses,0,1,1,E01,E01..00,42344001,70655012
+15243013,alcohol withdrawal delirium,1,1,1,E010,E010.00,8635005,15243013
+507053019,dts - delirium tremens,1,1,1,E010-1,E010.11,8635005,507053019
+476361000006114,alcohol amnestic syndrome,0,1,1,E011,E011.00,69482004,501300010
+753331000006118,korsakov's alcoholic psychosis,0,1,1,E0110,E011000,69482004,501296014
+294662017,korsakov's alcoholic psychosis with peripheral neuritis,0,1,1,E0111,E011100,191471000,294662017
+501294012,wernicke-korsakov syndrome,0,1,1,E0112,E011200,69482004,501294012
+294664016,alcohol amnestic syndrome nos,0,1,1,E011z,E011z00,73097000,121405015
+401760017,other alcoholic dementia,0,1,1,E012,E012.00,281004,1225776018
+346929012,alcoholic dementia nos,0,1,1,E012-1,E012.11,281004,1225776018
+294668018,chronic alcoholic brain syndrome,0,1,1,E0120,E012000,191475009,294668018
+294669014,alcohol withdrawal hallucinosis,1,1,1,E013,E013.00,191476005,294669014
+294671014,pathological alcohol intoxication,1,1,0,E014,E014.00,191477001,294671014
+294670010,drunkenness - pathological,0,1,0,E014-1,E014.11,191477001,294670010
+294672019,alcoholic paranoia,0,1,1,E015,E015.00,191478006,294672019
+294673012,other alcoholic psychosis,0,1,1,E01y,E01y.00,42344001,70655012
+882221000006114,other alcoholic psychoses,0,1,1,E01y-99,E01y.99,623961000000108,882221000006114
+294674018,alcohol withdrawal syndrome,1,1,1,E01y0,E01y000,191480000,294674018
+294675017,other alcoholic psychosis nos,0,1,1,E01yz,E01yz00,42344001,70655012
+294676016,alcoholic psychosis nos,0,1,1,E01z,E01z.00,42344001,70655012
+500478011,alcohol dependence syndrome,0,1,1,E23,E23..00,66590003,500478011
+12878014,alcoholism,0,1,1,E23-1,E23..11,66590003,110629012
+502017010,alcohol problem drinking,0,1,1,E23-2,E23..12,7200002,502017010
+295127018,acute alcoholic intoxication in alcoholism,1,1,1,E230,E230.00,191802004,295127018
+295126010,alcohol dependence with acute alcoholic intoxication,1,1,1,E230-1,E230.11,191802004,295126010
+295128011,"acute alcoholic intoxication, unspecified, in alcoholism",1,1,1,E2300,E230000,191802004,295127018
+295129015,continuous acute alcoholic intoxication in alcoholism,1,1,1,E2301,E230100,191804003,295129015
+295130013,episodic acute alcoholic intoxication in alcoholism,1,1,1,E2302,E230200,191805002,295130013
+295131012,"acute alcoholic intoxication in remission, in alcoholism",1,1,1,E2303,E230300,191806001,295131012
+295132017,acute alcoholic intoxication in alcoholism nos,1,1,1,E230z,E230z00,191802004,295127018
+110629012,chronic alcoholism,0,1,1,E231,E231.00,66590003,110629012
+295136019,unspecified chronic alcoholism,0,1,1,E2310,E231000,66590003,110628016
+295139014,continuous chronic alcoholism,0,1,1,E2311,E231100,191811004,295139014
+295141010,episodic chronic alcoholism,0,1,1,E2312,E231200,191812006,295141010
+295142015,chronic alcoholism in remission,0,1,1,E2313,E231300,191813001,295142015
+295143013,chronic alcoholism nos,0,1,1,E231z,E231z00,66590003,110629012
+295144019,alcohol dependence syndrome nos,0,1,1,E23z,E23z.00,66590003,500478011
+401797010,nondependent alcohol abuse,0,1,0,E250,E250.00,268645007,401797010
+223671000000110,hangover (alcohol),0,1,0,E250-2,E250.12,32553006,485256013
+769451000006111,intoxication - alcohol,0,1,0,E250-4,E250.14,25702006,43083015
+882531000006110,non-dependent abuse of alcohol,0,1,0,E250-99,E250.99,268645007,882531000006110
+295251015,"nondependent alcohol abuse, unspecified",0,1,0,E2500,E250000,268645007,401797010
+295252010,"nondependent alcohol abuse, continuous",0,1,0,E2501,E250100,191882002,295252010
+295253017,"nondependent alcohol abuse, episodic",0,1,0,E2502,E250200,191883007,295253017
+295254011,nondependent alcohol abuse in remission,0,1,0,E2503,E250300,191884001,295254011
+295255012,nondependent alcohol abuse nos,0,1,0,E250z,E250z00,268645007,401797010
+295765017,[x]mental and behavioural disorders due to use of alcohol,0,1,1,Eu10,Eu10.00,29212009,48886010
+397611000006115,[x]mental & behav dis due to use alcohol: acute intoxication,1,1,0,Eu100,Eu10000,25702006,43081018
+362251000006117,[x]acute alcoholic drunkenness,1,1,0,Eu100-1,Eu10011,25702006,43081018
+397881000006114,[x]mental and behav dis due to use of alcohol: harmful use,0,1,1,Eu101,Eu10100,15167005,25750014
+397801000006117,[x]mental and behav dis due to use alcohol: dependence syndr,0,1,1,Eu102,Eu10200,66590003,500478011
+362921000006118,[x]alcohol addiction,0,1,1,Eu102-1,Eu10211,66590003,500478011
+370971000006114,[x]chronic alcoholism,0,1,1,Eu102-2,Eu10212,66590003,110629012
+397811000006119,[x]mental and behav dis due to use alcohol: withdrawal state,1,1,1,Eu103,Eu10300,191480000,294674018
+376451000006113,"[x]delirium tremens, alcohol induced",1,1,1,Eu104-1,Eu10411,8635005,15243013
+397621000006111,[x]mental & behav dis due to use alcohol: psychotic disorder,0,1,1,Eu105,Eu10500,42344001,70655012
+362951000006110,[x]alcoholic hallucinosis,0,1,1,Eu105-1,Eu10511,7052005,1233279015
+362961000006112,[x]alcoholic jealousy,0,1,1,Eu105-2,Eu10512,42344001,70655012
+362971000006117,[x]alcoholic paranoia,0,1,1,Eu105-3,Eu10513,42344001,70655012
+362981000006119,[x]alcoholic psychosis nos,0,1,1,Eu105-4,Eu10514,42344001,70655012
+397791000006118,[x]mental and behav dis due to use alcohol: amnesic syndrome,0,1,0,Eu106,Eu10600,73097000,121405015
+394681000006119,"[x]korsakov's psychosis, alcohol induced",0,1,1,Eu106-1,Eu10611,69482004,115434017
+362941000006113,[x]alcoholic dementia nos,0,1,1,Eu107-1,Eu10711,281004,1225776018
+370961000006119,[x]chronic alcoholic brain syndrome,0,1,1,Eu107-2,Eu10712,191475009,294668018
+315091000000117,[x]alcohol withdrawal-induced seizure,1,1,1,Eu108,Eu10800,308742005,452061016
+397241000006119,[x]men & behav dis due to use alcohol: oth men & behav dis,0,1,0,Eu10y,Eu10y00,29212009,48886010
+397431000006111,[x]ment & behav dis due use alcohol: unsp ment & behav dis,0,1,0,Eu10z,Eu10z00,91388009,151411015
+542611000006114,cerebral degeneration due to alcoholism,0,1,1,F11x0,F11x000,192811002,297011014
+297011014,alcoholic encephalopathy,0,1,1,F11x0-1,F11x011,192811002,297011014
+478046010,cerebellar ataxia due to alcoholism,0,1,1,F1440,F144000,361272001,478046010
+478024019,alcohol-induced epilepsy,0,1,1,F25B,F25B.00,361268000,478024019
+14103017,alcoholic polyneuropathy,0,1,1,F375,F375.00,7916009,14104011
+476701000006114,alcoholic myopathy,0,1,1,F3941,F394100,19303008,32551012
+138527014,alcoholic cardiomyopathy,0,1,1,G555,G555.00,83521008,138527014
+453265010,oesophageal varices in alcoholic cirrhosis of the liver,0,1,1,G8523,G852300,309783001,453265010
+4525015,alcoholic gastritis,0,1,1,J153,J153.00,2043009,4525015
+83834016,alcoholic fatty liver,0,1,1,J610,J610.00,50325005,83834016
+17390014,acute alcoholic hepatitis,1,1,1,J611,J611.00,9953008,17390014
+476611000006116,alcoholic cirrhosis of liver,0,1,1,J612,J612.00,420054005,2920441014
+353594015,alcoholic fibrosis and sclerosis of liver,0,1,1,J6120,J612000,235880004,353594015
+303399018,alcoholic liver damage unspecified,0,1,1,J613,J613.00,41309000,68906017
+886501000006115,alcoholic liver damage nos,0,1,1,J613-99,J613.99,589511000000102,886501000006115
+353595019,alcoholic hepatic failure,0,1,1,J6130,J613000,235881000,353595019
+353587018,alcoholic hepatitis,0,1,1,J617,J617.00,235875008,353587018
+451124014,chronic alcoholic hepatitis,0,1,1,J6170,J617000,307757001,451124014
+353687012,alcohol-induced acute pancreatitis,1,1,1,J6708,J670800,235942001,353687012
+353698013,alcohol-induced chronic pancreatitis,0,1,1,J6710,J671000,235952002,353698013
+317636014,[d]alcohol blood level excessive,0,1,0,R103,R103.00,441685000,2817390013
+1225183017,alcohol deterrent poisoning,0,1,1,SLH3,SLH3.00,27134008,1225183017
+500729017,alcohol causing toxic effect,1,1,0,SM0,SM0..00,67426006,500729017
+991151000006114,alcohol nos - toxic effect,1,1,0,SM0-98,SM0..98,67426006,991151000006114
+899411000006110,toxic effects of alcohol,1,1,0,SM0-99,SM0..99,67426006,899411000006110
+324489011,alcohol causing toxic effect nos,1,1,0,SM0z,SM0z.00,67426006,112060019
+899431000006116,alcohol nos - toxic effect,1,1,0,SM0z-99,SM0z.99,592581000000100,899431000006116
+328737014,"accidental poisoning by alcohol, nec",1,1,0,T90,T90..00,269765000,404332015
+900431000006118,accident poisoning - alcohol,1,1,0,T90-99,T90..99,640861000000108,900431000006118
+328738016,accidental poisoning by alcoholic beverages,1,1,0,T900,T900.00,216633005,328738016
+328760018,accidental poisoning by alcohol nos,1,1,0,T90z,T90z.00,269765000,404332015
+900461000006110,accident poison - alcohol nos,1,1,0,T90z-99,T90z.99,643461000000102,900461000006110
+464381000006118,adverse reaction to alcohol deterrents,0,1,1,TJH3,TJH3.00,292416003,432554017
+361471000006115,[x]accident poisoning/exposure to alcohol,1,1,0,U1A9,U1A9.00,269765000,404332015
+361191000006110,[x]accident poison/exposure to alcohol at home,1,1,0,U1A90,U1A9000,269765000,404332015
+360881000006113,[x]accid poison/expos to alcohol at res institut,1,1,0,U1A91,U1A9100,269765000,404332015
+359981000006119,[x]acc poison/expos alcohol school/pub admin area,1,1,0,U1A92,U1A9200,269765000,404332015
+360371000006117,[x]accid pois/expos alcohol in sport/athletic area,1,1,0,U1A93,U1A9300,269765000,404332015
+360621000006110,[x]accid poison/expos alcohol in street/highway,1,1,0,U1A94,U1A9400,269765000,404332015
+360631000006113,[x]accid poison/expos alcohol trade/service area,1,1,0,U1A95,U1A9500,269765000,404332015
+359811000006119,[x]acc pois/expos alcohol indust/construct area,1,1,0,U1A96,U1A9600,269765000,404332015
+361201000006113,[x]accident poison/exposure to alcohol on farm,1,1,0,U1A97,U1A9700,269765000,404332015
+360481000006111,[x]accid pois/expos to alcohol other spec place,1,1,0,U1A9y,U1A9y00,269765000,404332015
+360891000006111,[x]accid poison/expos to alcohol unspecif place,1,1,0,U1A9z,U1A9z00,269765000,404332015
+393861000006111,[x]intent self poison/exposure to alcohol,1,1,0,U209,U209.00,271982007,407014015
+391941000006118,[x]int self poison/exposure to alcohol at home,1,1,0,U2090,U209000,67426006,112060019
+393591000006118,[x]intent self poison alcohol at res institut,1,1,0,U2091,U209100,67426006,112060019
+391521000006119,[x]int self poison alcohol school/pub admin area,1,1,0,U2092,U209200,67426006,112060019
+391501000006112,[x]int self poison alcohol in sport/athletic area,1,1,0,U2093,U209300,67426006,112060019
+393311000006117,[x]intent self pois alcohol in street/highway,1,1,0,U2094,U209400,67426006,112060019
+393321000006113,[x]intent self pois alcohol trade/service area,1,1,0,U2095,U209500,67426006,112060019
+391351000006115,[x]int self pois alcohol indust/construct area,1,1,0,U2096,U209600,67426006,112060019
+391951000006116,[x]int self poison/exposure to alcohol on farm,1,1,0,U2097,U209700,67426006,112060019
+391511000006110,[x]int self poison alcohol other spec place,1,1,0,U209y,U209y00,67426006,112060019
+393601000006114,[x]intent self poison alcohol unspecif place,1,1,0,U209z,U209z00,67426006,112060019
+422801000006118,"[x]poisoning/exposure, ? intent, to alcohol",1,1,0,U409,U409.00,67426006,112060019
+422121000006117,"[x]poison/exposure ?intent, to alcohol at home",1,1,0,U4090,U409000,67426006,112060019
+421791000006112,[x]pois/expos ?intent to alcohol at res institut,1,1,0,U4091,U409100,67426006,112060019
+420991000006116,[x]pois/exp ?intent alcohol school/pub admin area,1,1,0,U4092,U409200,67426006,112060019
+420981000006119,[x]pois/exp ?intent alcohol in sport/athletic area,1,1,0,U4093,U409300,67426006,112060019
+421521000006118,[x]pois/expos ?intent alcohol in street/highway,1,1,0,U4094,U409400,67426006,112060019
+421531000006115,[x]pois/expos ?intent alcohol trade/service area,1,1,0,U4095,U409500,67426006,112060019
+422381000006116,"[x]poison/exposure, ?intent, alcohol indust/construct area",1,1,0,U4096,U409600,67426006,112060019
+422131000006119,"[x]poison/exposure ?intent, to alcohol on farm",1,1,0,U4097,U409700,67426006,112060019
+421381000006110,[x]pois/exp ?intent to alcohol other spec place,1,1,0,U409y,U409y00,67426006,112060019
+421801000006113,[x]pois/expos ?intent to alcohol unspecif place,1,1,0,U409z,U409z00,67426006,112060019
+362931000006115,[x]alcohol deterrents caus adverse effects in therapeut use,0,1,1,U60H3,U60H300,292416003,432554017
+350971000006112,[x] adverse reaction to alcohol deterrents,0,1,1,U60H3-1,U60H311,292416003,432554017
+380131000006115,[x]evidence of alcohl involv determin by blood alcohl level,0,1,0,U80,U80..00,441685000,2817389016
+380081000006115,[x]eviden of alcohl involv blood alcohl level <20 mg/100 ml,0,1,0,U800,U800.00,274776000,410638011
+380091000006117,[x]eviden of alcohl involv blood alcohl level 20-39mg/100ml,0,1,0,U801,U801.00,441685000,2817389016
+380101000006111,[x]eviden of alcohl involv blood alcohl level 40-59mg/100ml,0,1,0,U802,U802.00,441685000,2817389016
+380111000006114,[x]eviden of alcohl involv blood alcohl level 60-79mg/100ml,0,1,0,U803,U803.00,441685000,2817389016
+380121000006118,[x]eviden of alcohl involv blood alcohl level 80-99mg/100ml,0,1,0,U804,U804.00,442669008,2817739010
+380051000006111,[x]eviden of alcoh involv blood alcoh level 100-119mg/100ml,0,1,0,U805,U805.00,442669008,2817739010
+380061000006113,[x]eviden of alcoh involv blood alcoh level 120-199mg/100ml,0,1,0,U806,U806.00,442669008,2817739010
+380071000006118,[x]eviden of alcoh involv blood alcoh level 200-239mg/100ml,0,1,0,U807,U807.00,442669008,2817739010
+380041000006114,[x]eviden alcoh involv blood alcoh level 240mg/100ml or more,0,1,0,U808,U808.00,442669008,2817739010
+380021000006119,[x]evid alcoh invol detrm by pres alcoh in bld levl not spec,0,1,0,U80z,U80z.00,25702006,43081018
+380031000006116,[x]evid of alcohol involv determind by level of intoxication,0,1,0,U81,U81..00,25702006,43081018
+380011000006110,[x]evid alcoh invol determ by levl of intox mild alcoh intox,0,1,0,U810,U810.00,25702006,43081018
+379991000006118,[x]evid alcoh invol determ by level of intox mod alcoh intox,0,1,0,U811,U811.00,25702006,43081018
+380001000006112,[x]evid alcoh invol determ by level of intox sev alcoh intox,0,1,0,U812,U812.00,25702006,43081018
+379981000006116,[x]evid alcoh invl determ by levl intox very sev alcoh intox,0,1,0,U813,U813.00,25702006,43081018
+460276013,[v]personal history of alcoholism,0,0,1,ZV113,ZV11300,371422002,1196720012
+346501000006111,[v]problems related to lifestyle alcohol use,0,1,0,ZV113-1,ZV11311,371422002,1196720012
+460926018,[v]alcohol rehabilitation,0,1,0,ZV57A,ZV57A00,471691000000107,1001331000000118
+461112017,[v]alcohol abuse counselling and surveillance,0,1,0,ZV6D6,ZV6D600,24165007,1206287010

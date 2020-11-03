@@ -1,0 +1,52 @@
+prodcodeid,dmdid,substancestrength,release,termfromemis,productname,drugsubstancename,formulation,routeofadministration,bnfchapter,_posm,_ocsmgstr,ocsmg,_extrastrength
+429541000033111,,,,deltastab tablets 5 mg,,,,,,-1.0,,,
+1132041000033113,,,,prednisone tablets 1 mg,,,,,,-1.0,,,
+1128341000033110,,,,prednisolone suppositories 5 mg,,,,,,-1.0,,,
+1137141000033110,,,,precortisyl tablets 5 mg,,,,,,-1.0,,,
+2509541000033113,,,,*prednisolone liquid,,,,,,-1.0,,,
+2509641000033114,,,,*prednisolone powder,,,,,,-1.0,,,
+1337741000033115,,,,sintisone tablets 6.65 mg,,,,,,-1.0,,,
+2509341000033118,,,,*prednisolone tablets,,,,,,-1.0,,,
+2509441000033112,,,,*prednisolone granules,,,,,,-1.0,,,
+1137241000033115,,,,precortisyl forte tablets 25 mg,,,,,,-1.0,,,
+2509741000033117,,,,*prednisolone pills (sucrose),,,,,,-1.0,,,
+1132141000033112,,,,prednisone tablets 5 mg,,,,,,-1.0,,,
+429141000033119,,,,decortisyl tablets 5 mg,,,,,,-1.0,,,
+429441000033110,,,,deltastab tablets 1 mg,,,,,,-1.0,,,
+10988941000033111,,,,prednisolone dompe oral solution 5 mg/5 ml unit dose,,,,,,-1.0,,,
+1130841000033117,,,,prednisolone steaglate tablets 6.65 mg,,,,,,-1.0,,,
+1137041000033111,,,,precortisyl tablets 1 mg,,,,,,-1.0,,,
+1137341000033113,,,,prednesol soluble tablets 5 mg,,,,,,-1.0,,,
+898441000033115,4052211000001108,100.000mg,,medrone 100mg tablets (pfizer ltd),medrone 100mg tablets,methylprednisolone,tablet,oral,8020200/ 9010300/ 9010400,7.0,100.000,100.0,mg
+899741000033118,4051211000001101,2.000mg,,medrone 2mg tablets (pfizer ltd),medrone 2mg tablets,methylprednisolone,tablet,oral,8020200/ 9010400,5.0,2.000,2.0,mg
+899841000033111,4051611000001104,4.000mg,,medrone 4mg tablets (pfizer ltd),medrone 4mg tablets,methylprednisolone,tablet,oral,8020200/ 9010400,5.0,4.000,4.0,mg
+899641000033110,4051911000001105,16.000mg,,medrone 16mg tablets (pfizer ltd),medrone 16mg tablets,methylprednisolone,tablet,oral,8020200/ 9010400,6.0,16.000,16.0,mg
+1131741000033117,325426006,1.000mg,,prednisolone 1mg tablets,prednisolone 1mg tablets,prednisolone,tablet,oral,1050000,5.0,1.000,1.0,mg
+1131941000033119,325427002,5.000mg,,prednisolone 5mg tablets,prednisolone 5mg tablets,prednisolone,tablet,oral,6030200,5.0,5.000,5.0,mg
+10212541000033119,28799011000001102,5.000mg,,pevanti 5mg tablets (advanz pharma),pevanti 5mg tablets,prednisolone,tablet,oral,,5.0,5.000,5.0,mg
+1114241000033116,325442004,2.500mg,,prednisolone 2.5mg gastro-resistant tablets,prednisolone 2.5mg gastro-resistant tablets,prednisolone,gastro-resistant tablet,oral,1050000,5.0,2.500,2.5,mg
+431541000033114,459611000001100,2.500mg,,deltacortril 2.5mg gastro-resistant tablets (alliance pharmaceuticals ltd),deltacortril 2.5mg gastro-resistant tablets,prednisolone,gastro-resistant tablet,oral,3020000/ 8020200/ 10010201,5.0,2.500,2.5,mg
+8494441000033110,32652311000001103,2.500mg,,dilacort 2.5mg gastro-resistant tablets (crescent pharma ltd),dilacort 2.5mg gastro-resistant tablets,prednisolone,gastro-resistant tablet,oral,,5.0,2.500,2.5,mg
+431641000033110,331111000001100,5.000mg,,deltacortril 5mg gastro-resistant tablets (alliance pharmaceuticals ltd),deltacortril 5mg gastro-resistant tablets,prednisolone,gastro-resistant tablet,oral,3020000/ 8020200/ 10010201,5.0,5.000,5.0,mg
+1114341000033114,325443009,5.000mg,,prednisolone 5mg gastro-resistant tablets,prednisolone 5mg gastro-resistant tablets,prednisolone,gastro-resistant tablet,oral,6030200,5.0,5.000,5.0,mg
+8494541000033111,32652511000001109,5.000mg,,dilacort 5mg gastro-resistant tablets (crescent pharma ltd),dilacort 5mg gastro-resistant tablets,prednisolone,gastro-resistant tablet,oral,,5.0,5.000,5.0,mg
+1127341000033111,325444003,5.000mg,,prednisolone 5mg soluble tablets,prednisolone 5mg soluble tablets,prednisolone sodium phosphate,soluble tablet,oral,6030200,5.0,5.000,5.0,mg
+1130741000033110,325450008,25.000mg,,prednisolone 25mg tablets,prednisolone 25mg tablets,prednisolone,tablet,oral,6030200,6.0,25.000,25.0,mg
+10212941000033113,28799811000001108,25.000mg,,pevanti 25mg tablets (advanz pharma),pevanti 25mg tablets,prednisolone,tablet,oral,,6.0,25.000,25.0,mg
+9119141000033118,416533002,3.000mg/1.000ml,,prednisolone 15mg/5ml oral solution,prednisolone 15mg/5ml oral solution,prednisolone,oral solution,oral,,5.0,3.000,3.0,mg/ml
+5990141000033115,17872811000001100,1.000mg,,prednisone 1mg modified-release tablets,prednisone 1mg modified-release tablets,prednisone,modified-release tablet,oral,6030200,5.0,1.000,1.0,mg
+5990641000033113,17872911000001105,1.000mg,,lodotra 1mg modified-release tablets (napp pharmaceuticals ltd),lodotra 1mg modified-release tablets,prednisone,modified-release tablet,oral,6030200,5.0,1.000,1.0,mg
+5990241000033110,17873211000001107,2.000mg,,prednisone 2mg modified-release tablets,prednisone 2mg modified-release tablets,prednisone,modified-release tablet,oral,6030200,5.0,2.000,2.0,mg
+5990741000033116,17873311000001104,2.000mg,,lodotra 2mg modified-release tablets (napp pharmaceuticals ltd),lodotra 2mg modified-release tablets,prednisone,modified-release tablet,oral,6030200,5.0,2.000,2.0,mg
+5990341000033117,17873811000001108,5.000mg,,prednisone 5mg modified-release tablets,prednisone 5mg modified-release tablets,prednisone,modified-release tablet,oral,6030200,5.0,5.000,5.0,mg
+5990841000033114,17873911000001103,5.000mg,,lodotra 5mg modified-release tablets (napp pharmaceuticals ltd),lodotra 5mg modified-release tablets,prednisone,modified-release tablet,oral,6030200,5.0,5.000,5.0,mg
+10212641000033118,28799311000001104,10.000mg,,pevanti 10mg tablets (advanz pharma),pevanti 10mg tablets,prednisolone,tablet,oral,,6.0,10.000,10.0,mg
+10212141000033111,28808411000001103,10.000mg,,prednisolone 10mg tablets,prednisolone 10mg tablets,prednisolone,tablet,oral,,6.0,10.000,10.0,mg
+1131841000033110,28808611000001100,2.500mg,,prednisolone 2.5mg tablets,prednisolone 2.5mg tablets,prednisolone,tablet,oral,,5.0,2.500,2.5,mg
+10212441000033115,28798211000001102,2.500mg,,pevanti 2.5mg tablets (advanz pharma),pevanti 2.5mg tablets,prednisolone,tablet,oral,,5.0,2.500,2.5,mg
+10212741000033110,28799611000001109,20.000mg,,pevanti 20mg tablets (advanz pharma),pevanti 20mg tablets,prednisolone,tablet,oral,,6.0,20.000,20.0,mg
+10212341000033114,28808711000001109,20.000mg,,prednisolone 20mg tablets,prednisolone 20mg tablets,prednisolone,tablet,oral,,6.0,20.000,20.0,mg
+10266841000033117,29424511000001109,1.000mg/1.000ml,,prednisolone 5mg/5ml oral solution unit dose,prednisolone 5mg/5ml oral solution unit dose,prednisolone,oral solution,oral,,5.0,1.000,1.0,mg/ml
+10494341000033117,29904211000001102,10.000mg/1.000ml,,prednisolone 10mg/ml oral solution sugar free,prednisolone 10mg/ml oral solution sugar free,prednisolone,oral solution,oral,,6.0,10.000,10.0,mg/ml
+11507841000033115,32611811000001105,1.000mg,,prednisolone 1mg gastro-resistant tablets,prednisolone 1mg gastro-resistant tablets,prednisolone,gastro-resistant tablet,oral,,5.0,1.000,1.0,mg
+11664841000033116,32781411000001102,30.000mg,,prednisolone 30mg tablets,prednisolone 30mg tablets,prednisolone,tablet,oral,,6.0,30.000,30.0,mg
