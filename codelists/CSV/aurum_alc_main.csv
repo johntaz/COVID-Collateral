@@ -1,0 +1,91 @@
+medcodeid,term,outcome_main,outcome_sens,chronic,originalreadcode,cleansedreadcode,snomedctconceptid,snomedctdescriptionid
+2658601000006116,acute alcoholic liver disease,1,1,1,^ESCTAC265860,,9953008,17389017
+5981291000006110,alcohol withdrawal-induced convulsion,1,1,1,^ESCTAL598129,,308742005,452062011
+940781000006116,evidence of alcohol withdrawal,1,1,1,HMPNQEV1,,940781000006100,940781000006116
+1974521000006117,"mental & behav dis due to use alcohol: withdrawl state with delirium, with convulsions",1,1,1,EMISICD10|F1041,,1974521000006101,1974521000006117
+1974301000006117,"mental & behav dis due to use alcohol: withdrawl state with delirium, without convulsions",1,1,1,EMISICD10|F1040,,1974301000006101,1974301000006117
+1974191000006110,"mental and behav dis due to use alcohol: withdrawal state, uncomplicated",1,1,1,EMISICD10|F1030,,1974191000006106,1974191000006110
+1974231000006117,"mental and behav dis due to use alcohol: withdrawal state, with convulsions",1,1,1,EMISICD10|F1031,,1974231000006101,1974231000006117
+3890681000006118,uncomplicated alcohol withdrawal,1,1,1,^ESCTUN389068,,85561006,141818010
+12726971000006110,accidental poisoning by alcohol nos,1,1,0,^ESCT1272697,,643461000000102,1416421000000110
+12726711000006116,"accidental poisoning by alcohol, nec",1,1,0,^ESCT1272671,,640861000000108,1411191000000114
+4895571000006112,accidental poisoning by alcoholic beverage,1,1,0,^ESCTAC489557,,216633005,3300762012
+5513321000006114,accidental poisoning caused by alcohol,1,1,0,^ESCTAC551332,,269765000,3296925013
+4895591000006113,accidental poisoning caused by alcoholic beverage,1,1,0,^ESCTAC489559,,216633005,3300761017
+2911291000006114,acute alcohol intoxication,1,1,0,^ESCTAC291129,,25702006,483024013
+12721931000006119,alcohol causing toxic effect nos,1,1,0,^ESCT1272193,,592581000000100,1313721000000116
+8364771000006117,injury following alcohol use,1,1,0,^ESCTIN836477,,984801000000105,2504461000000116
+2911271000006113,acute alcoholism,1,1,0,^ESCTAC291127,,25702006,43082013
+854651000006117,alcohol overdose,1,1,0,EGTON59,,854651000006101,854651000006117
+3846821000006114,alcohol poisoning,1,1,0,^ESCTAL384682,,82782008,1234741018
+1973481000006115,"mental & behav dis due to use alcohol: acute intoxication, pathological intoxication",1,1,0,EMISICD10|F1007,,1973481000006104,1973481000006115
+1972151000006110,"mental & behav dis due to use alcohol: acute intoxication, uncomplicated",1,1,0,EMISICD10|F1000,,1972151000006106,1972151000006110
+1973411000006110,"mental & behav dis due to use alcohol: acute intoxication, with coma",1,1,0,EMISICD10|F1005,,1973411000006106,1973411000006110
+1973441000006114,"mental & behav dis due to use alcohol: acute intoxication, with convulsions",1,1,0,EMISICD10|F1006,,1973441000006105,1973441000006114
+1973241000006113,"mental & behav dis due to use alcohol: acute intoxication, with delirium",1,1,0,EMISICD10|F1003,,1973241000006109,1973241000006113
+1972271000006112,"mental & behav dis due to use alcohol: acute intoxication, with other medical complications",1,1,0,EMISICD10|F1002,,1972271000006108,1972271000006112
+1973321000006113,"mental & behav dis due to use alcohol: acute intoxication, with perceptual distortions",1,1,0,EMISICD10|F1004,,1973321000006109,1973321000006113
+1972161000006112,"mental & behav dis due to use alcohol: acute intoxication, with trauma or other bodily injury",1,1,0,EMISICD10|F1001,,1972161000006108,1972161000006112
+12726111000006115,accidental poisoning by other ethyl alcohol and its products,1,1,0,^ESCT1272611,,672521000000104,1475011000000113
+15243013,alcohol withdrawal delirium,1,1,1,E010,E010.00,8635005,15243013
+507053019,dts - delirium tremens,1,1,1,E010-1,E010.11,8635005,507053019
+294669014,alcohol withdrawal hallucinosis,1,1,1,E013,E013.00,191476005,294669014
+294671014,pathological alcohol intoxication,1,1,0,E014,E014.00,191477001,294671014
+294674018,alcohol withdrawal syndrome,1,1,1,E01y0,E01y000,191480000,294674018
+295127018,acute alcoholic intoxication in alcoholism,1,1,1,E230,E230.00,191802004,295127018
+295126010,alcohol dependence with acute alcoholic intoxication,1,1,1,E230-1,E230.11,191802004,295126010
+295128011,"acute alcoholic intoxication, unspecified, in alcoholism",1,1,1,E2300,E230000,191802004,295127018
+295129015,continuous acute alcoholic intoxication in alcoholism,1,1,1,E2301,E230100,191804003,295129015
+295130013,episodic acute alcoholic intoxication in alcoholism,1,1,1,E2302,E230200,191805002,295130013
+295131012,"acute alcoholic intoxication in remission, in alcoholism",1,1,1,E2303,E230300,191806001,295131012
+295132017,acute alcoholic intoxication in alcoholism nos,1,1,1,E230z,E230z00,191802004,295127018
+397611000006115,[x]mental & behav dis due to use alcohol: acute intoxication,1,1,0,Eu100,Eu10000,25702006,43081018
+362251000006117,[x]acute alcoholic drunkenness,1,1,0,Eu100-1,Eu10011,25702006,43081018
+397811000006119,[x]mental and behav dis due to use alcohol: withdrawal state,1,1,1,Eu103,Eu10300,191480000,294674018
+376451000006113,"[x]delirium tremens, alcohol induced",1,1,1,Eu104-1,Eu10411,8635005,15243013
+315091000000117,[x]alcohol withdrawal-induced seizure,1,1,1,Eu108,Eu10800,308742005,452061016
+17390014,acute alcoholic hepatitis,1,1,1,J611,J611.00,9953008,17390014
+353687012,alcohol-induced acute pancreatitis,1,1,1,J6708,J670800,235942001,353687012
+500729017,alcohol causing toxic effect,1,1,0,SM0,SM0..00,67426006,500729017
+991151000006114,alcohol nos - toxic effect,1,1,0,SM0-98,SM0..98,67426006,991151000006114
+899411000006110,toxic effects of alcohol,1,1,0,SM0-99,SM0..99,67426006,899411000006110
+324489011,alcohol causing toxic effect nos,1,1,0,SM0z,SM0z.00,67426006,112060019
+899431000006116,alcohol nos - toxic effect,1,1,0,SM0z-99,SM0z.99,592581000000100,899431000006116
+328737014,"accidental poisoning by alcohol, nec",1,1,0,T90,T90..00,269765000,404332015
+900431000006118,accident poisoning - alcohol,1,1,0,T90-99,T90..99,640861000000108,900431000006118
+328738016,accidental poisoning by alcoholic beverages,1,1,0,T900,T900.00,216633005,328738016
+328760018,accidental poisoning by alcohol nos,1,1,0,T90z,T90z.00,269765000,404332015
+900461000006110,accident poison - alcohol nos,1,1,0,T90z-99,T90z.99,643461000000102,900461000006110
+361471000006115,[x]accident poisoning/exposure to alcohol,1,1,0,U1A9,U1A9.00,269765000,404332015
+361191000006110,[x]accident poison/exposure to alcohol at home,1,1,0,U1A90,U1A9000,269765000,404332015
+360881000006113,[x]accid poison/expos to alcohol at res institut,1,1,0,U1A91,U1A9100,269765000,404332015
+359981000006119,[x]acc poison/expos alcohol school/pub admin area,1,1,0,U1A92,U1A9200,269765000,404332015
+360371000006117,[x]accid pois/expos alcohol in sport/athletic area,1,1,0,U1A93,U1A9300,269765000,404332015
+360621000006110,[x]accid poison/expos alcohol in street/highway,1,1,0,U1A94,U1A9400,269765000,404332015
+360631000006113,[x]accid poison/expos alcohol trade/service area,1,1,0,U1A95,U1A9500,269765000,404332015
+359811000006119,[x]acc pois/expos alcohol indust/construct area,1,1,0,U1A96,U1A9600,269765000,404332015
+361201000006113,[x]accident poison/exposure to alcohol on farm,1,1,0,U1A97,U1A9700,269765000,404332015
+360481000006111,[x]accid pois/expos to alcohol other spec place,1,1,0,U1A9y,U1A9y00,269765000,404332015
+360891000006111,[x]accid poison/expos to alcohol unspecif place,1,1,0,U1A9z,U1A9z00,269765000,404332015
+393861000006111,[x]intent self poison/exposure to alcohol,1,1,0,U209,U209.00,271982007,407014015
+391941000006118,[x]int self poison/exposure to alcohol at home,1,1,0,U2090,U209000,67426006,112060019
+393591000006118,[x]intent self poison alcohol at res institut,1,1,0,U2091,U209100,67426006,112060019
+391521000006119,[x]int self poison alcohol school/pub admin area,1,1,0,U2092,U209200,67426006,112060019
+391501000006112,[x]int self poison alcohol in sport/athletic area,1,1,0,U2093,U209300,67426006,112060019
+393311000006117,[x]intent self pois alcohol in street/highway,1,1,0,U2094,U209400,67426006,112060019
+393321000006113,[x]intent self pois alcohol trade/service area,1,1,0,U2095,U209500,67426006,112060019
+391351000006115,[x]int self pois alcohol indust/construct area,1,1,0,U2096,U209600,67426006,112060019
+391951000006116,[x]int self poison/exposure to alcohol on farm,1,1,0,U2097,U209700,67426006,112060019
+391511000006110,[x]int self poison alcohol other spec place,1,1,0,U209y,U209y00,67426006,112060019
+393601000006114,[x]intent self poison alcohol unspecif place,1,1,0,U209z,U209z00,67426006,112060019
+422801000006118,"[x]poisoning/exposure, ? intent, to alcohol",1,1,0,U409,U409.00,67426006,112060019
+422121000006117,"[x]poison/exposure ?intent, to alcohol at home",1,1,0,U4090,U409000,67426006,112060019
+421791000006112,[x]pois/expos ?intent to alcohol at res institut,1,1,0,U4091,U409100,67426006,112060019
+420991000006116,[x]pois/exp ?intent alcohol school/pub admin area,1,1,0,U4092,U409200,67426006,112060019
+420981000006119,[x]pois/exp ?intent alcohol in sport/athletic area,1,1,0,U4093,U409300,67426006,112060019
+421521000006118,[x]pois/expos ?intent alcohol in street/highway,1,1,0,U4094,U409400,67426006,112060019
+421531000006115,[x]pois/expos ?intent alcohol trade/service area,1,1,0,U4095,U409500,67426006,112060019
+422381000006116,"[x]poison/exposure, ?intent, alcohol indust/construct area",1,1,0,U4096,U409600,67426006,112060019
+422131000006119,"[x]poison/exposure ?intent, to alcohol on farm",1,1,0,U4097,U409700,67426006,112060019
+421381000006110,[x]pois/exp ?intent to alcohol other spec place,1,1,0,U409y,U409y00,67426006,112060019
+421801000006113,[x]pois/expos ?intent to alcohol unspecif place,1,1,0,U409z,U409z00,67426006,112060019
