@@ -294,7 +294,7 @@ its_function <- function(outcomes_vec = outcomes,
 		
 		# forest plot of estiamtes
 		fp2 <- ggplot(data=interaction_tbl_data, aes(x=outcome_name, y=Est, ymin=lci, ymax=uci)) +
-			geom_point(size = 0.2, pch = 1, colour = "orange") +
+			geom_point(size = 2.5, pch = 16, colour = "orange") +
 			geom_linerange(lwd = 1.5, colour = "orange") +
 			geom_hline(yintercept=1, lty=2) +  # add a dotted line at x=1 after flip
 			coord_flip() +  # flip coordinates (puts labels on y axis)
@@ -332,7 +332,7 @@ its_function <- function(outcomes_vec = outcomes,
 			mutate(dummy_facet = "A")
 		## Forest plot
 		fp <- ggplot(data=forest_plot_df, aes(x=dummy_facet, y=Est, ymin=lci, ymax=uci)) +
-			geom_point(size = 0.5, pch = 1, colour = "darkred") +
+			geom_point(size = 2.5, pch = 16, colour = "darkred") +
 			geom_linerange(lwd = 1.5, colour = "darkred") +
 			geom_hline(yintercept=1, lty=2) +  # add a dotted line at x=1 after flip
 			coord_flip() +  # flip coordinates (puts labels on y axis)
