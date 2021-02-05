@@ -5,9 +5,12 @@ You can choose whether to plot the overall time series or a breakdown of data by
 
 You can also see results from our interrupted time series analysis. 
 
+**Important note**: if there were 5 or fewer contacts in a particular group in one week then we censored the data and assumed 5 contacts. This can make some time series appear volatile as they bounce between 0 and 5 contacts between weeks, however this was an essential step to protect anonymity in our data. 
+
 ## Primary Care Contacts
 ### Selecting the health conditions 
 There is a tickbox for the 16 health conditions we studied. These are grouped according to biological systems: 
+
 - **Endocrine, nutritional and metabolic diseases**: Diabetic Emergencies.
 - **Mental, Behavioral and Neurodevelopmental disorders**: Acute Alcohol-Related Events, Anxiety, Depression, Eating Disorders, Obsessive Compulsive Disorder (OCD), Self-Harm, Serious Mental Illness.
 - **Diseases of the circulatory system**: Cerebrovascular Accident, Heart Failure, Myocardial Infarction, Transient Ischaemic Attacks, Unstable Angina, Venous Thromboembolism.

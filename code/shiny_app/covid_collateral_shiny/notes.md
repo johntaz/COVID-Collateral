@@ -1,7 +1,7 @@
 # About the app 
 This app accompanies a paper entitled _COVID-19 collateral: Indirect acute effects of the pandemic on physical and mental health in the UK_.
 
-The paper can be accessed here: [actual link to be added](https://twitter.com/ehr_lshtm?lang=en)
+The paper can be accessed [here](https://www.medrxiv.org/content/10.1101/2020.10.29.20222174v1.article-metrics)
 
 You can use this app to examine the data used in this analysis from 2017 to 2020. We analysed primary care records from approximately 10 million people across England and Northern Ireland. We wanted to analyse whether people contacted primary care less because of the indirect effects of the COVID-19 pandemic.
 
@@ -12,18 +12,19 @@ Kathryn E Mansfield, PhD\*, Rohini Mathur, PhD\*, John Tazare, MSc\*, Alasdair D
 
 \* Contributed equally
 
-## Acknowledgments
-This study is based in part on data from the Clinical Practice Research Datalink obtained under licence from the UK Medicines and Healthcare products Regulatory Agency. The data is provided by patients and collected by the NHS as part of their care and support. The interpretation and conclusions contained in this study are those of the authors alone. The study was approved by the Independent Scientific Advisory Committee (Protocol number: 20_089R2).
-
 ## Code
 All analysis code and data are available at [GitHub](https://github.com/johntaz/COVID-Collateral)
 
 ## Contact
 Alasdair Henderson: [email](mailto:alasdair.henderson1@lshtm.ac.uk) or [Twitter](https://www.twitter.com/AD_Henderson1)
 
-## Data source
-**Important note**: if there were 5 or fewer contacts in a particular group in one week then we censored the data and assumed 5 contacts. This can make some time series appear volatile as they bounce between 0 and 5 contacts between weeks, however this was an essential step to protect anonymity in our data. 
+## Declaration of interests
+MM is a member of Independent SAGE.
 
+## Funding
+SML is funded by a Wellcome Trust Senior Clinical Fellowship (205039/Z/16/Z). MM is Research Director of the European Observatory on Health Systems and Policies. AYSW is funded by a BHF Immediate Postdoctoral Basic Science Research Fellowship (EPNCZQ52). JFH is supported by the Wellcome Trust (211085/Z/18/Z), the University College London Hospitals NIHR Biomedical Research Centre and the NIHR North Thames Applied Research Collaboration. CWG is funded by a Wellcome Intermediate Clinical Fellowship (201440/Z/16/Z).
+
+## Data source
 The Clinical Practice Research Datalink (CPRD) Aurum includes de-identified routinely collected primary care health record data from participating general practices covering 13% of the English population and Northern Ireland from 2019. The data are broadly representative of the UK population with respect to age, sex, ethnicity, and geographic region.^[1]
 
 ^[1] Wolf A, Dedman D, Campbell J, et al. Data resource profile: Clinical Practice Research Datalink (CPRD) Aurum. International Journal of Epidemiology 2019; : 1–8.
@@ -83,8 +84,5 @@ COPD exacerbations | Adults (aged ≥41 years) with an established diagnosis of 
 
 ^[4] Rothnie KJ, Müllerová H, Hurst JR, et al. Validation of the recording of acute exacerbations of COPD in UK primary care electronic healthcare records. PLoS One 2016; 11: 1–14.
 
-## Declaration of interests
-MM is a member of Independent SAGE.
-
-## Funding
-SML is funded by a Wellcome Trust Senior Clinical Fellowship (205039/Z/16/Z). MM is Research Director of the European Observatory on Health Systems and Policies. AYSW is funded by a BHF Immediate Postdoctoral Basic Science Research Fellowship (EPNCZQ52). JFH is supported by the Wellcome Trust (211085/Z/18/Z), the University College London Hospitals NIHR Biomedical Research Centre and the NIHR North Thames Applied Research Collaboration. CWG is funded by a Wellcome Intermediate Clinical Fellowship (201440/Z/16/Z).
+## Acknowledgments
+This study is based in part on data from the Clinical Practice Research Datalink obtained under licence from the UK Medicines and Healthcare products Regulatory Agency. The data is provided by patients and collected by the NHS as part of their care and support. The interpretation and conclusions contained in this study are those of the authors alone. The study was approved by the Independent Scientific Advisory Committee (Protocol number: 20_089R2).

@@ -75,14 +75,6 @@ ui <- shinyUI(
 						 								 style = "color: white; background-color:#4682b4", 
 						 								 label = "Plot"
 						 		),
-						 		helpText("Data can be shown for several conditions simultaneously or one at a time by checking the boxes below"),
-						 		actionButton("selectAll", label = "Select All"),
-						 		actionButton("deselectAll", label = "Deselect All"),
-						 		checkboxGroupInput("var", 
-						 											 label = "Choose outcome variables to display", 
-						 											 choices = as.list(outcome_choices_reordered),
-						 											 selected = as.list(outcome_choices_reordered)
-						 											 ),
 						 		helpText("Data can be shown from January 2017 to July 2020"),
 						 		dateRangeInput("dates", 
 						 									 label = "Date range:", 
@@ -90,8 +82,16 @@ ui <- shinyUI(
 						 									 end = "2020-07-31"),
 						 		checkboxInput("lockdownLine",
 						 									label = "Display lockdown date (23 March 2020)", 
-						 									value = FALSE)
-						 	),
+						 									value = FALSE),
+						 		helpText("Data can be shown for several conditions simultaneously or one at a time by checking the boxes below"),
+						 		actionButton("selectAll", label = "Select All"),
+						 		actionButton("deselectAll", label = "Deselect All"),
+						 		checkboxGroupInput("var", 
+						 											 label = "Choose outcome variables to display", 
+						 											 choices = as.list(outcome_choices_reordered),
+						 											 selected = as.list(outcome_choices_reordered)
+						 											 )
+						 		),
 						 	## make the main panel
 						 	mainPanel(
 						 		tabsetPanel(id = "stratifier",
@@ -124,11 +124,13 @@ ui <- shinyUI(
 						 						 sidebarLayout(
 						 						 	position = "left",
 						 						 	sidebarPanel(
+						 						 		helpText('Select at least one group from the box below'),
 						 						 		selectInput("labAge", 
-						 						 								multiple = TRUE,
-						 						 								label = "Age", 
-						 						 								choices = age_choice,
-						 						 								selected = age_choice
+						 						 								multiple=TRUE, 
+						 						 								label = "Age group", 
+						 						 								choices = c(Choose='', age_choice),
+						 						 								selected = age_choice[[1]],
+						 						 								selectize=TRUE
 						 						 								)
 						 						 	),
 						 						 	mainPanel(
@@ -140,11 +142,13 @@ ui <- shinyUI(
 						 						 sidebarLayout(
 						 						 	position = "left",
 						 						 	sidebarPanel(
+						 						 		helpText('Select at least one group from the box below'),
 						 						 		selectInput("labEthnicity", 
 						 						 								multiple = TRUE,
 						 						 								label = "Ethnicity", 
-						 						 								choices = ethnicity_choice,
-						 						 								selected = ethnicity_choice
+						 						 								choices = c(Choose='', ethnicity_choice),
+						 						 								selected = ethnicity_choice[[1]],
+						 						 								selectize=TRUE
 						 						 		)
 						 						 	),
 						 						 	mainPanel(
@@ -156,12 +160,14 @@ ui <- shinyUI(
 						 						 sidebarLayout(
 						 						 	position = "left",
 						 						 	sidebarPanel(
+						 						 		helpText('Select at least one group from the box below'),
 						 						 		selectInput("labRegionSum", 
 						 						 								multiple = TRUE,
 						 						 								label = "Region", 
-						 						 								choices = region_sum_choice,
-						 						 								selected = region_sum_choice[region_sum_choice != "Missing"]
-						 						 								)
+						 						 								choices = c(Choose='', region_sum_choice),
+						 						 								selected = region_sum_choice[[1]],
+						 						 								selectize=TRUE
+						 						 		)
 						 						 	),
 						 						 	mainPanel(
 						 								plotOutput("mainplot3A")
@@ -172,12 +178,14 @@ ui <- shinyUI(
 						 						 sidebarLayout(
 						 						 	position = "left",
 						 						 	sidebarPanel(
+						 						 		helpText('Select at least one group from the box below'),
 						 						 		selectInput("labRegion", 
 						 						 								multiple = TRUE,
 						 						 								label = "Region", 
-						 						 								choices = region_choice,
-						 						 								selected = region_choice[region_choice != "Missing"]
-						 						 								)
+						 						 								choices = c(Choose='', region_choice),
+						 						 								selected = region_choice[[1]],
+						 						 								selectize=TRUE
+						 						 		)
 						 						 	),
 						 						 	mainPanel(
 						 								plotOutput("mainplot3")
@@ -188,11 +196,13 @@ ui <- shinyUI(
 						 						 sidebarLayout(
 						 						 	position = "left",
 						 						 	sidebarPanel(
+						 						 		helpText('Select at least one group from the box below'),
 						 						 		selectInput("labSex", 
 						 						 								multiple = TRUE,
 						 						 								label = "Sex", 
-						 						 								choices = sex_choice,
-						 						 								selected = sex_choice
+						 						 								choices = c(Choose='', sex_choice),
+						 						 								selected = sex_choice,
+						 						 								selectize=TRUE
 						 						 		)
 						 						 	),
 						 						 	mainPanel(
@@ -256,7 +266,13 @@ ui <- shinyUI(
 						 	column(8,
 						 				 includeMarkdown(here::here("notes.md"))
 						 	)
-						 )
+						 ),
+						 tags$footer(HTML('<!-- Copyright -->
+						 	<div class="footer-copyright text-center font-small py-3">:
+						 	<p>Code released under the <a href="https://github.com/thomaspark/bootswatch/blob/master/LICENSE">MIT License</a>.
+						 Based on <a href="https://getbootstrap.com/" rel="nofollow">Bootstrap</a>. Icons from <a href="https://fortawesome.github.io/Font-Awesome/" rel="nofollow">Font Awesome</a>. Web fonts from <a href="https://fonts.google.com/" rel="nofollow">Google</a>.</p>
+						 	</div>
+						 	<!-- Copyright -->'))
 		),
 		tags$style(HTML(".navbar {height: 55px;
 										min-height:25px !important;}
@@ -268,9 +284,52 @@ ui <- shinyUI(
 										padding-top:20px !important; 
 										padding-bottom:35px !important;
 										height: 25px;
-										}"))
+										}")),
+	tags$footer(HTML('<!-- Footer -->
+								<footer class="page-footer font-footnotesize darkblue darken-3">
+								
+								<!-- Footer Elements -->
+								<div class="container pull-left">
+								
+								<!-- Grid row-->
+								<div class="row">
+								
+								<!-- Grid column -->
+								<div class="col-sm-24">
+								<div class="mb-4 flex-center">
+								
+								<!-- Paper -->
+								<img src="collateral_logo1.png" title="Read the papert" height = 24px>
+								<a href="https://www.medrxiv.org/content/10.1101/2020.10.29.20222174v1/" onclick="pageTracker._link(this.href); return false;">Read the paper here</a>
+								<!-- Twitter -->
+								<img src="ehr-research-group-logo.jpg" title="EHR group" height = 24px>
+								<a href="https://twitter.com/ehr_lshtm">Follow EHR group on Twitter</a>
+								<!-- LSHTM +-->
+								<img src="lshtm_logo.svg" title="London School of Hygiene &amp; Tropical Medicine" height = 24px>
+								<a href="https://lshtm.ac.uk/" onclick="pageTracker._link(this.href); return false;">LSHTM</a>
+								<!--Github -->
+								<img src="GitHub-Mark.png" title="Github" height = 24px>
+								<a href="https://github.com/johntaz/COVID-Collateral">GitHub</a>
+								</div>
+								</div>
+								<!-- Grid column -->
+								
+								</div>
+								<!-- Grid row-->
+								
+								</div>
+								<!-- Footer Elements -->
+								
+								</footer>
+								<!-- Footer -->'
+	)
+	)
 	)
 )
+#	a(img(src="collateral_logo1.png", height = "35px", align = "top"), 
+#		href="https://twitter.com/ehr_lshtm?lang=en"),
+#	a(apptitle, href = "https://twitter.com/ehr_lshtm?lang=en")
+
 
 
 server <- function(input, output, session){
@@ -342,6 +401,7 @@ server <- function(input, output, session){
 			filter(category %in% labs_to_find) %>%
 			filter(outcome %in% input$var) %>%
 			mutate_at("category", ~as.factor(.))
+		
 	})
 		
 	## set up reactive values to store plot
@@ -371,7 +431,7 @@ server <- function(input, output, session){
 				theme(legend.position = "none")
 		}
 	},
-	height=800)
+	height=700)
 	output$mainplot2 <- renderPlot({
 		if (is.null(v$plot)) return()
 		if(input$lockdownLine) {
@@ -380,7 +440,7 @@ server <- function(input, output, session){
 			v$plot
 		}
 	},
-	height=800)
+	height=700)
 	output$mainplot3A <- renderPlot({
 		if (is.null(v$plot)) return()
 		if(input$lockdownLine) {
@@ -389,7 +449,7 @@ server <- function(input, output, session){
 			v$plot 
 		}
 	},
-	height=800)
+	height=700)
 	output$mainplot3 <- renderPlot({
 		if (is.null(v$plot)) return()
 		if(input$lockdownLine) {
@@ -398,7 +458,7 @@ server <- function(input, output, session){
 			v$plot 
 		}
 	},
-	height=800)
+	height=700)
 	output$mainplot4 <- renderPlot({
 		if (is.null(v$plot)) return()
 		if(input$lockdownLine) {
@@ -407,7 +467,7 @@ server <- function(input, output, session){
 			v$plot
 		}
 	},
-	height=800)
+	height=700)
 	output$mainplot5 <- renderPlot({
 		if (is.null(v$plot)) return()
 		if(input$lockdownLine) {
@@ -416,7 +476,7 @@ server <- function(input, output, session){
 			v$plot
 		}
 	},
-	height=800)
+	height=700)
 	
 
 	# ITS plot ----------------------------------------------------------------
