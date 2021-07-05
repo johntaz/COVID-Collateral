@@ -3,7 +3,7 @@ Study investigating the indirect effects of COVID-19.
 
 While a reduction in hospital activity during the COVID-19 pandemic has been well documented, there has been only limited small scale research on impacts on primary care. We explored the effects of the COVID-19 pandemic and its control on general practice consultations for adverse acute physical and mental health outcomes in England to inform public health planning and policy. 
 
-Preprint (NOT YET PEER REVIEWED) at: [Link](https://www.medrxiv.org/content/10.1101/2020.10.29.20222174v1)
+Full paper at: [Link](https://doi.org/10.1016/S2589-7500(21)00017-0)
 
 Shiny app at: [Link](https://a-henderson91.shinyapps.io/covid_collateral_shiny/)
 
