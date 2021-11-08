@@ -44,9 +44,9 @@ for(ii in 1:length(outcomes)){
 }
 
 its_function <- function(outcomes_vec = outcomes,
-												 cutData = as.Date("2018-01-01"), 
+												 cutData = as.Date("2018-01-01"),
 												 start_lockdown =   as.Date("2020-03-08"),
-												 lockdown_adjustment_period_wks = 4,
+												 lockdown_adjustment_period_wks = 3,
 												 end_post_lockdown_period = as.Date("2020-08-01"),
 												 chop_selfharm = TRUE,
 												 display_from = as.Date("2020-01-01")
@@ -243,8 +243,8 @@ its_function <- function(outcomes_vec = outcomes,
 			# the data
 			geom_line(col = "gray60") +
 			### the probability if therer was no lockdwon
-			#geom_line(data = filter(main_plot_data, weekPlot >= abline_min), aes(y = probline_noLdn), col = 2, lty = 2) +
-			#geom_ribbon(data = filter(main_plot_data, weekPlot >= abline_min), aes(ymin = lci_noLdn, ymax=uci_noLdn), fill = alpha(2,0.4), lty = 0) +
+			geom_line(data = filter(main_plot_data, weekPlot >= abline_min), aes(y = probline_noLdn), col = 2, lty = 2) +
+			geom_ribbon(data = filter(main_plot_data, weekPlot >= abline_min), aes(ymin = lci_noLdn, ymax=uci_noLdn), fill = alpha(2,0.4), lty = 0) +
 			### probability with model (inc. std. error)
 			geom_line(aes(y = predicted_vals), col = 4, lty = 2) +
 			geom_ribbon(aes(ymin = lci, ymax=uci), fill = alpha(4,0.4), lty = 0) +
@@ -398,7 +398,7 @@ its_function <- function(outcomes_vec = outcomes,
 }
 
 # Figure 3 in paper ----------------------------------------------------
-pdf(file = here::here("graphfiles", paste0("Figure3_its_backdata_full", ".pdf")), width = 13, height = 14)
+pdf(file = here::here("graphfiles", paste0("Figure3_its_backdata_full_comp", ".pdf")), width = 13, height = 14)
 its_function(outcomes_vec = outcomes,
 						 cutData = as.Date("2017-01-01"),
 						 start_lockdown = as.Date("2020-03-08"),
