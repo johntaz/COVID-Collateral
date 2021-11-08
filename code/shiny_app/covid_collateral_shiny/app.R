@@ -25,6 +25,7 @@ region_choice <- unique(filter(refactored_shiny, stratifier == "region (detail)"
 region_sum_choice <- unique(filter(refactored_shiny, stratifier == "region (summary)")$category) %>% as.list()
 age_choice <- unique(filter(refactored_shiny, stratifier == "age")$category) %>% as.list()
 outcome_choices_reordered <- levels(refactored_shiny$outcome)
+mental_health_outcomes <- levels(refactored_shiny$outcome)[c(3:8)]
 apptitle <- "COVID-Collateral"
 bkg_colour <- "gray99"
 
@@ -78,7 +79,7 @@ ui <- shinyUI(
 						 		helpText("Data can be shown from January 2017 to July 2020"),
 						 		dateRangeInput("dates", 
 						 									 label = "Date range:", 
-						 									 start = "2020-01-01", 
+						 									 start = "2019-01-01", 
 						 									 end = "2020-07-31"),
 						 		checkboxInput("lockdownLine",
 						 									label = "Display lockdown date (23 March 2020)", 
@@ -89,7 +90,7 @@ ui <- shinyUI(
 						 		checkboxGroupInput("var", 
 						 											 label = "Choose outcome variables to display", 
 						 											 choices = as.list(outcome_choices_reordered),
-						 											 selected = as.list(outcome_choices_reordered)
+						 											 selected = as.list(mental_health_outcomes)
 						 											 )
 						 		),
 						 	## make the main panel
@@ -129,7 +130,7 @@ ui <- shinyUI(
 						 						 								multiple=TRUE, 
 						 						 								label = "Age group", 
 						 						 								choices = c(Choose='', age_choice),
-						 						 								selected = age_choice[[1]],
+						 						 								selected = age_choice,
 						 						 								selectize=TRUE
 						 						 								)
 						 						 	),
@@ -147,7 +148,7 @@ ui <- shinyUI(
 						 						 								multiple = TRUE,
 						 						 								label = "Ethnicity", 
 						 						 								choices = c(Choose='', ethnicity_choice),
-						 						 								selected = ethnicity_choice[[1]],
+						 						 								selected = ethnicity_choice,
 						 						 								selectize=TRUE
 						 						 		)
 						 						 	),
@@ -165,7 +166,7 @@ ui <- shinyUI(
 						 						 								multiple = TRUE,
 						 						 								label = "Region", 
 						 						 								choices = c(Choose='', region_sum_choice),
-						 						 								selected = region_sum_choice[[1]],
+						 						 								selected = region_sum_choice,
 						 						 								selectize=TRUE
 						 						 		)
 						 						 	),
@@ -183,7 +184,7 @@ ui <- shinyUI(
 						 						 								multiple = TRUE,
 						 						 								label = "Region", 
 						 						 								choices = c(Choose='', region_choice),
-						 						 								selected = region_choice[[1]],
+						 						 								selected = region_choice,
 						 						 								selectize=TRUE
 						 						 		)
 						 						 	),
@@ -300,7 +301,7 @@ ui <- shinyUI(
 								
 								<!-- Paper -->
 								<img src="collateral_logo1.png" title="Read the papert" height = 24px>
-								<a href="https://www.medrxiv.org/content/10.1101/2020.10.29.20222174v1/" onclick="pageTracker._link(this.href); return false;">Read the paper here</a>
+								<a href="https://www.sciencedirect.com/science/article/pii/S2589750021000170" onclick="pageTracker._link(this.href); return false;">Read the paper here</a>
 								<!-- Twitter -->
 								<img src="ehr-research-group-logo.jpg" title="EHR group" height = 24px>
 								<a href="https://twitter.com/ehr_lshtm">Follow EHR group on Twitter</a>

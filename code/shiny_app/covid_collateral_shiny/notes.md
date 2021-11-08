@@ -1,7 +1,7 @@
 # About the app 
 This app accompanies a paper entitled _COVID-19 collateral: Indirect acute effects of the pandemic on physical and mental health in the UK_.
 
-The paper can be accessed [here](https://www.medrxiv.org/content/10.1101/2020.10.29.20222174v1.article-metrics)
+The paper can be accessed [here](https://www.sciencedirect.com/science/article/pii/S2589750021000170)
 
 You can use this app to examine the data used in this analysis from 2017 to 2020. We analysed primary care records from approximately 10 million people across England and Northern Ireland. We wanted to analyse whether people contacted primary care less because of the indirect effects of the COVID-19 pandemic.
 
